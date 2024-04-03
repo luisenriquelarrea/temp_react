@@ -1,4 +1,4 @@
-function LoginForm(){
+const LoginForm = () => {
     return(
         <>
             <div className="field">

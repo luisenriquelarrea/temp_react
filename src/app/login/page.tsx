@@ -1,6 +1,6 @@
 import LoginForm from '@/app/ui/login-form';
 
-function LoginPage(){
+const LoginPage = () => {
     return(
         <div className="container is-fluid">
             <LoginForm />
