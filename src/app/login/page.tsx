@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState({});
+    const [credentials, setCredentials] = useState([]);
 
     const handleChange = (event: any) => {
         const name = event.target.name;
@@ -11,9 +12,35 @@ const LoginPage = () => {
         setInputs(values => ({...values, [name]: value}))
       }
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
-        console.log(inputs);
+        if(String(inputs.name).length === 0 || String(inputs.password).length === 0)
+        {
+            console.log('inputs required');
+            return;
+        }
+        useFetch("http://localhost:8080/api/authenticate")
+            .then(response => {
+                if(!response.ok){
+                    console.log("Bad credentials!");
+                    console.log(response);
+                    return;
+                }
+                response.json().then(data => {
+                    console.log(data)
+                })
+            })
+            .catch(error => console.error(error));
+    }
+
+    const useFetch = async (url: string) => {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(inputs),
+        })
     }
 
     return(
