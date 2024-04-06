@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AuthContext } from "./context/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 import "./globals.css";
 import 'bulma/css/bulma.min.css';
 
@@ -15,13 +17,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { user, login, logout, setUser } = useAuth();
   return (
     <html lang="en">
-      <body 
-        className={inter.className} 
-        suppressHydrationWarning={true}>
-          {children}
-      </body>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <body 
+          className={inter.className} 
+          suppressHydrationWarning={true}>
+            {children}
+        </body>
+      </AuthContext.Provider>
     </html>
   );
 }
