@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const LoginPage = () => {
@@ -29,6 +30,7 @@ const LoginPage = () => {
                 }
                 response.json().then(data => {
                     login(data)
+                    return <Navigate to={'/dashboard'} />
                 })
             })
             .catch(error => console.error(error));
