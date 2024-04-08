@@ -6,6 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState({});
+    const { login } = useAuth();
 
     const handleChange = (event: any) => {
         const name = event.target.name;
@@ -20,7 +21,6 @@ const LoginPage = () => {
             console.log('inputs required');
             return;
         }
-        const { login } = useAuth();
         useFetch("http://localhost:8080/api/authenticate")
             .then(response => {
                 if(!response.ok){
