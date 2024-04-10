@@ -12,14 +12,9 @@ const links = [
     //icon: HomeIcon 
   },
   {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
+    name: 'Empleados',
+    href: '/dashboard/empleado',
     //icon: DocumentDuplicateIcon,
-  },
-  { 
-    name: 'Customers', 
-    href: '/dashboard/customers', 
-    //icon: UserGroupIcon 
   },
 ];
 
