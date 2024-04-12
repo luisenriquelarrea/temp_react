@@ -2,9 +2,13 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { getUser } from '../api'
 
 const LoginPage = () => {
-    const [inputs, setInputs] = useState({});
+    const [inputs, setInputs] = useState({
+        name: "", 
+        password: ""
+    });
     const { login } = useAuth();
 
     const handleChange = (event: any) => {
@@ -20,7 +24,7 @@ const LoginPage = () => {
             console.log('inputs required');
             return;
         }
-        useFetch("http://localhost:8080/api/authenticate")
+        getUser(inputs)
             .then(response => {
                 if(!response.ok){
                     console.log("Bad credentials!");
@@ -35,15 +39,7 @@ const LoginPage = () => {
             .catch(error => console.error(error));
     }
 
-    const useFetch = async (url: string) => {
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(inputs),
-        })
-    }
+    
 
     return(
         <div className="container is-fluid">
