@@ -1,13 +1,21 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Alta from '@/app/ui/dashboard/Alta';
 import Table from '@/app/ui/dashboard/Table';
 const Page = () => {
+    const [modelo, setModelo] = useState('');
     const [showAlta, setShowAlta] = useState(false);
     const [showLista, setShowLista] = useState(false);
 
+    useEffect(() => {
+        let pathname = window.location.pathname;
+        let modelo = String(pathname).substring(pathname.lastIndexOf("/") + 1);
+        setModelo(modelo);
+     });
+
     const navigateBreadcrumb = (breadcrumb: String) => {
+        console.log(modelo);
         if(breadcrumb === 'alta')
             setShowAlta( !showAlta )
         else
