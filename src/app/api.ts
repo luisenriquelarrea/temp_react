@@ -5,24 +5,17 @@ interface User {
     password: string
 }
 
-interface SeccionMenu {
-    seccion_menu_id: string,
-    descripcion?: string,
-    label?: string
-}
-
-export const getNavLinks = async (data: SeccionMenu) => {
-    return fetch(url_api+"authenticate", {
-        method: 'POST',
+export const getNavLinks = async () => {
+    return fetch(url_api+"seccion_menu/", {
+        method: 'GET',
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(data),
     })
 }
 
 export const getUser = async (data: User) => {
-    return fetch(url_api+"seccion_menu", {
+    return fetch(url_api+"authenticate", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
