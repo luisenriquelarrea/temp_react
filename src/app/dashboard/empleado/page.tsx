@@ -3,19 +3,34 @@
 import { useState, useEffect } from "react";
 import Alta from '@/app/ui/dashboard/Alta';
 import Table from '@/app/ui/dashboard/Table';
+import { getSeccionMenu } from '../../api';
+
 const Page = () => {
-    const [modelo, setModelo] = useState('');
+    const [seccionMenu, setSeccionMenu] = useState('');
+    const [seccionMenuId, setSeccionMenuId] = useState(false);
     const [showAlta, setShowAlta] = useState(false);
     const [showLista, setShowLista] = useState(false);
 
     useEffect(() => {
         let pathname = window.location.pathname;
-        let modelo = String(pathname).substring(pathname.lastIndexOf("/") + 1);
-        setModelo(modelo);
+        let seccionMenu = String(pathname).substring(pathname.lastIndexOf("/") + 1);
+        setSeccionMenu(seccionMenu);
+        getSeccionMenu(seccionMenu)
+            .then(response => {
+                if(!response.ok){
+                    console.log("Error al obtener seccionMenu");
+                    console.log(response);
+                    return;
+                }
+                response.json().then(data => {
+                    console.log(data);
+                })
+            })
+            .catch(error => console.error(error));
      });
 
     const navigateBreadcrumb = (breadcrumb: String) => {
-        console.log(modelo);
+        console.log(seccionMenu);
         if(breadcrumb === 'alta')
             setShowAlta( !showAlta )
         else

@@ -14,6 +14,18 @@ export const getNavLinks = async () => {
     })
 }
 
+export const getSeccionMenu = async (seccionMenu: string) => {
+    return fetch(url_api+"seccion_menu/desc", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+            'seccion_menu': seccionMenu
+        }),
+    })
+}
+
 export const getUser = async (data: User) => {
     return fetch(url_api+"authenticate", {
         method: 'POST',
@@ -23,5 +35,3 @@ export const getUser = async (data: User) => {
         body: JSON.stringify(data),
     })
 }
-
-export default { getUser }
