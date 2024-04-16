@@ -21,7 +21,7 @@ export const getSeccionMenu = async (seccionMenu: string) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ 
-            'seccion_menu': seccionMenu
+            'descripcion': seccionMenu
         }),
     })
 }

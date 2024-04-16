@@ -23,7 +23,7 @@ const Page = () => {
                     return;
                 }
                 response.json().then(data => {
-                    console.log(data);
+                    setSeccionMenuId(data.id);
                 })
             })
             .catch(error => console.error(error));
@@ -31,6 +31,7 @@ const Page = () => {
 
     const navigateBreadcrumb = (breadcrumb: String) => {
         console.log(seccionMenu);
+        console.log(seccionMenuId)
         if(breadcrumb === 'alta')
             setShowAlta( !showAlta )
         else
