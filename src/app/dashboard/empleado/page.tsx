@@ -8,6 +8,7 @@ import { getSeccionMenu } from '../../api';
 const Page = () => {
     const [seccionMenu, setSeccionMenu] = useState('');
     const [seccionMenuId, setSeccionMenuId] = useState(false);
+    const [navbarLabel, setNavbarLabel] = useState(false)
     const [showAlta, setShowAlta] = useState(false);
     const [showLista, setShowLista] = useState(false);
 
@@ -24,6 +25,7 @@ const Page = () => {
                 }
                 response.json().then(data => {
                     setSeccionMenuId(data.id);
+                    setNavbarLabel(data.navbarLabel);
                 })
             })
             .catch(error => console.error(error));
@@ -42,7 +44,7 @@ const Page = () => {
         <>
             <nav className="breadcrumb no-print" aria-label="breadcrumbs">
                 <ul>
-                    <li className="my-bread"><b> Empleados </b></li>
+                    <li className="my-bread"><b> {navbarLabel} </b></li>
                     <li>
                         <a onClick={() => navigateBreadcrumb("alta")}>Alta</a>
                     </li>
