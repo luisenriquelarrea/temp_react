@@ -1,17 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import SideNav from '@/app/ui/dashboard/SideNav';
-import { useAuth } from '../hooks/useAuth';
-import { User } from "../hooks/useUser";
+import { useLocalStorage } from "../hooks/useLocalStorage";
  
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  let user: any = [];
+  const { getItem } = useLocalStorage();
+  const [user, setUser] = useState<string | null>(null);
   useEffect(() => {
     //Runs only on the first render
-    const { getItem } = useAuth();
-    user = getItem("user");
+    setUser(getItem("user"));
   }, []);
-  //const { getItem } = useAuth();
   console.log(user);
   return (
     <div className="columns">
