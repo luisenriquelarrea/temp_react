@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<string | null>(null);
   useEffect(() => {
     //Runs only on the first render
-    setUser(getItem("user"));
+    setUser(JSON.parse(String(getItem("user"))));
   }, []);
   console.log(user);
   return (
