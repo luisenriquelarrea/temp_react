@@ -15,7 +15,7 @@ export const getNavLinks = async () => {
 }
 
 export const getSeccionMenu = async (seccionMenu: string) => {
-    return fetch(url_api+"seccion_menu/desc", {
+    return fetch(url_api+"seccion_menu/descripcion", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
