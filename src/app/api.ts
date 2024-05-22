@@ -1,16 +1,15 @@
 import { url_api } from './constants';
+import { User } from './entities';
 
-interface User {
-    name: string,
-    password: string
-}
-
-export const getNavLinks = async () => {
-    return fetch(url_api+"seccion_menu/", {
-        method: 'GET',
+export const getNavLinks = async (grupo: any) => {
+    return fetch(url_api+"accion_grupo/allowed_menus", {
+        method: 'POST',
         headers: {
             "Content-Type": "application/json"
         },
+        body: JSON.stringify({ 
+            'grupoId': grupo.id
+        }),
     })
 }
 

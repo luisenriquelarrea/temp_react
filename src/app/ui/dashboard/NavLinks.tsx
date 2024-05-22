@@ -4,13 +4,24 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getNavLinks } from '../../api';
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { User, Grupo } from '../../entities';
 
 const NavLinks = () => {
-
+    const { getItem } = useLocalStorage();
+    const [user, setUser] = useState<User>();
+    const [grupo, setGrupo] = useState<Grupo>();
     const [links, setLinks] = useState([]);
 
     useEffect(() => {
-        getNavLinks()
+        //Runs only on the first render
+        setUser(JSON.parse(String(getItem("user"))));
+    }, []);
+
+    setGrupo(user?.grupo);
+
+    useEffect(() => {
+    getNavLinks(grupo?.id)
             .then(response => {
                 if(!response.ok){
                     console.log("Bad credentials!");
@@ -23,6 +34,7 @@ const NavLinks = () => {
             })
             .catch(error => console.error(error));
     }, []);
+    console.log(links);
 
     const pathname = usePathname();
     return (
