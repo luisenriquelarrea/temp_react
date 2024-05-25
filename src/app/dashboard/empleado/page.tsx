@@ -1,39 +1,48 @@
 "use client"
 
 import { useState, useEffect } from "react";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import Alta from '@/app/ui/dashboard/Alta';
 import Table from '@/app/ui/dashboard/Table';
-import { getSeccionMenu } from '../../api';
+import { User, Accion } from '../../entities';
+import { getSeccionMenu, getBreadcrumbs } from '../../api';
 
 const Page = () => {
-    const [seccionMenu, setSeccionMenu] = useState('');
-    const [seccionMenuId, setSeccionMenuId] = useState(false);
-    const [navbarLabel, setNavbarLabel] = useState(false)
+    const { getItem } = useLocalStorage();
+    const [navbarLabel, setNavbarLabel] = useState("")
+    const [breadcrumbs, setBreadcrumbs] = useState([]);
     const [showAlta, setShowAlta] = useState(false);
     const [showLista, setShowLista] = useState(false);
 
     useEffect(() => {
+        const user: User = JSON.parse(String(getItem("user")));
         let pathname = window.location.pathname;
         let seccionMenu = String(pathname).substring(pathname.lastIndexOf("/") + 1);
-        setSeccionMenu(seccionMenu);
-        getSeccionMenu(seccionMenu)
-            .then(response => {
-                if(!response.ok){
-                    console.log("Error al obtener seccionMenu");
-                    console.log(response);
-                    return;
-                }
-                response.json().then(data => {
-                    setSeccionMenuId(data.id);
-                    setNavbarLabel(data.navbarLabel);
-                })
+        getSeccionMenu(seccionMenu).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener seccionMenu");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                setNavbarLabel(data.navbarLabel);
+                const seccionMenuId = data.id;
+                getBreadcrumbs(seccionMenuId, user.grupo).then(response => {
+                    if(!response.ok){
+                        console.log("Error al obtener breadcrumbs");
+                        console.log(response);
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log(data);
+                        setBreadcrumbs(data);
+                    })
+                }).catch(error => console.error(error));
             })
-            .catch(error => console.error(error));
-     });
+        }).catch(error => console.error(error));
+    }, []);
 
     const navigateBreadcrumb = (breadcrumb: String) => {
-        console.log(seccionMenu);
-        console.log(seccionMenuId)
         if(breadcrumb === 'alta')
             setShowAlta( !showAlta )
         else
@@ -45,12 +54,13 @@ const Page = () => {
             <nav className="breadcrumb no-print" aria-label="breadcrumbs">
                 <ul>
                     <li className="my-bread"><b> {navbarLabel} </b></li>
-                    <li>
-                        <a onClick={() => navigateBreadcrumb("alta")}>Alta</a>
-                    </li>
-                    <li>
-                        <a onClick={() => navigateBreadcrumb("lista")}>Lista</a>
-                    </li>
+                    {breadcrumbs.map((breadcrumb: Accion) => {
+                        return(
+                            <li key={breadcrumb.descripcion}>
+                                <a onClick={() => navigateBreadcrumb("alta")}>{breadcrumb.label}</a>
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>
             { showAlta ? <Alta /> : null }

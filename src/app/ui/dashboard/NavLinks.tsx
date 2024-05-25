@@ -23,7 +23,6 @@ const NavLinks = () => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setSeccionMenu(data);
             })
         }).catch(error => console.error(error));

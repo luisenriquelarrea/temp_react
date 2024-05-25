@@ -1,6 +1,19 @@
 import { url_api } from './constants';
 import { User } from './entities';
 
+export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
+    return fetch(url_api+"accion_grupo/allowed_breadcrumbs", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+            'seccionMenuId': seccionMenuId,
+            'grupoId': grupo.id
+        }),
+    })
+}
+
 export const getNavLinks = async (grupo: any) => {
     return fetch(url_api+"accion_grupo/allowed_menus", {
         method: 'POST',
