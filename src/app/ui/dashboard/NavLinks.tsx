@@ -5,47 +5,39 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getNavLinks } from '../../api';
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { User, Grupo } from '../../entities';
+import { User, SeccionMenu } from '../../entities';
 
 const NavLinks = () => {
     const { getItem } = useLocalStorage();
-    const [user, setUser] = useState<User>();
-    const [grupo, setGrupo] = useState<Grupo>();
-    const [links, setLinks] = useState([]);
+    const [seccionMenu, setSeccionMenu] = useState([]);
+
+    var user: User = {};
 
     useEffect(() => {
         //Runs only on the first render
-        setUser(JSON.parse(String(getItem("user"))));
-    }, []);
-
-    setGrupo(user?.grupo);
-
-    useEffect(() => {
-    getNavLinks(grupo?.id)
-            .then(response => {
-                if(!response.ok){
-                    console.log("Bad credentials!");
-                    console.log(response);
-                    return;
-                }
-                response.json().then(data => {
-                    setLinks(data);
-                })
+        user = JSON.parse(String(getItem("user")));
+        getNavLinks(user.grupo).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener navLinks");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+                setSeccionMenu(data);
             })
-            .catch(error => console.error(error));
+        }).catch(error => console.error(error));
     }, []);
-    console.log(links);
 
     const pathname = usePathname();
     return (
         <>
-            {links.map((link) => {
-                //const LinkIcon = link.icon;
+            {seccionMenu.map((seccion: SeccionMenu) => {
                 return (
                     <Link
-                        key={link.descripcion}
-                        href={'dashboard/'+link.descripcion} >
-                        <p>{link.navbarLabel}</p>
+                        key={seccion.descripcion}
+                        href={'dashboard/'+seccion.descripcion} >
+                        <p>{seccion.navbarLabel}</p>
                     </Link>
                 );
             })}
