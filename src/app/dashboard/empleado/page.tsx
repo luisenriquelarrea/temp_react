@@ -1,18 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import Alta from '@/app/ui/dashboard/Alta';
 import Table from '@/app/ui/dashboard/Table';
+import { arrayColumn } from '../../funciones';
 import { User, Accion } from '../../entities';
-import { getSeccionMenu, getBreadcrumbs } from '../../api';
+import {getSeccionMenu, getBreadcrumbs } from '../../api';
 
 const Page = () => {
     const { getItem } = useLocalStorage();
     const [navbarLabel, setNavbarLabel] = useState("")
     const [breadcrumbs, setBreadcrumbs] = useState([]);
-    const [showAlta, setShowAlta] = useState(false);
-    const [showLista, setShowLista] = useState(false);
+    const [breadcrumbStates, setBreadcrumbStates] = useState<any>({});
 
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
@@ -34,7 +34,11 @@ const Page = () => {
                         return;
                     }
                     response.json().then(data => {
-                        console.log(data);
+                        let tmp: any = {};
+                        arrayColumn(data, 'callMethod').forEach(key => {
+                            tmp[key] = false;
+                        });
+                        setBreadcrumbStates(tmp);
                         setBreadcrumbs(data);
                     })
                 }).catch(error => console.error(error));
@@ -42,11 +46,26 @@ const Page = () => {
         }).catch(error => console.error(error));
     }, []);
 
-    const navigateBreadcrumb = (breadcrumb: String) => {
-        if(breadcrumb === 'alta')
-            setShowAlta( !showAlta )
-        else
-            setShowLista( !showLista )
+    const navigateBreadcrumb = (breadcrumb: string) => {
+        /*for(const prop in breadcrumbStates)
+            breadcrumbStates[prop] = false
+        for(const prop in breadcrumbStates)
+            (prop === breadcrumb) ? breadcrumbStates[prop] = true : false*/
+        /*setBreadcrumbStates((prevState: any) => {
+            for(const prop in breadcrumbStates)
+                prevState[prop] = false;
+            for(const prop in prevState)
+                (prop === breadcrumb) ? prevState[prop] = true : false;
+            console.log(prevState);
+            return prevState;
+        });*/
+        const newStates = breadcrumbStates;
+        for(const prop in newStates)
+            newStates[prop] = false;
+        for(const prop in newStates)
+            (prop === breadcrumb) ? newStates[prop] = true : false;
+        setBreadcrumbStates(newStates);
+        console.log(breadcrumbStates);
     }
 
     return(
@@ -57,14 +76,15 @@ const Page = () => {
                     {breadcrumbs.map((breadcrumb: Accion) => {
                         return(
                             <li key={breadcrumb.descripcion}>
-                                <a onClick={() => navigateBreadcrumb("alta")}>{breadcrumb.label}</a>
+                                <a onClick={ () => navigateBreadcrumb(String(breadcrumb.callMethod)) }>
+                                    {breadcrumb.label}
+                                </a>
                             </li>
                         );
                     })}
                 </ul>
             </nav>
-            { showAlta ? <Alta /> : null }
-            { showLista ? <Table /> : null }
+            { Boolean(breadcrumbStates['create']) === true ? <Alta /> : null }
         </>
     );
 }
