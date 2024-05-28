@@ -47,25 +47,12 @@ const Page = () => {
     }, []);
 
     const navigateBreadcrumb = (breadcrumb: string) => {
-        /*for(const prop in breadcrumbStates)
-            breadcrumbStates[prop] = false
-        for(const prop in breadcrumbStates)
-            (prop === breadcrumb) ? breadcrumbStates[prop] = true : false*/
-        /*setBreadcrumbStates((prevState: any) => {
-            for(const prop in breadcrumbStates)
-                prevState[prop] = false;
-            for(const prop in prevState)
-                (prop === breadcrumb) ? prevState[prop] = true : false;
-            console.log(prevState);
-            return prevState;
-        });*/
         const newStates = breadcrumbStates;
         for(const prop in newStates)
             newStates[prop] = false;
         for(const prop in newStates)
             (prop === breadcrumb) ? newStates[prop] = true : false;
         setBreadcrumbStates(newStates);
-        console.log(breadcrumbStates);
     }
 
     return(
@@ -75,8 +62,9 @@ const Page = () => {
                     <li className="my-bread"><b> {navbarLabel} </b></li>
                     {breadcrumbs.map((breadcrumb: Accion) => {
                         return(
-                            <li key={breadcrumb.descripcion}>
-                                <a onClick={ () => navigateBreadcrumb(String(breadcrumb.callMethod)) }>
+                            <li key={ breadcrumb.descripcion }>
+                                <a key={ breadcrumb.descripcion }
+                                    onClick={ () => navigateBreadcrumb(String(breadcrumb.callMethod)) }>
                                     {breadcrumb.label}
                                 </a>
                             </li>
@@ -84,7 +72,8 @@ const Page = () => {
                     })}
                 </ul>
             </nav>
-            { Boolean(breadcrumbStates['create']) === true ? <Alta /> : null }
+            { breadcrumbStates['create'] ? <Alta /> : null }
+            { breadcrumbStates['read'] ? <Table /> : null }
         </>
     );
 }
