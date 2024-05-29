@@ -53,6 +53,7 @@ const Page = () => {
         for(const prop in newStates)
             (prop === breadcrumb) ? newStates[prop] = true : false;
         setBreadcrumbStates(newStates);
+        console.log(breadcrumbStates);
     }
 
     return(

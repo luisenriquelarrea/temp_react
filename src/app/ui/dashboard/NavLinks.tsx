@@ -31,16 +31,17 @@ const NavLinks = () => {
     const pathname = usePathname();
     return (
         <>
-        <Link 
-                        className="w3-bar-item w3-button w3-padding"
-                        href='/dashboard' >
-                        <p><i className="fa fa-users fa-fw"></i> Dashboard</p>
-    </Link>
+            <Link 
+                key="dashboard"
+                className="w3-bar-item w3-button w3-padding"
+                href='/dashboard' >
+                <p><i className="fa fa-users fa-fw"></i> Dashboard</p>
+            </Link>
             {seccionMenu.map((seccion: SeccionMenu) => {
                 return (
                     <Link 
-                        className="w3-bar-item w3-button w3-padding"
                         key={seccion.descripcion}
+                        className="w3-bar-item w3-button w3-padding"
                         href={'/dashboard/'+seccion.descripcion} >
                         <p><i className="fa fa-users fa-fw"></i> {seccion.navbarLabel}</p>
                     </Link>
