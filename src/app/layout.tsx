@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-//import { AuthContext } from "./context/AuthContext";
-//import { useAuth } from "./hooks/useAuth";
+import "./w3.css"
 import "./globals.css";
 import 'bulma/css/bulma.min.css';
 
@@ -17,12 +16,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //const { user, login, logout, setUser } = useAuth();
   return (
     <html lang="en">
         <head>
-            <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         </head>
         <body 
