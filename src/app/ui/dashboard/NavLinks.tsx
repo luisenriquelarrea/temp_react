@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from "react";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -51,4 +52,4 @@ const NavLinks = () => {
     );
 }
 
-export default NavLinks;
+export default memo(NavLinks);

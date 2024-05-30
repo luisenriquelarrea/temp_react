@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react";
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import Alta from '@/app/ui/dashboard/Alta';
@@ -79,4 +80,4 @@ const Page = () => {
     );
 }
 
-export default Page;
+export default memo(Page);
