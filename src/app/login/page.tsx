@@ -24,25 +24,21 @@ const LoginPage = () => {
             console.log('inputs required');
             return;
         }
-        getUser(inputs)
-            .then(response => {
-                if(!response.ok){
-                    console.log("Bad credentials!");
-                    console.log(response);
-                    return;
-                }
-                response.json().then(data => {
-                    login(data)
-                    window.location.href = '/dashboard';
-                })
+        getUser(inputs).then(response => {
+            if(!response.ok){
+                console.log("Bad credentials!");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                login(data)
+                window.location.href = '/dashboard';
             })
-            .catch(error => console.error(error));
+        }).catch(error => console.error(error));
     }
 
-    
-
     return(
-        <div className="container is-fluid">
+        <div className="my-login">
             <form onSubmit={handleSubmit}>
                 <div className="field">
                     <label className="label">Username</label>
