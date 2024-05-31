@@ -11,7 +11,8 @@ import {getSeccionMenu, getBreadcrumbs } from '../../api';
 
 const Page = () => {
     const { getItem } = useLocalStorage();
-    const [navbarLabel, setNavbarLabel] = useState("")
+    const [seccionMenuId, setSecccionMenuId] = useState(0);
+    const [navbarLabel, setNavbarLabel] = useState("");
     const [alta, setAlta] = useState(false);
     const [lista, setLista] = useState(false);
     const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -30,6 +31,7 @@ const Page = () => {
             response.json().then(data => {
                 setNavbarLabel(data.navbarLabel);
                 const seccionMenuId = data.id;
+                setSecccionMenuId(seccionMenuId);
                 getBreadcrumbs(seccionMenuId, user.grupo).then(response => {
                     if(!response.ok){
                         console.log("Error al obtener breadcrumbs");
@@ -93,7 +95,7 @@ const Page = () => {
                     })}
                 </ul>
             </nav>
-            { Boolean(alta) ? <Alta /> : null }
+            { Boolean(alta) ? <Alta seccionMenuId={ seccionMenuId } /> : null }
             { Boolean(lista) ? <Table /> : null }
         </>
     );

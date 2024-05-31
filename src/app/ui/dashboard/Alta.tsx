@@ -1,4 +1,23 @@
-const Alta = () => {
+import { useState, useEffect } from "react";
+import { getInputs } from '../../api';
+
+const Alta = (props: any) => {
+    const [inputs, setInputs] = useState([]);
+
+    useEffect(() => {
+        getInputs(props.seccionMenuId, 'alta').then(response => {
+            if(!response.ok){
+                console.log("Error al obtener inputs");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+                setInputs(data);
+            })
+        }).catch(error => console.error(error));
+    }, []);
+
     return(
         <>
             <div className="columns is-multiline">

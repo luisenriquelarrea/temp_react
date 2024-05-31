@@ -14,6 +14,19 @@ export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
     })
 }
 
+export const getInputs = async (seccionMenuId: number, columna: string) => {
+    return fetch(url_api+"seccion_menu_input/inputs", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+            'seccionMenuId': seccionMenuId,
+            'columna': columna
+        }),
+    })
+}
+
 export const getNavLinks = async (grupo: any) => {
     return fetch(url_api+"accion_grupo/allowed_menus", {
         method: 'POST',
