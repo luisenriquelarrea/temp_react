@@ -1,6 +1,16 @@
 import { url_api } from './constants';
 import { User } from './entities';
 
+export const save = async (seccionMenu: string, formdata: any) => {
+    return fetch(url_api+seccionMenu+"/add", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
 export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
     return fetch(url_api+"accion_grupo/allowed_breadcrumbs", {
         method: 'POST',

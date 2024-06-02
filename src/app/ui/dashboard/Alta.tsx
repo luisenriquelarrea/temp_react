@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import InputText  from './InputText';
-import { getInputs } from '../../api';
+import { getInputs, save } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 
 const Alta = (props: any) => {
@@ -31,7 +31,16 @@ const Alta = (props: any) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
+        save(props.seccionMenu, formData).then(response => {
+            if(!response.ok){
+                console.log("Error al guardar registro");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+            })
+        }).catch(error => console.error(error));
     }
 
     return(

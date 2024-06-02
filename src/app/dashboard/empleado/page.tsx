@@ -12,6 +12,7 @@ import {getSeccionMenu, getBreadcrumbs } from '../../api';
 const Page = () => {
     const { getItem } = useLocalStorage();
     const [seccionMenuId, setSecccionMenuId] = useState(0);
+    const [seccionMenu, setSecccionMenu] = useState("");
     const [navbarLabel, setNavbarLabel] = useState("");
     const [alta, setAlta] = useState(false);
     const [lista, setLista] = useState(false);
@@ -22,6 +23,7 @@ const Page = () => {
         const user: User = JSON.parse(String(getItem("user")));
         let pathname = window.location.pathname;
         let seccionMenu = String(pathname).substring(pathname.lastIndexOf("/") + 1);
+        setSecccionMenu(seccionMenu);
         getSeccionMenu(seccionMenu).then(response => {
             if(!response.ok){
                 console.log("Error al obtener seccionMenu");
@@ -95,7 +97,9 @@ const Page = () => {
                     })}
                 </ul>
             </nav>
-            { Boolean(alta) ? <Alta seccionMenuId={ seccionMenuId } /> : null }
+            { Boolean(alta) ? <Alta 
+                seccionMenuId={ seccionMenuId } 
+                seccionMenu={ seccionMenu } /> : null }
             { Boolean(lista) ? <Table /> : null }
         </>
     );
