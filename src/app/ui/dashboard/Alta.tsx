@@ -5,6 +5,7 @@ import { SeccionMenuInput } from '../../entities';
 
 const Alta = (props: any) => {
     const [inputs, setInputs] = useState([]);
+    const [formData, setFormData] = useState({});
 
     useEffect(() => {
         getInputs(props.seccionMenuId, 'alta').then(response => {
@@ -24,8 +25,13 @@ const Alta = (props: any) => {
         if(input.inputType === "text")
             return <InputText 
                 key={ input.inputName }
-                inputData={ input } />
+                inputData={ input }
+                stateFormData={ setFormData } />
         return null
+    }
+
+    const handleSubmit = () => {
+        console.log(formData);
     }
 
     return(
@@ -38,7 +44,7 @@ const Alta = (props: any) => {
             })}
             </div>
             <div className="column is-2">
-                <button className="button is-info is-fullwidth">Guardar</button>
+                <button onClick={ handleSubmit } className="button is-info is-fullwidth">Guardar</button>
             </div>
         </>
     );

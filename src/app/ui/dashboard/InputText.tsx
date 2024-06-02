@@ -1,6 +1,15 @@
-import { SeccionMenuInput } from '../../entities';
+import { useState } from 'react';
 
 const InputText = (props: any) => {
+    const [text, setText] = useState("");
+
+    const handleChange = (event: any) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setText(value);
+        props.stateFormData((values: any) => ({...values, [name]: value}))
+    }
+
     return(
         <>
             <div className={ `column is-${props.inputData.cols}` } >
@@ -16,6 +25,8 @@ const InputText = (props: any) => {
                         <input className="input is-info" 
                             name={ props.inputData.inputName }
                             type="text" 
+                            value={ text }
+                            onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel } />
                     </div>
                 </div>

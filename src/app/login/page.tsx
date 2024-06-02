@@ -15,7 +15,7 @@ const LoginPage = () => {
         const name = event.target.name;
         const value = event.target.value;
         setInputs(values => ({...values, [name]: value}))
-      }
+    }
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
