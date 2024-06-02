@@ -66,7 +66,7 @@ const LoginPage = () => {
                 </div>
                 <div className="field">
                     <div className="control">
-                        <button type="submit" className="button is-success">Login</button>
+                        <button type="submit" className="button is-info is-fullwidth">Login</button>
                     </div>
                 </div>
             </form>

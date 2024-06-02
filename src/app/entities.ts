@@ -21,3 +21,17 @@ export interface SeccionMenu {
     descripcion?: string,
     navbarLabel?: string
 }
+
+export interface SeccionMenuInput {
+    inputType?: string,
+    inputLabel?: string,
+    inputId?: string,
+    inputName?: string,
+    inputCols?: number,
+    inputRequired?: number,
+    alta?: number,
+    modifica?: number,
+    lista?: number,
+    orden?: number,
+    modelo?: string
+}
