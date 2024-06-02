@@ -20,14 +20,20 @@ const Alta = (props: any) => {
         }).catch(error => console.error(error));
     }, []);
 
+    const renderInput = (input: SeccionMenuInput) => {
+        if(input.inputType === "text")
+            return <InputText 
+                key={ input.inputName }
+                inputData={ input } />
+        return null
+    }
+
     return(
         <>
             <div className="columns is-multiline">
             {inputs.map((input: SeccionMenuInput) => {
                 return (
-                    <InputText 
-                        key={ input.inputName }
-                        inputData={ input } />
+                    renderInput(input)
                 );
             })}
             </div>
