@@ -32,7 +32,8 @@ const Alta = (props: any) => {
             return <InputSelect 
                 key={ input.inputName }
                 inputData={ input }
-                stateFormData={ setFormData } />
+                stateFormData={ setFormData }
+                seccionMenu={ props.seccionMenu } />
         return null
     }
 

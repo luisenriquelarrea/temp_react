@@ -1,7 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSeccionMenuList } from '../../api';
 
 const InputSelect = (props: any) => {
     const [text, setText] = useState("");
+    const [options, setOptions] = useState([]);
+
+    useEffect(() => {
+        getSeccionMenuList(props.inputData.modelo).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener "+props.inputData.modelo+" lista");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+                setOptions(data);
+            })
+        }).catch(error => console.error(error));
+    }, []);
 
     const handleChange = (event: any) => {
         const name = event.target.name;
@@ -22,10 +38,18 @@ const InputSelect = (props: any) => {
                         }
                     </label>
                     <div className="control">
-                        <div className="select is-info">
+                        <div className="select is-info is-fullwidth">
                             <select>
                                 <option>Selecciona una opción</option>
-                                <option>With options</option>
+                                {options.map((option: any) => {
+                                    return(
+                                        <option 
+                                            key={ option.id } 
+                                            value={ option.id } >
+                                            { option.descripcion }
+                                        </option>
+                                    );
+                                })}
                             </select>
                         </div>
                     </div>
