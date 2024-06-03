@@ -100,7 +100,9 @@ const Page = () => {
             { Boolean(alta) ? <Alta 
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
-            { Boolean(lista) ? <Table /> : null }
+            { Boolean(lista) ? <Table
+                seccionMenuId={ seccionMenuId } 
+                seccionMenu={ seccionMenu } /> : null }
         </>
     );
 }

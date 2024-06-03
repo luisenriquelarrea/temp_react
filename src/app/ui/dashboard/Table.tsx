@@ -1,4 +1,4 @@
-const Table = () => {
+const Table = (props: any) => {
     return (
         <>
             <table className="table is-bordered display">
