@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import InputText  from './InputText';
+import InputSelect  from './InputSelect';
 import { getInputs, save } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 
@@ -24,6 +25,11 @@ const Alta = (props: any) => {
     const renderInput = (input: SeccionMenuInput) => {
         if(input.inputType === "text")
             return <InputText 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ setFormData } />
+        if(input.inputType === "select")
+            return <InputSelect 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData } />
