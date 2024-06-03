@@ -39,7 +39,7 @@ const InputSelect = (props: any) => {
                     </label>
                     <div className="control">
                         <div className="select is-info is-fullwidth">
-                            <select>
+                            <select name={ props.inputData.inputName } onChange={ handleChange }>
                                 <option>Selecciona una opción</option>
                                 {options.map((option: any) => {
                                     return(

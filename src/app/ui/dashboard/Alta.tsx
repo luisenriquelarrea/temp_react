@@ -38,6 +38,7 @@ const Alta = (props: any) => {
     }
 
     const handleSubmit = () => {
+        console.log(formData);
         save(props.seccionMenu, formData).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");
