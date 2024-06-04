@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import { getInputs, getSeccionMenuList } from '../../api';
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { getInputs, getSeccionMenuList, getTableActions } from '../../api';
+import { User } from '../../entities';
 
 const Table = (props: any) => {
+    const { getItem } = useLocalStorage();
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
+    const [tableActions, setTableActions] = useState([]);
 
     useEffect(() => {
         getInputs(props.seccionMenuId, 'lista').then(response => {
@@ -29,6 +33,19 @@ const Table = (props: any) => {
                 setData(data);
             })
         }).catch(error => console.error(error));
+
+        const user: User = JSON.parse(String(getItem("user")));
+        getTableActions(props.seccionMenuId, user.grupo).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener tableActions");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+                setTableActions(data);
+            })
+        }).catch(error => console.error(error));
     }, []);
 
     return (
@@ -47,15 +64,20 @@ const Table = (props: any) => {
                 <tbody>
                         {data.map((record: any) => {
                             return(
-                            <tr>
-                            {columns.map((column: any) => {
-                                const columnKey: string = column.id;
-                                const columnName: string = column.inputName;
-                                return(
-                                    <td key={ record[columnKey] }> { record[columnName] } </td>
-                                );
-                            })}
-                            </tr>
+                                <tr>
+                                    {columns.map((column: any) => {
+                                        const columnKey: string = column.id;
+                                        const columnName: string = column.inputName;
+                                        return(
+                                            <td key={ record[columnKey] }> { record[columnName] } </td>
+                                        );
+                                    })}
+                                    {tableActions.map((action: any) => {
+                                        return(
+                                            <i key={ action.id } className="fa fa-users fa-fw"></i>
+                                        );
+                                    })}
+                                </tr>
                             );
                         })}
                 </tbody>
