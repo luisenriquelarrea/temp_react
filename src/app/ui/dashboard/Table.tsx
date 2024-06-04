@@ -74,7 +74,7 @@ const Table = (props: any) => {
                                     })}
                                     {tableActions.map((action: any) => {
                                         return(
-                                            <i key={ action.id } className="fa fa-users fa-fw"></i>
+                                            <i key={ action.id } className={`fa fa-${action.icon} fa-fw`}></i>
                                         );
                                     })}
                                 </tr>
