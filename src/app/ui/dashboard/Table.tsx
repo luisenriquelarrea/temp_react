@@ -78,21 +78,22 @@ const Table = (props: any) => {
                         return(
                             <tr key={ record.id }>
                                 {columns.map((column: any) => {
-                                    const columnKey: string = column.id;
                                     const columnName: string = column.inputName;
                                     return(
                                         <td 
-                                            key={ record[columnKey] } 
+                                            key={ column.id } 
                                             className={ parseInt(record.status) === 0 ? "record-inactive" : "" }> 
                                             { record[columnName] } 
                                         </td>
                                     );
                                 })}
-                                {tableActions.map((action: Accion) => {
-                                    return(
-                                        renderAction(action, parseInt(record["status"]))
-                                    );
-                                })}
+                                <td>
+                                    {tableActions.map((action: Accion) => {
+                                        return(
+                                            renderAction(action, parseInt(record["status"]))
+                                        );
+                                    })}
+                                </td>
                             </tr>
                         );
                     })}
