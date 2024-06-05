@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { getInputs, getSeccionMenuList, getTableActions } from '../../api';
-import { User } from '../../entities';
+import { User, Accion } from '../../entities';
 
 const Table = (props: any) => {
     const { getItem } = useLocalStorage();
@@ -48,6 +48,18 @@ const Table = (props: any) => {
         }).catch(error => console.error(error));
     }, []);
 
+    const renderAction = (action: Accion, recordStatus: number) => {
+        if(action.callMethod !== "change_status")
+            return <i key={ action.id } className={`fa fa-${action.icon} fa-fw`}></i>
+        if(action.descripcion === "deactivate" && recordStatus === 0)
+            return null;
+        if(action.descripcion === "deactivate" && recordStatus === 1)
+            return <i key={ action.id } className={`fa fa-pause fa-fw`}></i>
+        if(action.descripcion === "activate" && recordStatus === 0)
+            return <i key={ action.id } className={`fa fa-play fa-fw`}></i>
+        return null;
+    }
+
     return (
         <div className="table-container">
             <table className="table is-bordered display">
@@ -62,24 +74,28 @@ const Table = (props: any) => {
                     </tr>
                 </thead>
                 <tbody>
-                        {data.map((record: any) => {
-                            return(
-                                <tr>
-                                    {columns.map((column: any) => {
-                                        const columnKey: string = column.id;
-                                        const columnName: string = column.inputName;
-                                        return(
-                                            <td key={ record[columnKey] }> { record[columnName] } </td>
-                                        );
-                                    })}
-                                    {tableActions.map((action: any) => {
-                                        return(
-                                            <i key={ action.id } className={`fa fa-${action.icon} fa-fw`}></i>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {data.map((record: any) => {
+                        return(
+                            <tr key={ record.id }>
+                                {columns.map((column: any) => {
+                                    const columnKey: string = column.id;
+                                    const columnName: string = column.inputName;
+                                    return(
+                                        <td 
+                                            key={ record[columnKey] } 
+                                            className={ parseInt(record.status) === 0 ? "record-inactive" : "" }> 
+                                            { record[columnName] } 
+                                        </td>
+                                    );
+                                })}
+                                {tableActions.map((action: Accion) => {
+                                    return(
+                                        renderAction(action, parseInt(record["status"]))
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table> 
         </div>

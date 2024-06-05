@@ -1,6 +1,8 @@
 export interface Accion {
+    id?: number,
     descripcion?: string,
     label?: string,
+    icon?: string,
     callMethod?: string
 }
 export interface Grupo {
