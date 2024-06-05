@@ -9,6 +9,10 @@ const Table = (props: any) => {
     const [data, setData] = useState([]);
     const [tableActions, setTableActions] = useState([]);
 
+    const recordInactive = {
+        backgroundColor: "#ffe4f3"
+    };
+
     useEffect(() => {
         getInputs(props.seccionMenuId, 'lista').then(response => {
             if(!response.ok){
@@ -82,7 +86,7 @@ const Table = (props: any) => {
                                     return(
                                         <td 
                                             key={ column.id } 
-                                            className={ parseInt(record.status) === 0 ? "record-inactive" : "" }> 
+                                            style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
                                             { record[columnName] } 
                                         </td>
                                     );
