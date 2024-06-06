@@ -21,6 +21,15 @@ export const updateRecord = async (seccionMenu: string, id: number, formdata: an
     })
 }
 
+export const deleteRecord = async (seccionMenu: string, id: number) => {
+    return fetch(url_api+seccionMenu+"/"+id, {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json"
+        },
+    })
+}
+
 export const getById = async (seccionMenu: string, id: number) => {
     return fetch(url_api+seccionMenu+"/"+id, {
         method: 'GET',

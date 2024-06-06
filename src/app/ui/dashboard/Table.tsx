@@ -5,7 +5,8 @@ import {
     getSeccionMenuList, 
     getTableActions, 
     getById, 
-    updateRecord 
+    updateRecord,
+    deleteRecord 
 } from '../../api';
 import { User, Accion } from '../../entities';
 import { flipStatus } from '../../funciones';
@@ -93,6 +94,8 @@ const Table = (props: any) => {
     const handleAction = (action: string, record: any) => {
         if(action === "changeStatus")
             changeStatus(record.id, record.status);
+        if(action === "eliminar")
+            eliminar(record.id, record.status);
     }
 
     const update = (recordId: number, recordStatus: number) => {
@@ -100,7 +103,15 @@ const Table = (props: any) => {
     }
     
     const eliminar = (recordId: number, recordStatus: number) => {
-        
+        deleteRecord(props.seccionMenu, recordId).then(response => {
+            if(!response.ok){
+                console.log("Error al eliminar registro");
+                console.log(response);
+                return;
+            }
+            console.log(data);
+            setTable();
+        }).catch(error => console.error(error));
     }
 
     const changeStatus = (recordId: number, recordStatus: number) => {
