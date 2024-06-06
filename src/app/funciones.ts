@@ -3,3 +3,7 @@ export const arrayColumn = (array: any[], column: string) => {
         return array.map(item => item[column])
     return [];
 }
+
+export const flipStatus = (status: number) => {
+    return 1 - status;
+}
