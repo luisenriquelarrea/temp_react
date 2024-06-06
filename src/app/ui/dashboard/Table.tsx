@@ -52,16 +52,43 @@ const Table = (props: any) => {
         }).catch(error => console.error(error));
     }, []);
 
-    const renderAction = (action: Accion, recordStatus: number) => {
-        if(action.callMethod !== "change_status")
-            return <i key={ action.id } className={`fa fa-${action.icon} fa-fw`}></i>
-        if(action.descripcion === "deactivate" && recordStatus === 0)
+    const renderAction = (action: Accion, record: any) => {
+        if(action.callMethod !== "changeStatus")
+            return <i 
+                key={ action.id } 
+                className={`fa fa-${action.icon} fa-fw`}
+                onClick={() => eval( String(action.callMethod) )(record.id, record.status) } >
+
+                </i>
+        if(action.descripcion === "deactivate" && parseInt(record.status) === 0)
             return null;
-        if(action.descripcion === "deactivate" && recordStatus === 1)
-            return <i key={ action.id } className={`fa fa-pause fa-fw`}></i>
-        if(action.descripcion === "activate" && recordStatus === 0)
-            return <i key={ action.id } className={`fa fa-play fa-fw`}></i>
+        if(action.descripcion === "deactivate" && parseInt(record.status) === 1)
+            return <i 
+                key={ action.id } 
+                className={`fa fa-pause fa-fw`}
+                onClick={() => eval( String(action.callMethod) )(record.id, record.status) } >
+
+                </i>
+        if(action.descripcion === "activate" && parseInt(record.status) === 0)
+            return <i 
+                key={ action.id } 
+                className={`fa fa-play fa-fw`}
+                onClick={() => eval( String(action.callMethod) )(record.id, record.status) } >
+
+                </i>
         return null;
+    }
+
+    const update = (recordId: number, recordStatus: number) => {
+
+    }
+    
+    const eliminar = (recordId: number, recordStatus: number) => {
+        
+    }
+
+    const changeStatus = (recordId: number, recordStatus: number) => {
+        
     }
 
     return (
@@ -94,7 +121,7 @@ const Table = (props: any) => {
                                 <td>
                                     {tableActions.map((action: Accion) => {
                                         return(
-                                            renderAction(action, parseInt(record["status"]))
+                                            renderAction(action, record)
                                         );
                                     })}
                                 </td>
