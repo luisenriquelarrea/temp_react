@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { getInputs, getSeccionMenuList, getTableActions, updateRecord } from '../../api';
+import { 
+    getInputs, 
+    getSeccionMenuList, 
+    getTableActions, 
+    getById, 
+    updateRecord 
+} from '../../api';
 import { User, Accion } from '../../entities';
 import { flipStatus } from '../../funciones';
 
@@ -94,19 +100,24 @@ const Table = (props: any) => {
     }
 
     const changeStatus = (recordId: number, recordStatus: number) => {
-        recordStatus = flipStatus(recordStatus);
-        let formdata = {
-            "id": recordId,
-            "status": recordStatus
-        };
-        updateRecord(props.seccionMenu, recordId, formdata).then(response => {
+        getById(props.seccionMenu, recordId).then(response => {
             if(!response.ok){
-                console.log("Error al modificar registro");
+                console.log("Error al obtener registro");
                 console.log(response);
                 return;
             }
             response.json().then(data => {
-                console.log(data);
+                data.status = flipStatus(recordStatus);
+                updateRecord(props.seccionMenu, recordId, data).then(response => {
+                    if(!response.ok){
+                        console.log("Error al modificar registro");
+                        console.log(response);
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log(data);
+                    })
+                }).catch(error => console.error(error));
             })
         }).catch(error => console.error(error));
     }

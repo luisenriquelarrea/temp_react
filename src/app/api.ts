@@ -21,6 +21,15 @@ export const updateRecord = async (seccionMenu: string, id: number, formdata: an
     })
 }
 
+export const getById = async (seccionMenu: string, id: number) => {
+    return fetch(url_api+seccionMenu+"/"+id, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        },
+    })
+}
+
 export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
     return fetch(url_api+"accion_grupo/allowed_breadcrumbs", {
         method: 'POST',
