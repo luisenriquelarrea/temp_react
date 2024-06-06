@@ -10,6 +10,7 @@ import {
 } from '../../api';
 import { User, Accion } from '../../entities';
 import { flipStatus } from '../../funciones';
+import ModalUpdate from '@/app/ui/dashboard/Table';
 
 const Table = (props: any) => {
     const { getItem } = useLocalStorage();
@@ -95,14 +96,18 @@ const Table = (props: any) => {
         if(action === "changeStatus")
             changeStatus(record.id, record.status);
         if(action === "eliminar")
-            eliminar(record.id, record.status);
+            eliminar(record.id);
+        if(action === "update")
+            update(record.id);
     }
 
-    const update = (recordId: number, recordStatus: number) => {
-
+    const update = (recordId: number) => {
+        return <ModalUpdate 
+            seccionMenuId={ props.seccionMenuId }
+            seccionMenu={ props.seccionMenu } />
     }
     
-    const eliminar = (recordId: number, recordStatus: number) => {
+    const eliminar = (recordId: number) => {
         deleteRecord(props.seccionMenu, recordId).then(response => {
             if(!response.ok){
                 console.log("Error al eliminar registro");
@@ -139,6 +144,7 @@ const Table = (props: any) => {
     }
 
     return (
+        <>
         <div className="table-container">
             <table className="table is-bordered display">
                 <thead>
@@ -178,6 +184,7 @@ const Table = (props: any) => {
                 </tbody>
             </table> 
         </div>
+        </>
     );
 }
 
