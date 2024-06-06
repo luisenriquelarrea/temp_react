@@ -57,7 +57,7 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 className={`fa fa-${action.icon} fa-fw`}
-                onClick={() => eval( String(action.callMethod) )(record.id, record.status) } >
+                onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
         if(action.descripcion === "deactivate" && parseInt(record.status) === 0)
@@ -66,17 +66,22 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 className={`fa fa-pause fa-fw`}
-                onClick={() => eval( String(action.callMethod) )(record.id, record.status) } >
+                onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
         if(action.descripcion === "activate" && parseInt(record.status) === 0)
             return <i 
                 key={ action.id } 
                 className={`fa fa-play fa-fw`}
-                onClick={() => eval( String(action.callMethod) )(record.id, record.status) } >
+                onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
         return null;
+    }
+
+    const handleAction = (action: string, record: any) => {
+        if(action === "changeStatus")
+            changeStatus(record.id, record.status);
     }
 
     const update = (recordId: number, recordStatus: number) => {
