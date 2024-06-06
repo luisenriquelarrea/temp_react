@@ -33,18 +33,6 @@ const Table = (props: any) => {
             })
         }).catch(error => console.error(error));
 
-        getSeccionMenuList(props.seccionMenu).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener "+props.seccionMenu);
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                console.log(data);
-                setData(data);
-            })
-        }).catch(error => console.error(error));
-
         const user: User = JSON.parse(String(getItem("user")));
         getTableActions(props.seccionMenuId, user.grupo).then(response => {
             if(!response.ok){
@@ -57,7 +45,23 @@ const Table = (props: any) => {
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
+
+        setTable();
     }, []);
+
+    const setTable = () => {
+        getSeccionMenuList(props.seccionMenu).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener "+props.seccionMenu);
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+                setData(data);
+            })
+        }).catch(error => console.error(error));
+    }
 
     const renderAction = (action: Accion, record: any) => {
         if(action.callMethod !== "changeStatus")
@@ -116,6 +120,7 @@ const Table = (props: any) => {
                     }
                     response.json().then(data => {
                         console.log(data);
+                        setTable();
                     })
                 }).catch(error => console.error(error));
             })
