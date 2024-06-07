@@ -10,13 +10,14 @@ import {
 } from '../../api';
 import { User, Accion } from '../../entities';
 import { flipStatus } from '../../funciones';
-import ModalUpdate from '@/app/ui/dashboard/Table';
+import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
 
 const Table = (props: any) => {
     const { getItem } = useLocalStorage();
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [tableActions, setTableActions] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     const recordInactive = {
         backgroundColor: "#ffe4f3"
@@ -102,9 +103,7 @@ const Table = (props: any) => {
     }
 
     const update = (recordId: number) => {
-        return <ModalUpdate 
-            seccionMenuId={ props.seccionMenuId }
-            seccionMenu={ props.seccionMenu } />
+        setShowModal(true);
     }
     
     const eliminar = (recordId: number) => {
@@ -184,6 +183,11 @@ const Table = (props: any) => {
                 </tbody>
             </table> 
         </div>
+        { 
+            Boolean(showModal) ? <ModalUpdate 
+                seccionMenuId={ props.seccionMenuId } 
+                seccionMenu={ props.seccionMenu } /> : null 
+        }
         </>
     );
 }
