@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const InputText = (props: any) => {
-    const [text, setText] = useState("");
+    const [text, setText] = useState(props.text);
 
     const handleChange = (event: any) => {
         const name = event.target.name;

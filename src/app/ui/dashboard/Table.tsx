@@ -18,6 +18,7 @@ const Table = (props: any) => {
     const [data, setData] = useState([]);
     const [tableActions, setTableActions] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [recordId, setRecordId] = useState(0);
 
     const recordInactive = {
         backgroundColor: "#ffe4f3"
@@ -31,7 +32,6 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setColumns(data);
             })
         }).catch(error => console.error(error));
@@ -44,7 +44,6 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
@@ -60,7 +59,6 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setData(data);
             })
         }).catch(error => console.error(error));
@@ -103,6 +101,7 @@ const Table = (props: any) => {
     }
 
     const update = (recordId: number) => {
+        setRecordId(recordId);
         setShowModal(true);
     }
     
@@ -113,7 +112,6 @@ const Table = (props: any) => {
                 console.log(response);
                 return;
             }
-            console.log(data);
             setTable();
         }).catch(error => console.error(error));
     }
@@ -134,7 +132,6 @@ const Table = (props: any) => {
                         return;
                     }
                     response.json().then(data => {
-                        console.log(data);
                         setTable();
                     })
                 }).catch(error => console.error(error));
@@ -186,7 +183,8 @@ const Table = (props: any) => {
         { 
             Boolean(showModal) ? <ModalUpdate 
                 seccionMenuId={ props.seccionMenuId } 
-                seccionMenu={ props.seccionMenu } /> : null 
+                seccionMenu={ props.seccionMenu }
+                recordId={ recordId } /> : null 
         }
         </>
     );
