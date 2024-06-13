@@ -14,7 +14,6 @@ const InputSelect = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setOptions(data);
             })
         }).catch(error => console.error(error));

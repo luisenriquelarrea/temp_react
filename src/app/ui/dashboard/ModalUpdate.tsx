@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
-import { getInputs, getById } from '../../api';
+import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 
 const ModalUpdate = (props: any) => {
@@ -57,6 +57,31 @@ const ModalUpdate = (props: any) => {
         return null
     }
 
+    const handleSubmit = () => {
+        console.log(formData);
+        getById(props.seccionMenu, props.recordId).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener registro");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                for (let [key, value] of Object.entries(formData))
+                    data[key] = value;
+                updateRecord(props.seccionMenu, props.recordId, data).then(response => {
+                    if(!response.ok){
+                        console.log("Error al modificar registro");
+                        console.log(response);
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log(data);
+                    })
+                }).catch(error => console.error(error));
+            })
+        }).catch(error => console.error(error));
+    }
+
     return (
         <div className="modal is-active">
             <div className="modal-background"></div>
@@ -78,7 +103,7 @@ const ModalUpdate = (props: any) => {
                     </div>
                 </section>
                 <footer className="modal-card-foot">
-                    <button className="button is-info is-fullwidth">Guardar cambios</button>
+                    <button onClick={ handleSubmit } className="button is-info is-fullwidth">Guardar cambios</button>
                 </footer>
             </div>
         </div>
