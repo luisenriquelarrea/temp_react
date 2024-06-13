@@ -3,6 +3,7 @@ import { getSeccionMenuList } from '../../api';
 
 const InputSelect = (props: any) => {
     const [text, setText] = useState("");
+    const [defaultValue, setDefaultValue] = useState(props.defaultValue);
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
@@ -39,8 +40,11 @@ const InputSelect = (props: any) => {
                     </label>
                     <div className="control">
                         <div className="select is-info is-fullwidth">
-                            <select name={ props.inputData.inputName } onChange={ handleChange }>
-                                <option>Selecciona una opción</option>
+                            <select 
+                                value={ defaultValue }
+                                name={ props.inputData.inputName } 
+                                onChange={ handleChange } >
+                                <option value="0">Selecciona una opción</option>
                                 {options.map((option: any) => {
                                     return(
                                         <option 

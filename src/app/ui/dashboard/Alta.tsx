@@ -27,13 +27,15 @@ const Alta = (props: any) => {
             return <InputText 
                 key={ input.inputName }
                 inputData={ input }
-                stateFormData={ setFormData } />
+                stateFormData={ setFormData } 
+                text="" />
         if(input.inputType === "select")
             return <InputSelect 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData }
-                seccionMenu={ props.seccionMenu } />
+                seccionMenu={ props.seccionMenu } 
+                defaultValue="0" />
         return null
     }
 
