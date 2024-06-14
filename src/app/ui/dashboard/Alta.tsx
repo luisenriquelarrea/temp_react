@@ -16,7 +16,6 @@ const Alta = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setInputs(data);
             })
         }).catch(error => console.error(error));

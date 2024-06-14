@@ -58,7 +58,7 @@ const ModalUpdate = (props: any) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
+        //console.log(formData);
         getById(props.seccionMenu, props.recordId).then(response => {
             if(!response.ok){
                 console.log("Error al obtener registro");
