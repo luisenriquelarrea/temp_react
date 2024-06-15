@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { getSeccionMenuList } from '../../api';
 
 const InputSelect = (props: any) => {
-    const [text, setText] = useState("");
     const [defaultValue, setDefaultValue] = useState(props.defaultValue);
     const [options, setOptions] = useState([]);
 
@@ -22,8 +21,8 @@ const InputSelect = (props: any) => {
     const handleChange = (event: any) => {
         const name = event.target.name;
         const value = event.target.value;
-        setText(value);
-        props.stateFormData((values: any) => ({...values, [name]: {"id":value} }))
+        setDefaultValue(value);
+        props.stateFormData((values: any) => ({...values, [name]: value }))
     }
 
     return(
