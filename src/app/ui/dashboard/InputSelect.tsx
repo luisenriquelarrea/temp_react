@@ -22,7 +22,7 @@ const InputSelect = (props: any) => {
         const name = event.target.name;
         const value = event.target.value;
         setDefaultValue(value);
-        props.stateFormData((values: any) => ({...values, [name]: value }))
+        props.stateFormData((values: any) => ({...values, [name]: {"id":value} }))
     }
 
     return(
