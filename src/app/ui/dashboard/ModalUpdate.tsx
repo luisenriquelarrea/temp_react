@@ -41,7 +41,7 @@ const ModalUpdate = (props: any) => {
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData }
-                text={ data[inputName!] } />
+                text={ data[inputName!] === null ? "" : data[inputName!]} />
         }
         if(input.inputType === "select")
         {
@@ -52,7 +52,7 @@ const ModalUpdate = (props: any) => {
                 inputData={ input }
                 stateFormData={ setFormData }
                 seccionMenu={ props.seccionMenu }
-                defaultValue={ data[inputModelo!][inputId!] } />
+                defaultValue={ data[inputModelo!] === null ? 0 : data[inputModelo!][inputId!] } />
         }
         return null
     }
@@ -76,10 +76,15 @@ const ModalUpdate = (props: any) => {
                     }
                     response.json().then(data => {
                         console.log(data);
+                        props.setTable();
                     })
                 }).catch(error => console.error(error));
             })
         }).catch(error => console.error(error));
+    }
+
+    const closeModal = () => {
+        props.stateShowModal(false);
     }
 
     return (
@@ -88,7 +93,7 @@ const ModalUpdate = (props: any) => {
             <div className="modal-card">
                 <header className="modal-card-head">
                     <p className="modal-card-title">Modifica registro</p>
-                    <button className="delete" aria-label="close" ></button>
+                    <button onClick={ closeModal } className="delete" aria-label="close" ></button>
                 </header>
                 <section className="modal-card-body">
                     <div className="field" >

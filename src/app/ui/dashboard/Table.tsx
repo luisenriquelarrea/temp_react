@@ -187,7 +187,9 @@ const Table = (props: any) => {
             Boolean(showModal) ? <ModalUpdate 
                 seccionMenuId={ props.seccionMenuId } 
                 seccionMenu={ props.seccionMenu }
-                recordId={ recordId } /> : null 
+                recordId={ recordId }
+                stateShowModal={ setShowModal }
+                setTable={ setTable } /> : null 
         }
         </>
     );
