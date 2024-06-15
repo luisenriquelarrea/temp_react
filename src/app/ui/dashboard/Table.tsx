@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { 
     getInputs, 
@@ -11,6 +11,7 @@ import {
 import { User, Accion } from '../../entities';
 import { flipStatus } from '../../funciones';
 import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
+import { useDownloadExcel } from "react-export-table-to-excel";
 
 const Table = (props: any) => {
     const { getItem } = useLocalStorage();
@@ -19,6 +20,7 @@ const Table = (props: any) => {
     const [tableActions, setTableActions] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [recordId, setRecordId] = useState(0);
+    const tableRef = useRef(null);
 
     const recordInactive = {
         backgroundColor: "#ffe4f3"
@@ -142,10 +144,16 @@ const Table = (props: any) => {
         }).catch(error => console.error(error));
     }
 
+    const { onDownload } = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: props.seccionMenu,
+        sheet: props.seccionMenu
+    })
+
     return (
         <>
         <div className="table-container">
-            <table className="table is-bordered display">
+            <table className="table is-bordered display" ref={tableRef}>
                 <thead>
                     <tr>
                         {columns.map((column: any) => {
@@ -183,6 +191,7 @@ const Table = (props: any) => {
                 </tbody>
             </table> 
         </div>
+        <button onClick={ onDownload } className="button is-info" >Descargar excel</button>
         { 
             Boolean(showModal) ? <ModalUpdate 
                 seccionMenuId={ props.seccionMenuId } 
