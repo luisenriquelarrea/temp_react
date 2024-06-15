@@ -68,6 +68,7 @@ const Table = (props: any) => {
         if(action.callMethod !== "changeStatus")
             return <i 
                 key={ action.id } 
+                title={ action.label }
                 className={`fa fa-${action.icon} fa-fw`}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
@@ -77,6 +78,7 @@ const Table = (props: any) => {
         if(action.descripcion === "deactivate" && parseInt(record.status) === 1)
             return <i 
                 key={ action.id } 
+                title={ action.label }
                 className={`fa fa-pause fa-fw`}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
@@ -84,6 +86,7 @@ const Table = (props: any) => {
         if(action.descripcion === "activate" && parseInt(record.status) === 0)
             return <i 
                 key={ action.id } 
+                title={ action.label }
                 className={`fa fa-play fa-fw`}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
