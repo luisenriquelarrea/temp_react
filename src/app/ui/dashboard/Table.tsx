@@ -61,6 +61,7 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
+                console.log(data);
                 setData(data);
             })
         }).catch(error => console.error(error));
@@ -174,7 +175,11 @@ const Table = (props: any) => {
                                         <td 
                                             key={ column.id } 
                                             style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
-                                            { record[columnName] } 
+                                            { 
+                                                typeof(record[columnName]) === 'object' 
+                                                ? record[columnName][column.inputId] 
+                                                : record[columnName] 
+                                            } 
                                         </td>
                                     );
                                 })}
