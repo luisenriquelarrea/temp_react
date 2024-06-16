@@ -46,6 +46,8 @@ const Page = () => {
                             tmp[key] = false;
                         });
                         //breadcrumbStates.current = tmp;
+                        if(arrayColumn(data, 'descripcion').includes('read'))
+                            read();
                         setBreadcrumbs(data);
                     })
                 }).catch(error => console.error(error));
