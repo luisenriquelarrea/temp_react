@@ -11,6 +11,7 @@ import {
 import { User, Accion } from '../../entities';
 import { flipStatus, arrayColumn } from '../../funciones';
 import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
+import Filters from '@/app/ui/dashboard/Filters';
 import { useDownloadExcel } from "react-export-table-to-excel";
 
 const Table = (props: any) => {
@@ -157,64 +158,66 @@ const Table = (props: any) => {
 
     return (
         <>
-        <div className="table-container">
-            <table id="myTable" className="table is-bordered display" ref={tableRef}>
-                <thead>
-                    <tr>
-                        {columns.map((column: any) => {
+            <Filters
+                seccionMenuId={ props.seccionMenuId } />
+            <div className="table-container">
+                <table id="myTable" className="table is-bordered display" ref={tableRef}>
+                    <thead>
+                        <tr>
+                            {columns.map((column: any) => {
+                                return(
+                                    <th key={ column.id }> { column.inputLabel } </th>
+                                );
+                            })}
+                            <th className="no-print">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((record: any) => {
                             return(
-                                <th key={ column.id }> { column.inputLabel } </th>
-                            );
-                        })}
-                        <th className="no-print">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((record: any) => {
-                        return(
-                            <tr key={ record.id }>
-                                {columns.map((column: any) => {
-                                    const columnName: string = column.inputName;
-                                    return(
-                                        <td 
-                                            key={ column.id } 
-                                            style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
-                                            { 
-                                                typeof(record[columnName]) === 'object' 
-                                                ? record[columnName][column.inputId] 
-                                                : record[columnName] 
-                                            } 
-                                        </td>
-                                    );
-                                })}
-                                <td>
-                                    {tableActions.map((action: Accion) => {
+                                <tr key={ record.id }>
+                                    {columns.map((column: any) => {
+                                        const columnName: string = column.inputName;
                                         return(
-                                            renderAction(action, record)
+                                            <td 
+                                                key={ column.id } 
+                                                style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
+                                                { 
+                                                    typeof(record[columnName]) === 'object' 
+                                                    ? record[columnName][column.inputId] 
+                                                    : record[columnName] 
+                                                } 
+                                            </td>
                                         );
                                     })}
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table> 
-        </div>
-        {
-            Boolean(xls)
-            ? <button onClick={ onDownload } className="button is-info" >Descargar excel</button>
-            : null
-        }
-        { 
-            Boolean(showModal) 
-            ? <ModalUpdate 
-                seccionMenuId={ props.seccionMenuId } 
-                seccionMenu={ props.seccionMenu }
-                recordId={ recordId }
-                stateShowModal={ setShowModal }
-                setTable={ setTable } /> 
-            : null 
-        }
+                                    <td>
+                                        {tableActions.map((action: Accion) => {
+                                            return(
+                                                renderAction(action, record)
+                                            );
+                                        })}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table> 
+            </div>
+            {
+                Boolean(xls)
+                ? <button onClick={ onDownload } className="button is-info" >Descargar excel</button>
+                : null
+            }
+            { 
+                Boolean(showModal) 
+                ? <ModalUpdate 
+                    seccionMenuId={ props.seccionMenuId } 
+                    seccionMenu={ props.seccionMenu }
+                    recordId={ recordId }
+                    stateShowModal={ setShowModal }
+                    setTable={ setTable } /> 
+                : null 
+            }
         </>
     );
 }
