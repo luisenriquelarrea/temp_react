@@ -153,7 +153,7 @@ const Table = (props: any) => {
     return (
         <>
         <div className="table-container">
-            <table className="table is-bordered display" ref={tableRef}>
+            <table id="myTable" className="table is-bordered display" ref={tableRef}>
                 <thead>
                     <tr>
                         {columns.map((column: any) => {
