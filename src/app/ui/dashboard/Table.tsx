@@ -9,7 +9,7 @@ import {
     deleteRecord 
 } from '../../api';
 import { User, Accion } from '../../entities';
-import { flipStatus } from '../../funciones';
+import { flipStatus, arrayColumn } from '../../funciones';
 import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
 import { useDownloadExcel } from "react-export-table-to-excel";
 
@@ -18,6 +18,7 @@ const Table = (props: any) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [tableActions, setTableActions] = useState([]);
+    const [xls, setXls] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [recordId, setRecordId] = useState(0);
     const tableRef = useRef(null);
@@ -46,6 +47,8 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
+                if(arrayColumn(data, 'descripcion').includes('xls'))
+                    setXls(true);
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
@@ -67,6 +70,8 @@ const Table = (props: any) => {
     }
 
     const renderAction = (action: Accion, record: any) => {
+        if(action.callMethod === "xls")
+            return null;
         if(action.callMethod !== "changeStatus")
             return <i 
                 key={ action.id } 
@@ -195,14 +200,20 @@ const Table = (props: any) => {
                 </tbody>
             </table> 
         </div>
-        <button onClick={ onDownload } className="button is-info" >Descargar excel</button>
+        {
+            Boolean(xls)
+            ? <button onClick={ onDownload } className="button is-info" >Descargar excel</button>
+            : null
+        }
         { 
-            Boolean(showModal) ? <ModalUpdate 
+            Boolean(showModal) 
+            ? <ModalUpdate 
                 seccionMenuId={ props.seccionMenuId } 
                 seccionMenu={ props.seccionMenu }
                 recordId={ recordId }
                 stateShowModal={ setShowModal }
-                setTable={ setTable } /> : null 
+                setTable={ setTable } /> 
+            : null 
         }
         </>
     );
