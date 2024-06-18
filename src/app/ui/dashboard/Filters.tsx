@@ -45,10 +45,10 @@ const Filters = (props: any) => {
                     );
                 })}
                 <div className="column is-1">
-                    <button onClick={ handleSubmit } className="button is-info is-small">Filtrar</button>
+                    <button onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Filtrar</button>
                 </div>
                 <div className="column is-1">
-                    <button onClick={ handleSubmit } className="button is-info is-small">Limpiar</button>
+                    <button onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Limpiar</button>
                 </div>
             </div>
         </>
