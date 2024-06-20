@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import InputTextFilter  from './InputTextFilter';
 import { getInputs } from '../../api';
 import { SeccionMenuInput } from '../../entities';
+import { objectClean } from '../../funciones';
 
 const Filters = (props: any) => {
     const [inputs, setInputs] = useState([]);
@@ -15,7 +16,6 @@ const Filters = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setInputs(data);
             })
         }).catch(error => console.error(error));
@@ -32,7 +32,7 @@ const Filters = (props: any) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
+        console.log(objectClean(formData));
         
     }
 
