@@ -3,6 +3,7 @@ import InputText  from './InputText';
 import InputSelect  from './InputSelect';
 import { getInputs, save } from '../../api';
 import { SeccionMenuInput } from '../../entities';
+import { objectClean } from '../../funciones';
 
 const Alta = (props: any) => {
     const [inputs, setInputs] = useState([]);
@@ -39,8 +40,8 @@ const Alta = (props: any) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
-        save(props.seccionMenu, formData).then(response => {
+        console.log(objectClean(formData));
+        save(props.seccionMenu, objectClean(formData)).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");
                 console.log(response);

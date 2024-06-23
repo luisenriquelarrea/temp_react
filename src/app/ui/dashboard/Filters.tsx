@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import InputTextFilter  from './InputTextFilter';
-import { getInputs } from '../../api';
+import { getInputs, getSeccionMenuListFiltered } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { objectClean } from '../../funciones';
 
@@ -33,7 +33,16 @@ const Filters = (props: any) => {
 
     const handleSubmit = () => {
         console.log(objectClean(formData));
-        
+        getSeccionMenuListFiltered(props.seccionMenu, objectClean(formData)).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener lista filtrada");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                props.setTable(data);
+            })
+        }).catch(error => console.error(error));
     }
 
     return(

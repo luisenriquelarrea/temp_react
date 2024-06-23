@@ -111,6 +111,16 @@ export const getSeccionMenuList = async (seccionMenu: string) => {
     })
 }
 
+export const getSeccionMenuListFiltered = async (seccionMenu: string, formdata: any) => {
+    return fetch(url_api+seccionMenu+"/filteredList", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
 export const getUser = async (data: User) => {
     return fetch(url_api+"authenticate", {
         method: 'POST',

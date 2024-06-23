@@ -159,7 +159,9 @@ const Table = (props: any) => {
     return (
         <>
             <Filters
-                seccionMenuId={ props.seccionMenuId } />
+                seccionMenuId={ props.seccionMenuId }
+                seccionMenu={ props.seccionMenu }
+                setTable={ setData } />
             <div className="table-container">
                 <table id="myTable" className="table is-bordered display" ref={tableRef}>
                     <thead>
