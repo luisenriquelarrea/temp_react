@@ -185,9 +185,9 @@ const Table = (props: any) => {
                                                 key={ column.id } 
                                                 style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
                                                 { 
-                                                    typeof(record[columnName]) === 'object' 
+                                                    typeof(record[columnName]) === 'object' && String(record[columnName]) !== "null"
                                                     ? record[columnName][column.inputId] 
-                                                    : record[columnName] 
+                                                    : record[columnName]
                                                 } 
                                             </td>
                                         );
