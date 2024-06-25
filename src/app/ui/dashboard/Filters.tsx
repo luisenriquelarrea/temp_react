@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import InputTextFilter  from './InputTextFilter';
+import InputSelectFilter  from './InputSelectFilter';
 import { getInputs, getSeccionMenuListFiltered } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { objectClean } from '../../funciones';
@@ -28,6 +29,13 @@ const Filters = (props: any) => {
                 inputData={ input }
                 stateFormData={ setFormData } 
                 text="" />
+        if(input.inputType === "select")
+             return <InputSelectFilter 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ setFormData }
+                seccionMenu={ props.seccionMenu } 
+                defaultValue="0" />
         return null
     }
 
@@ -55,9 +63,6 @@ const Filters = (props: any) => {
                 })}
                 <div className="column is-1">
                     <button onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Filtrar</button>
-                </div>
-                <div className="column is-1">
-                    <button onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Limpiar</button>
                 </div>
             </div>
         </>
