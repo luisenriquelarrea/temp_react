@@ -24,7 +24,7 @@ const InputText = (props: any) => {
                     <div className="control">
                         <input className="input is-info" 
                             name={ props.inputData.inputName }
-                            type="text" 
+                            type={ props.inputData.inputType } 
                             value={ text }
                             onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel } />

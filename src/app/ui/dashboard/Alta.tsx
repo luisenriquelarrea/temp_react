@@ -8,8 +8,10 @@ import { objectClean } from '../../funciones';
 const Alta = (props: any) => {
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
+    const [inputsText, setInputsText] = useState<any>([]);
 
     useEffect(() => {
+        setInputsText(['text', 'password', 'date']);
         getInputs(props.seccionMenuId, 'alta').then(response => {
             if(!response.ok){
                 console.log("Error al obtener inputs");
@@ -23,7 +25,7 @@ const Alta = (props: any) => {
     }, []);
 
     const renderInput = (input: SeccionMenuInput) => {
-        if(input.inputType === "text")
+        if( inputsText.includes(String(input.inputType)) )
             return <InputText 
                 key={ input.inputName }
                 inputData={ input }

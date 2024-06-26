@@ -8,8 +8,10 @@ const ModalUpdate = (props: any) => {
     const [data, setData] = useState<any>([]);
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
+    const [inputsText, setInputsText] = useState<any>([]);
 
     useEffect(() => {
+        setInputsText(['text', 'password', 'date']);
         getById(props.seccionMenu, props.recordId).then(response => {
             if(!response.ok){
                 console.log("Error al obtener registro");
@@ -36,13 +38,12 @@ const ModalUpdate = (props: any) => {
 
     const renderInput = (input: SeccionMenuInput) => {
         let inputName = input.inputName;
-        if(input.inputType === "text"){
+        if( inputsText.includes(String(input.inputType)) )
             return <InputText 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData }
                 text={ data[inputName!] === null ? "" : data[inputName!]} />
-        }
         if(input.inputType === "select")
         {
             let inputModelo = input.modelo;
