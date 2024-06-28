@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
 const InputDatesFilter = (props: any) => {
-    const [text, setText] = useState(props.text);
+    const [fechaInicio, setFechaInicio] = useState("");
+    const [fechaFinal, setFechaFinal] = useState("");
 
     const handleChange = (event: any) => {
         const name = event.target.name;
         const value = event.target.value;
-        setText(value);
+        (String(name).indexOf("Valor1") !== -1) ? setFechaInicio(value) : setFechaFinal(value);
         props.stateFormData((values: any) => ({...values, [name]: value}))
     }
 
@@ -16,13 +17,13 @@ const InputDatesFilter = (props: any) => {
             <div className="column is-2" >
                 <div className="field">
                     <label className="label">
-                        Fecha inicio
+                        { props.inputData.inputLabel }
                     </label>
                     <div className="control">
                         <input className="input is-info is-small" 
-                            name={ props.inputData.inputName }
+                            name={ `${props.inputData.inputName}Valor1` }
                             type={ props.inputData.inputType } 
-                            value={ text }
+                            value={ fechaInicio }
                             onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel } />
                     </div>
@@ -31,13 +32,13 @@ const InputDatesFilter = (props: any) => {
             <div className="column is-2" >
                 <div className="field">
                     <label className="label">
-                        Fecha final
+                        -
                     </label>
                     <div className="control">
                         <input className="input is-info is-small" 
-                            name={ props.inputData.inputName }
+                            name={ `${props.inputData.inputName}Valor2` }
                             type={ props.inputData.inputType } 
-                            value={ text }
+                            value={ fechaFinal }
                             onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel } />
                     </div>
