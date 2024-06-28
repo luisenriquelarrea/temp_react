@@ -6,7 +6,7 @@ import { getUser } from '../api'
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState({
-        name: "", 
+        username: "", 
         password: ""
     });
     const { login } = useAuth();
@@ -19,7 +19,7 @@ const LoginPage = () => {
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        if(String(inputs.name).length === 0 || String(inputs.password).length === 0)
+        if(String(inputs.username).length === 0 || String(inputs.password).length === 0)
         {
             console.log('inputs required');
             return;
@@ -46,8 +46,8 @@ const LoginPage = () => {
                         <input 
                             className="input" 
                             type="text" 
-                            name="name" 
-                            value={ inputs.name || "" }
+                            name="username" 
+                            value={ inputs.username || "" }
                             onChange={ handleChange }
                             placeholder="username" />
                     </div>
