@@ -56,11 +56,15 @@ const Page = () => {
     }, []);
 
     const create = () => {
+        if(Boolean(alta) === true)
+            return;
         setLista(false);
         setAlta(!alta);
     }
 
     const read = () => {
+        if(Boolean(lista) === true)
+            return;
         setAlta(false);
         setLista(!lista);
     }
