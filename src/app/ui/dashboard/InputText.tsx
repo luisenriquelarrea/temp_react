@@ -12,7 +12,7 @@ const InputText = (props: any) => {
 
     return(
         <>
-            <div className={ `column is-${props.inputData.cols}` } >
+            <div className={ `column is-${props.inputData.inputCols}` } >
                 <div className="field">
                     <label className="label"> 
                         { props.inputData.inputLabel }

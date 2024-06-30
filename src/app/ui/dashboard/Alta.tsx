@@ -11,7 +11,7 @@ const Alta = (props: any) => {
     const [inputsText, setInputsText] = useState<any>([]);
 
     useEffect(() => {
-        setInputsText(['text', 'password', 'date']);
+        setInputsText(['text', 'password', 'date', 'number', 'checkbox']);
         getInputs(props.seccionMenuId, 'alta').then(response => {
             if(!response.ok){
                 console.log("Error al obtener inputs");
