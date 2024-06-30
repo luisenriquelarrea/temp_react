@@ -24,6 +24,7 @@ const NavLinks = () => {
                 return;
             }
             response.json().then(data => {
+                console.log(data);
                 setSeccionMenu(data);
             })
         }).catch(error => console.error(error));
@@ -36,7 +37,7 @@ const NavLinks = () => {
                 key="dashboard"
                 className="w3-bar-item w3-button w3-padding"
                 href='/dashboard' >
-                <p><i className="fa fa-users fa-fw"></i> Dashboard</p>
+                <p><i className="fa fa-dashboard fa-fw"></i> Dashboard</p>
             </Link>
             {seccionMenu.map((seccion: SeccionMenu) => {
                 return (
@@ -44,7 +45,7 @@ const NavLinks = () => {
                         key={seccion.descripcion}
                         className="w3-bar-item w3-button w3-padding"
                         href={'/dashboard/'+seccion.descripcion} >
-                        <p><i className="fa fa-users fa-fw"></i> {seccion.navbarLabel}</p>
+                        <p><i className={`fa fa-${seccion.icon} fa-fw`}></i> {seccion.navbarLabel}</p>
                     </Link>
                 );
             })}

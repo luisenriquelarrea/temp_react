@@ -22,7 +22,8 @@ export interface Menu{
 export interface SeccionMenu {
     menu?: Menu,
     descripcion?: string,
-    navbarLabel?: string
+    navbarLabel?: string,
+    icon?: string
 }
 
 export interface SeccionMenuInput {
