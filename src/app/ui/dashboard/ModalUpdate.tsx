@@ -3,6 +3,7 @@ import InputText  from './InputText';
 import InputSelect  from './InputSelect';
 import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
+import { uncapitalizeFirstLetter } from '../../funciones';
 
 const ModalUpdate = (props: any) => {
     const [data, setData] = useState<any>([]);
@@ -28,7 +29,7 @@ const ModalUpdate = (props: any) => {
                         return;
                     }
                     response.json().then(data => {
-                        //console.log(data);
+                        console.log(data);
                         setInputs(data);
                     })
                 }).catch(error => console.error(error));
@@ -37,6 +38,7 @@ const ModalUpdate = (props: any) => {
     }, []);
 
     const renderInput = (input: SeccionMenuInput) => {
+        input.inputCols = 6;
         let inputName = input.inputName;
         if( inputsText.includes(String(input.inputType)) )
             return <InputText 
@@ -46,7 +48,7 @@ const ModalUpdate = (props: any) => {
                 text={ data[inputName!] === null ? "" : data[inputName!]} />
         if(input.inputType === "select")
         {
-            let inputModelo = input.modelo;
+            let inputModelo = uncapitalizeFirstLetter(String(input.modelo));
             let inputId = input.inputId;
             return <InputSelect 
                 key={ input.inputName }
@@ -98,8 +100,7 @@ const ModalUpdate = (props: any) => {
                 </header>
                 <section className="modal-card-body">
                     <div className="field" >
-                        <label className="label">  </label>
-                        <div className="control">
+                        <div className="columns is-multiline">
                             {inputs.map((input: SeccionMenuInput) => {
                                 return (
                                     renderInput(input)

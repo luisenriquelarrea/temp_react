@@ -37,5 +37,6 @@ export interface SeccionMenuInput {
     modifica?: number,
     lista?: number,
     orden?: number,
+    urlGet?: string,
     modelo?: string
 }

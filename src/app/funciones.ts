@@ -17,3 +17,7 @@ export const objectClean = (obj: any) => {
       }
       return obj;
 }
+
+export const uncapitalizeFirstLetter = (cadena: string) => {
+    return cadena.charAt(0).toLowerCase() + cadena.slice(1);
+}

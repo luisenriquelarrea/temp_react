@@ -6,9 +6,9 @@ const InputSelect = (props: any) => {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        getSeccionMenuList(props.inputData.modelo).then(response => {
+        getSeccionMenuList(props.inputData.urlGet).then(response => {
             if(!response.ok){
-                console.log("Error al obtener "+props.inputData.modelo+" lista");
+                console.log("Error al obtener "+props.inputData.urlGet+" lista");
                 console.log(response);
                 return;
             }
