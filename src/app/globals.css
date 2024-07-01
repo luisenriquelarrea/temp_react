@@ -83,6 +83,10 @@ a {
   color: red;
 }
 
+.my-check {
+  margin-right: 5px;
+}
+
 td i {
   cursor: pointer;
 }

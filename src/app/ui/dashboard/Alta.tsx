@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
+import InputCheckbox from "./InputCheckbox";
 import { getInputs, save } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { objectClean } from '../../funciones';
@@ -11,7 +12,7 @@ const Alta = (props: any) => {
     const [inputsText, setInputsText] = useState<any>([]);
 
     useEffect(() => {
-        setInputsText(['text', 'password', 'date', 'number', 'checkbox']);
+        setInputsText(['text', 'password', 'date', 'number']);
         getInputs(props.seccionMenuId, 'alta').then(response => {
             if(!response.ok){
                 console.log("Error al obtener inputs");
@@ -38,12 +39,18 @@ const Alta = (props: any) => {
                 stateFormData={ setFormData }
                 seccionMenu={ props.seccionMenu } 
                 defaultValue="0" />
+        if( input.inputType === "checkbox" )
+            return <InputCheckbox 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ setFormData } 
+                text="0" />
         return null
     }
 
     const handleSubmit = () => {
         console.log(objectClean(formData));
-        save(props.seccionMenu, objectClean(formData)).then(response => {
+        /*save(props.seccionMenu, objectClean(formData)).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");
                 console.log(response);
@@ -52,7 +59,7 @@ const Alta = (props: any) => {
             response.json().then(data => {
                 console.log(data);
             })
-        }).catch(error => console.error(error));
+        }).catch(error => console.error(error));*/
     }
 
     return(
