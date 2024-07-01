@@ -102,6 +102,24 @@ const Table = (props: any) => {
         return null;
     }
 
+    const renderColumn = (record: any, column: any) => {
+        const columnName: string = column.inputName;
+        if(columnName.includes(".")){
+            const deepColumns = columnName.split(".");
+            var deepRecord = record;
+            deepColumns.forEach(deepColumn => {
+                if(typeof(deepRecord[deepColumn]) === 'object' && String(deepRecord[deepColumn]) !== "null"){
+                    deepRecord = deepRecord[deepColumn]
+                }
+            });
+            return deepRecord[column.inputId];
+        }
+        if(typeof(record[columnName]) === 'object' && String(record[columnName]) !== "null"){
+            return record[columnName][column.inputId];
+        }
+        return record[columnName];
+    }
+
     const handleAction = (action: string, record: any) => {
         if(action === "changeStatus")
             changeStatus(record.id, record.status);
@@ -179,15 +197,12 @@ const Table = (props: any) => {
                             return(
                                 <tr key={ record.id }>
                                     {columns.map((column: any) => {
-                                        const columnName: string = column.inputName;
                                         return(
                                             <td 
                                                 key={ column.id } 
                                                 style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
                                                 { 
-                                                    typeof(record[columnName]) === 'object' && String(record[columnName]) !== "null"
-                                                    ? record[columnName][column.inputId] 
-                                                    : record[columnName]
+                                                    renderColumn(record, column)
                                                 } 
                                             </td>
                                         );
