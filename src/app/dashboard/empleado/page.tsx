@@ -96,6 +96,7 @@ const Page = () => {
                                 <a 
                                     onClick={() => eval(String(breadcrumb.callMethod))() }
                                     key={ breadcrumb.descripcion } >
+                                    <i className={`fa fa-${breadcrumb.icon} fa-fw`}></i>
                                     {breadcrumb.label}
                                 </a>
                             </li>
