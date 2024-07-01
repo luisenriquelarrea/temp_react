@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
+import MessageBox from "./MessageBox";
 import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter } from '../../funciones';
@@ -11,6 +12,11 @@ const ModalUpdate = (props: any) => {
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
     const [inputsText, setInputsText] = useState<any>([]);
+    const [showMessageBox, setShowMessageBox] = useState(false);
+    const [messageData, setMessageData] = useState({
+        "messageType": "",
+        "message": ""
+    });
 
     useEffect(() => {
         setInputsText(['text', 'password', 'date']);
@@ -82,10 +88,20 @@ const ModalUpdate = (props: any) => {
                     if(!response.ok){
                         console.log("Error al modificar registro");
                         console.log(response);
+                        setMessageData({
+                            "messageType": "danger",
+                            "message": "Ocurrió un error al modificar registro."
+                        });
+                        setShowMessageBox(true);
                         return;
                     }
                     response.json().then(data => {
                         console.log(data);
+                        setMessageData({
+                            "messageType": "success",
+                            "message": "Éxito al modificar registro."
+                        });
+                        setShowMessageBox(true);
                         props.setTable();
                     })
                 }).catch(error => console.error(error));
@@ -106,6 +122,9 @@ const ModalUpdate = (props: any) => {
                     <button onClick={ closeModal } className="delete" aria-label="close" ></button>
                 </header>
                 <section className="modal-card-body">
+                    {
+                        Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
+                    }
                     <div className="field" >
                         <div className="columns is-multiline">
                             {inputs.map((input: SeccionMenuInput) => {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
+import MessageBox from "./MessageBox";
 import { getInputs, save } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { objectClean } from '../../funciones';
@@ -10,6 +11,11 @@ const Alta = (props: any) => {
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({'status':1});
     const [inputsText, setInputsText] = useState<any>([]);
+    const [showMessageBox, setShowMessageBox] = useState(false);
+    const [messageData, setMessageData] = useState({
+        "messageType": "",
+        "message": ""
+    });
 
     useEffect(() => {
         setInputsText(['text', 'password', 'date', 'number']);
@@ -54,16 +60,29 @@ const Alta = (props: any) => {
             if(!response.ok){
                 console.log("Error al guardar registro");
                 console.log(response);
+                setMessageData({
+                    "messageType": "danger",
+                    "message": "Ocurrió un error al crear registro."
+                });
+                setShowMessageBox(true);
                 return;
             }
             response.json().then(data => {
                 console.log(data);
+                setMessageData({
+                    "messageType": "success",
+                    "message": "Éxito al crear registro."
+                });
+                setShowMessageBox(true);
             })
         }).catch(error => console.error(error));
     }
 
     return(
         <>
+            {
+                Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
+            }
             <div className="columns is-multiline">
             {inputs.map((input: SeccionMenuInput) => {
                 return (
