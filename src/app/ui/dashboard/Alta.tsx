@@ -13,8 +13,8 @@ const Alta = (props: any) => {
     const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
-        "messageType": "",
-        "message": ""
+        messageType: "",
+        message: ""
     });
 
     useEffect(() => {
@@ -61,8 +61,8 @@ const Alta = (props: any) => {
                 console.log("Error al guardar registro");
                 console.log(response);
                 setMessageData({
-                    "messageType": "danger",
-                    "message": "Ocurrió un error al crear registro."
+                    messageType: "danger",
+                    message: "Ocurrió un error al crear registro."
                 });
                 setShowMessageBox(true);
                 return;
@@ -70,8 +70,8 @@ const Alta = (props: any) => {
             response.json().then(data => {
                 console.log(data);
                 setMessageData({
-                    "messageType": "success",
-                    "message": "Éxito al crear registro."
+                    messageType: "success",
+                    message: "Éxito al crear registro."
                 });
                 setShowMessageBox(true);
             })
