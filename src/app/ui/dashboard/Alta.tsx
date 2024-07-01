@@ -8,7 +8,7 @@ import { objectClean } from '../../funciones';
 
 const Alta = (props: any) => {
     const [inputs, setInputs] = useState([]);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({'status':1});
     const [inputsText, setInputsText] = useState<any>([]);
 
     useEffect(() => {
