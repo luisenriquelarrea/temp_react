@@ -50,7 +50,7 @@ const Alta = (props: any) => {
 
     const handleSubmit = () => {
         console.log(objectClean(formData));
-        /*save(props.seccionMenu, objectClean(formData)).then(response => {
+        save(props.seccionMenu, objectClean(formData)).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");
                 console.log(response);
@@ -59,7 +59,7 @@ const Alta = (props: any) => {
             response.json().then(data => {
                 console.log(data);
             })
-        }).catch(error => console.error(error));*/
+        }).catch(error => console.error(error));
     }
 
     return(

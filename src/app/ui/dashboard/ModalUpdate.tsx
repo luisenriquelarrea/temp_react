@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
+import InputCheckbox from "./InputCheckbox";
 import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter } from '../../funciones';
@@ -57,11 +58,17 @@ const ModalUpdate = (props: any) => {
                 seccionMenu={ props.seccionMenu }
                 defaultValue={ data[inputModelo!] === null ? 0 : data[inputModelo!][inputId!] } />
         }
+        if( input.inputType === "checkbox" )
+            return <InputCheckbox 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ setFormData } 
+                text={ data[inputName!] } />
         return null
     }
 
     const handleSubmit = () => {
-        //console.log(formData);
+        console.log(formData);
         getById(props.seccionMenu, props.recordId).then(response => {
             if(!response.ok){
                 console.log("Error al obtener registro");
