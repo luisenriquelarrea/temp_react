@@ -89,7 +89,7 @@ const Page = () => {
         <>
             <nav className="breadcrumb no-print" aria-label="breadcrumbs">
                 <ul>
-                    <li className="my-bread"><b>{navbarLabel}</b></li>
+                    <li><a className="my-bread" style={{color: 'black'}}><b>{ navbarLabel }</b></a></li>
                     {breadcrumbs.map((breadcrumb: Accion) => {
                         return(
                             <li key={ breadcrumb.descripcion }>

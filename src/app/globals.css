@@ -87,6 +87,12 @@ a {
   margin-right: 5px;
 }
 
+.my-bread {
+  font-size: 18px;
+  color: black;
+  cursor: default;
+}
+
 td i {
   cursor: pointer;
 }

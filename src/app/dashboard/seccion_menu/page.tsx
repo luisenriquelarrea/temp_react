@@ -19,11 +19,6 @@ const Page = () => {
     const [breadcrumbs, setBreadcrumbs] = useState([]);
     //const breadcrumbStates = useRef<any>({});
 
-    const styleBread = {
-        color: "black", 
-        cursor: "default"
-    };
-
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
         let pathname = window.location.pathname;
@@ -94,7 +89,7 @@ const Page = () => {
         <>
             <nav className="breadcrumb no-print" aria-label="breadcrumbs">
                 <ul>
-                    <li><a style={ styleBread }><b>{ navbarLabel }</b></a></li>
+                    <li><a className="my-bread" style={{color: 'black'}}><b>{ navbarLabel }</b></a></li>
                     {breadcrumbs.map((breadcrumb: Accion) => {
                         return(
                             <li key={ breadcrumb.descripcion }>
