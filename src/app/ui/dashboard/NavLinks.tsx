@@ -40,20 +40,24 @@ const NavLinks = () => {
             </Link>
             <div className="navbar-item has-dropdown is-hoverable">
                 {
-                    Object.keys(seccionMenu).map((key) => {
-                        const links = seccionMenu[key];        
-                        return <>
-                            <a key={key} className="w3-padding">
-                                <i className={`fa fa-list fa-fw`}></i> {key}
+                    Object.keys(seccionMenu).map((menu) => {
+                        const links = seccionMenu[menu];        
+                        return <div key={ menu }>
+                            <a 
+                                className="w3-bar-item w3-button w3-padding">
+                                <i className={`fa fa-caret-right fa-fw`}></i> {menu}
                             </a>
                             <div className="navbar-dropdown">
                                 {
-                                    Object.keys(links).map((k) => {
-                                        return <NavLink key={k} seccion={links[k]} />
+                                    Object.keys(links).map((key) => {
+                                        const seccion = links[key]
+                                        return <NavLink 
+                                            key={ key } 
+                                            seccion={ seccion } />
                                     })
                                 }
                             </div>
-                        </>
+                        </div>
                     })
                 }
             </div>
