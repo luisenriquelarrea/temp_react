@@ -25,6 +25,31 @@ const InputSelect = (props: any) => {
         props.stateFormData((values: any) => ({...values, [name]: {"id":value} }))
     }
 
+    const renderSelectColumnas = (option: any, selectColumnas: string) => {
+        if(String(selectColumnas).trim() === "null")
+            return option['descripcion'];
+        selectColumnas = selectColumnas.replace(/ /g, "");
+        const columnas = selectColumnas.split(",");
+        var str = "";
+        columnas.forEach(columna => {
+            if(columna.includes(".")){
+                const deepColumn = columna.split(".");
+                var deepRecord = option;
+                var finalColumn = "descripcion";
+                deepColumn.forEach(column => {
+                    if(typeof(deepRecord[column]) === 'object' 
+                        && String(deepRecord[column]) !== "null")
+                        deepRecord = deepRecord[column]
+                    finalColumn = column;
+                });
+                str += deepRecord[finalColumn]+" - ";
+            }
+            else
+                str += option[columna]+" ";
+        });
+        return str;
+    }
+
     return(
         <>
             <div className={ `column is-${props.inputData.inputCols}` } >
@@ -44,11 +69,12 @@ const InputSelect = (props: any) => {
                                 onChange={ handleChange } >
                                 <option value="0">Selecciona una opción</option>
                                 {options.map((option: any) => {
+                                    const selectColumnas = renderSelectColumnas(option, props.inputData.selectColumnas);
                                     return(
                                         <option 
                                             key={ option.id } 
                                             value={ option.id } >
-                                            { option.descripcion }
+                                            { selectColumnas }
                                         </option>
                                     );
                                 })}
