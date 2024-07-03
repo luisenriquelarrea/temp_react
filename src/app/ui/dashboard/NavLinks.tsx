@@ -10,7 +10,7 @@ import { User, SeccionMenu } from '../../entities';
 
 const NavLinks = () => {
     const { getItem } = useLocalStorage();
-    const [seccionMenu, setSeccionMenu] = useState([]);
+    const [seccionMenu, setSeccionMenu] = useState({});
 
     var user: User = {};
 
@@ -24,8 +24,7 @@ const NavLinks = () => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
-                setSeccionMenu(data);
+                setSeccionMenu(Object.groupBy(data, ( {menu}:any ) => menu.label));
             })
         }).catch(error => console.error(error));
     }, []);
@@ -39,16 +38,21 @@ const NavLinks = () => {
                 href='/dashboard' >
                 <p><i className="fa fa-dashboard fa-fw"></i> Dashboard</p>
             </Link>
-            {seccionMenu.map((seccion: SeccionMenu) => {
-                return (
+            <div className="navbar-item has-dropdown is-hoverable">
+        <a className="w3-padding">
+        <i className={`fa fa-list fa-fw`}></i> More
+        </a>
+        <div className="navbar-dropdown">
+            return({
                     <Link 
                         key={seccion.descripcion}
                         className="w3-bar-item w3-button w3-padding"
                         href={'/dashboard/'+seccion.descripcion} >
                         <p><i className={`fa fa-${seccion.icon} fa-fw`}></i> {seccion.navbarLabel}</p>
                     </Link>
-                );
-            })}
+            });
+            </div>
+            </div>
         </>
     );
 }
