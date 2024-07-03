@@ -1,6 +1,14 @@
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import DropDown from '@/app/ui/dashboard/DropDown';
 
 const SideNav = () => {
+    const { removeItem } = useLocalStorage();
+
+    const logOut = () => {
+        removeItem("user");
+        window.location.href = '/';
+    }
+
     return (
         <nav className="w3-sidebar w3-collapse w3-white my-sidebar">
             <div className="w3-container w3-row">
@@ -11,7 +19,7 @@ const SideNav = () => {
                     <span>Welcome, <strong>admin</strong></span><br/>
                     <a href="#" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
                     <a href="#" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
-                    <a href="#" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
+                    <a href="#" onClick={logOut} className="w3-bar-item w3-button"><i className="fa fa-power-off"></i></a>
                 </div>
             </div>
             <hr></hr>

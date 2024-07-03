@@ -7,7 +7,6 @@ const NavLink = (props: any) => {
             className="w3-bar-item w3-button w3-padding"
             href={ '/dashboard/'+props.seccion.descripcion } >
             <p>
-                <i className={`fa fa-${props.seccion.icon} fa-fw`}></i> 
                 { props.seccion.navbarLabel }
             </p>
         </Link> 
