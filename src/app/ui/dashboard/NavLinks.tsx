@@ -4,18 +4,18 @@ import { memo } from "react";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import NavLink from "./NavLink";
 import { getNavLinks } from '../../api';
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { User, SeccionMenu } from '../../entities';
+import { User } from '../../entities';
 
 const NavLinks = () => {
     const { getItem } = useLocalStorage();
-    const [seccionMenu, setSeccionMenu] = useState({});
+    const [seccionMenu, setSeccionMenu] = useState<any>({});
 
     var user: User = {};
 
     useEffect(() => {
-        //Runs only on the first render
         user = JSON.parse(String(getItem("user")));
         getNavLinks(user.grupo).then(response => {
             if(!response.ok){
@@ -39,19 +39,23 @@ const NavLinks = () => {
                 <p><i className="fa fa-dashboard fa-fw"></i> Dashboard</p>
             </Link>
             <div className="navbar-item has-dropdown is-hoverable">
-        <a className="w3-padding">
-        <i className={`fa fa-list fa-fw`}></i> More
-        </a>
-        <div className="navbar-dropdown">
-            return({
-                    <Link 
-                        key={seccion.descripcion}
-                        className="w3-bar-item w3-button w3-padding"
-                        href={'/dashboard/'+seccion.descripcion} >
-                        <p><i className={`fa fa-${seccion.icon} fa-fw`}></i> {seccion.navbarLabel}</p>
-                    </Link>
-            });
-            </div>
+                {
+                    Object.keys(seccionMenu).map((key) => {
+                        const links = seccionMenu[key];        
+                        return <>
+                            <a key={key} className="w3-padding">
+                                <i className={`fa fa-list fa-fw`}></i> {key}
+                            </a>
+                            <div className="navbar-dropdown">
+                                {
+                                    Object.keys(links).map((k) => {
+                                        return <NavLink key={k} seccion={links[k]} />
+                                    })
+                                }
+                            </div>
+                        </>
+                    })
+                }
             </div>
         </>
     );
