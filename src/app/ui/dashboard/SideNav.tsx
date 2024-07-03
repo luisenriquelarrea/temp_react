@@ -1,4 +1,4 @@
-import NavLinks from '@/app/ui/dashboard/NavLinks';
+import DropDown from '@/app/ui/dashboard/DropDown';
 
 const SideNav = () => {
     return (
@@ -16,7 +16,7 @@ const SideNav = () => {
             </div>
             <hr></hr>
             <div className="w3-bar-block">
-                <NavLinks />
+                <DropDown />
             </div>
         </nav>
     );

@@ -9,7 +9,7 @@ import { getNavLinks } from '../../api';
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { User } from '../../entities';
 
-const NavLinks = () => {
+const DropDown = () => {
     const { getItem } = useLocalStorage();
     const [seccionMenu, setSeccionMenu] = useState<any>({});
 
@@ -65,4 +65,4 @@ const NavLinks = () => {
     );
 }
 
-export default memo(NavLinks);
+export default memo(DropDown);
