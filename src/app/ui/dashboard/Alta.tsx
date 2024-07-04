@@ -93,6 +93,9 @@ const Alta = (props: any) => {
             <div className="column is-2">
                 <button onClick={ handleSubmit } className="button is-info is-fullwidth">Guardar</button>
             </div>
+            {
+                Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
+            }
         </>
     );
 }

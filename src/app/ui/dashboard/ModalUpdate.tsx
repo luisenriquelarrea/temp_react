@@ -134,6 +134,9 @@ const ModalUpdate = (props: any) => {
                             })}
                         </div>
                     </div>
+                    {
+                        Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
+                    }
                 </section>
                 <footer className="modal-card-foot">
                     <button onClick={ handleSubmit } className="button is-info is-fullwidth">Guardar cambios</button>
