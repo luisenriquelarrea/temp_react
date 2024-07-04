@@ -71,7 +71,7 @@ const Filters = (props: any) => {
                     );
                 })}
                 <div className="column is-12"></div>
-                <div className="column is-1">
+                <div className="column is-2">
                     <button onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Filtrar</button>
                 </div>
             </div>
