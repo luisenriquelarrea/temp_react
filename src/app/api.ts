@@ -1,8 +1,8 @@
-import { url_api } from './constants';
+import { urlAPI } from './constants';
 import { User } from './entities';
 
 export const save = async (seccionMenu: string, formdata: any) => {
-    return fetch(url_api+seccionMenu+"/add", {
+    return fetch(urlAPI+seccionMenu+"/add", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -12,7 +12,7 @@ export const save = async (seccionMenu: string, formdata: any) => {
 }
 
 export const updateRecord = async (seccionMenu: string, id: number, formdata: any) => {
-    return fetch(url_api+seccionMenu+"/"+id, {
+    return fetch(urlAPI+seccionMenu+"/"+id, {
         method: 'PUT',
         headers: {
             "Content-Type": "application/json"
@@ -22,7 +22,7 @@ export const updateRecord = async (seccionMenu: string, id: number, formdata: an
 }
 
 export const deleteRecord = async (seccionMenu: string, id: number) => {
-    return fetch(url_api+seccionMenu+"/"+id, {
+    return fetch(urlAPI+seccionMenu+"/"+id, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json"
@@ -31,7 +31,7 @@ export const deleteRecord = async (seccionMenu: string, id: number) => {
 }
 
 export const getById = async (seccionMenu: string, id: number) => {
-    return fetch(url_api+seccionMenu+"/"+id, {
+    return fetch(urlAPI+seccionMenu+"/"+id, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
@@ -40,7 +40,7 @@ export const getById = async (seccionMenu: string, id: number) => {
 }
 
 export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
-    return fetch(url_api+"accion_grupo/allowed_breadcrumbs", {
+    return fetch(urlAPI+"accion_grupo/allowed_breadcrumbs", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -53,7 +53,7 @@ export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
 }
 
 export const getTableActions = async (seccionMenuId: number, grupo: any) => {
-    return fetch(url_api+"accion_grupo/allowed_table_actions", {
+    return fetch(urlAPI+"accion_grupo/allowed_table_actions", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -66,7 +66,7 @@ export const getTableActions = async (seccionMenuId: number, grupo: any) => {
 }
 
 export const getInputs = async (seccionMenuId: number, columna: string) => {
-    return fetch(url_api+"seccion_menu_input/inputs", {
+    return fetch(urlAPI+"seccion_menu_input/inputs", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -79,7 +79,7 @@ export const getInputs = async (seccionMenuId: number, columna: string) => {
 }
 
 export const getNavLinks = async (grupo: any) => {
-    return fetch(url_api+"accion_grupo/allowed_menus", {
+    return fetch(urlAPI+"accion_grupo/allowed_menus", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -91,7 +91,7 @@ export const getNavLinks = async (grupo: any) => {
 }
 
 export const getSeccionMenu = async (seccionMenu: string) => {
-    return fetch(url_api+"seccion_menu/descripcion", {
+    return fetch(urlAPI+"seccion_menu/descripcion", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -103,7 +103,7 @@ export const getSeccionMenu = async (seccionMenu: string) => {
 }
 
 export const getSeccionMenuList = async (seccionMenu: string) => {
-    return fetch(url_api+seccionMenu+"/", {
+    return fetch(urlAPI+seccionMenu+"/", {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
@@ -112,7 +112,7 @@ export const getSeccionMenuList = async (seccionMenu: string) => {
 }
 
 export const getSeccionMenuListFiltered = async (seccionMenu: string, formdata: any) => {
-    return fetch(url_api+seccionMenu+"/filteredList", {
+    return fetch(urlAPI+seccionMenu+"/filteredList", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -122,7 +122,7 @@ export const getSeccionMenuListFiltered = async (seccionMenu: string, formdata: 
 }
 
 export const getUser = async (data: User) => {
-    return fetch(url_api+"authenticate", {
+    return fetch(urlAPI+"authenticate", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

@@ -24,7 +24,7 @@ coverage
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+build
 
 # Dependency directories
 node_modules
@@ -50,3 +50,7 @@ jspm_packages
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+#App
+constants.ts
+.env.local

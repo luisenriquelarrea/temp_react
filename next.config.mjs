@@ -1,19 +1,13 @@
 /** @type {import('next').NextConfig} */
 
-var isProd = false;
-
 const nextConfig = {
     output: 'export',
     images: {
         unoptimized: true,
     },
-    distDir: "build", // Where to export all pages
+    distDir: "build",
     trailingSlash: true,
-    assetPrefix: isProd ? 'http://localhost' : undefined,
-
-
-    // time in seconds of no pages generating during static
-    // generation before timing out
+    assetPrefix: (process.env.IS_PRODUCTION === 'true') ? process.env.URL_PRODUCTION : undefined,
     staticPageGenerationTimeout: 1000,
     reactStrictMode: false
 };
