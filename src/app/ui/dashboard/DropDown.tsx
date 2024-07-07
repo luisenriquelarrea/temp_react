@@ -24,6 +24,7 @@ const DropDown = () => {
                 return;
             }
             response.json().then(data => {
+                console.log(data);
                 setSeccionMenu(Object.groupBy(data, ( {menu}:any ) => menu.label));
             })
         }).catch(error => console.error(error));
@@ -38,29 +39,32 @@ const DropDown = () => {
                 href='/dashboard' >
                 <p><i className="fa fa-dashboard fa-fw"></i> Dashboard</p>
             </Link>
-            <div className="navbar-item has-dropdown is-hoverable">
                 {
                     Object.keys(seccionMenu).map((menu) => {
                         const links = seccionMenu[menu];        
                         return <div key={ menu }>
-                            <a 
-                                className="w3-bar-item w3-button w3-padding">
-                                <i className={`fa fa-caret-right fa-fw`}></i> {menu}
-                            </a>
-                            <div className="navbar-dropdown">
-                                {
-                                    Object.keys(links).map((key) => {
-                                        const seccion = links[key]
-                                        return <NavLink 
-                                            key={ key } 
-                                            seccion={ seccion } />
-                                    })
-                                }
+                            <div className="dropdown is-hoverable w3-bar-item w3-padding">
+                                <div className="dropdown-trigger">
+                                    <button aria-haspopup="true" aria-controls="dropdown-menu">
+                                        <p><i className="fa fa-angle-down fa-fw" aria-hidden="true"></i>{ menu }</p>
+                                    </button>
+                                </div>
+                                <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div className="dropdown-content">
+                                        {
+                                            Object.keys(links).map((key) => {
+                                                const seccion = links[key]
+                                                return <NavLink 
+                                                    key={ key } 
+                                                    seccion={ seccion } />
+                                            })
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     })
                 }
-            </div>
         </>
     );
 }
