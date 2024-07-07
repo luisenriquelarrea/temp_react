@@ -1,11 +1,11 @@
 "use client"
 
 import { memo } from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import Alta from '@/app/ui/dashboard/Alta';
 import Table from '@/app/ui/dashboard/Table';
-import { arrayColumn } from '../../funciones';
+import { arrayColumn, currentSeccionMenu } from '../../funciones';
 import { User, Accion } from '../../entities';
 import {getSeccionMenu, getBreadcrumbs } from '../../api';
 
@@ -17,14 +17,12 @@ const Page = () => {
     const [alta, setAlta] = useState(false);
     const [lista, setLista] = useState(false);
     const [breadcrumbs, setBreadcrumbs] = useState([]);
-    //const breadcrumbStates = useRef<any>({});
 
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
-        let pathname = window.location.pathname;
-        let seccionMenu = String(pathname).substring(pathname.lastIndexOf("/") + 1);
-        setSecccionMenu(seccionMenu);
-        getSeccionMenu(seccionMenu).then(response => {
+        const sm = currentSeccionMenu(window.location.pathname);
+        setSecccionMenu(sm);
+        getSeccionMenu(sm).then(response => {
             if(!response.ok){
                 console.log("Error al obtener seccionMenu");
                 console.log(response);
@@ -45,7 +43,6 @@ const Page = () => {
                         arrayColumn(data, 'callMethod').forEach(key => {
                             tmp[key] = false;
                         });
-                        //breadcrumbStates.current = tmp;
                         if(arrayColumn(data, 'descripcion').includes('read'))
                             read();
                         setBreadcrumbs(data);
@@ -68,22 +65,6 @@ const Page = () => {
         setAlta(false);
         setLista(!lista);
     }
-
-    /*const navigateBreadcrumb = (evt: any, breadcrumb: string) => {
-        evt.preventDefault();
-        const newStates = breadcrumbStates;
-        for(const prop in newStates)
-            newStates[prop] = false;
-        for(const prop in newStates)
-            (prop === breadcrumb) ? newStates[prop] = true : false;
-        setBreadcrumbStates(newStates);
-        console.log(breadcrumbStates);*/
-        /*for(const prop in breadcrumbStates.current)
-            breadcrumbStates.current[prop] = false;
-        for(const prop in breadcrumbStates.current)
-            (prop === breadcrumb) ? breadcrumbStates.current[prop] = true : false;
-        console.log(breadcrumbStates.current);
-    }*/
 
     return(
         <>
