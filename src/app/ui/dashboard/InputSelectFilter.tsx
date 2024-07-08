@@ -41,7 +41,7 @@ const InputSelect = (props: any) => {
                                         <option 
                                             key={ option.id } 
                                             value={ option.id } >
-                                            { option.descripcion }
+                                            { option[props.inputData.selectColumnas] }
                                         </option>
                                     );
                                 })}

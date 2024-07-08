@@ -103,6 +103,10 @@ td i {
   max-width: 500px;
 }
 
+#myTable {
+  font-size: 12px;
+}
+
 .my-top-bar{
   z-index: 4;
 }
