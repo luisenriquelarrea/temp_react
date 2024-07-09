@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import DropDown from '@/app/ui/dashboard/DropDown';
+import Accordion from '@/app/ui/dashboard/Accordion';
 
 const SideNav = () => {
     const { removeItem } = useLocalStorage();
@@ -64,7 +64,7 @@ const SideNav = () => {
                 </div>
                 <hr></hr>
                 <div className="w3-bar-block">
-                    <DropDown />
+                    <Accordion />
                 </div>
             </nav>
 

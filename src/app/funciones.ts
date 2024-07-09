@@ -23,6 +23,20 @@ export const objectClean = (obj: any) => {
       return obj;
 }
 
+export const parseString = (str: string) => {
+    str = str.replace(/ /g, "_").toLowerCase();
+    return removeSpecialChars(str);
+}
+
+const removeSpecialChars = (str: string) => {
+    str = str.replace(/á/g, "a");
+    str = str.replace(/é/g, "e");
+    str = str.replace(/í/g, "i");
+    str = str.replace(/ó/g, "o");
+    str = str.replace(/ú/g, "u");
+    return str;
+} 
+
 export const uncapitalizeFirstLetter = (cadena: string) => {
     return cadena.charAt(0).toLowerCase() + cadena.slice(1);
 }
