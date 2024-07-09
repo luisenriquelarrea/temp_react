@@ -50,7 +50,7 @@ const SideNav = () => {
                 </button>
                 <span className="w3-bar-item w3-right">Visual Studio Code</span>
             </div>
-            <nav className="w3-sidebar w3-collapse w3-white my-sidebar" id="mySidebar">
+            <nav className="w3-sidebar w3-collapse my-sidebar" id="mySidebar">
                 <div className="w3-container w3-row">
                     <div className="w3-col s4">
                         <i className="fa fa-users w3-xxxlarge"></i>

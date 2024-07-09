@@ -56,7 +56,7 @@ const Accordion = () => {
                         <button onClick={() => myAccordion(parseStr) } className="w3-button w3-block w3-left-align">
                             <p><i className="fa fa-angle-down fa-fw" aria-hidden="true"></i>{ menu }</p>
                         </button>
-                        <div id={ parseStr } className="w3-container w3-hide">
+                        <div id={ parseStr } className="w3-container w3-white w3-hide">
                         {
                             Object.keys(links).map((key) => {
                                 const seccion = links[key]
