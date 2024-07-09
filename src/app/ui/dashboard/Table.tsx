@@ -181,7 +181,9 @@ const Table = (props: any) => {
                 seccionMenu={ props.seccionMenu }
                 setTable={ setData } />
             <div className="table-container">
-                <table id="myTable" className="table is-bordered display" ref={tableRef}>
+                <table id="myTable" 
+                    className="table is-bordered is-striped is-hoverable" 
+                    ref={tableRef}>
                     <thead>
                         <tr>
                             {columns.map((column: any) => {
