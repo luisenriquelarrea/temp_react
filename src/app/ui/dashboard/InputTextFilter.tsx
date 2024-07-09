@@ -14,6 +14,7 @@ const InputTextFilter = (props: any) => {
         <>
             <div className="column is-2" >
                 <div className="field">
+                    <label className="label is-small"> { props.inputData.inputLabel } </label>
                     <div className="control">
                         <input className="input is-info is-small" 
                             name={ props.inputData.inputName }

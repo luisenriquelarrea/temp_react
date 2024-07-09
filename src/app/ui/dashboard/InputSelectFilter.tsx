@@ -29,6 +29,7 @@ const InputSelect = (props: any) => {
         <>
             <div className="column is-2" >
                 <div className="field">
+                    <label className="label is-small"> { props.inputData.inputLabel } </label>
                     <div className="control">
                         <div className="select is-info is-small is-fullwidth">
                             <select 

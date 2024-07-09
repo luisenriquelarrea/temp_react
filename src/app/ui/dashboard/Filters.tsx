@@ -23,6 +23,10 @@ const Filters = (props: any) => {
                 setInputs(data);
             })
         }).catch(error => console.error(error));
+        window.addEventListener('keypress', e => {
+            if(e.key === 'Enter')
+                document.getElementById('btn')?.click();   
+        });
     }, []);
 
     const renderInput = (input: SeccionMenuInput) => {
@@ -70,9 +74,9 @@ const Filters = (props: any) => {
                         renderInput(input)
                     );
                 })}
-                <div className="column is-12"></div>
+                <div className="column is-12" style={{"padding": 0}}></div>
                 <div className="column is-2">
-                    <button onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Filtrar</button>
+                    <button id="btn" onClick={ handleSubmit } className="button is-info is-small is-fullwidth">Filtrar</button>
                 </div>
             </div>
         </>
