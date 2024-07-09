@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getUser } from '../api'
+import Image from 'next/image'
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState({
@@ -39,9 +40,13 @@ const LoginPage = () => {
 
     return(
         <div className="my-login">
+            <Image 
+                src="/logo.png" 
+                width={200}
+                height={100} 
+                alt="Logo" />
             <form onSubmit={handleSubmit}>
                 <div className="field">
-                    <label className="label">Username</label>
                     <div className="control">
                         <input 
                             className="input" 
@@ -53,7 +58,6 @@ const LoginPage = () => {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Password</label>
                     <div className="control">
                         <input 
                             className="input" 
