@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import Image from 'next/image'
 import Accordion from '@/app/ui/dashboard/Accordion';
 
 const SideNav = () => {
@@ -53,7 +54,11 @@ const SideNav = () => {
             <nav className="w3-sidebar w3-collapse my-sidebar" id="mySidebar">
                 <div className="w3-container w3-row">
                     <div className="w3-col s4">
-                        <i className="fa fa-users w3-xxxlarge"></i>
+                        <Image 
+                            src="/logo.png" 
+                            width={60}
+                            height={80} 
+                            alt="Logo" />
                     </div>
                     <div className="w3-col s8 w3-bar">
                         <span>Welcome, <strong>{ username }</strong></span><br/>
