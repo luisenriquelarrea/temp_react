@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getSeccionMenuList } from '../../api';
 
-const InputSelect = (props: any) => {
+const InputSelectFilter = (props: any) => {
     const [defaultValue, setDefaultValue] = useState(props.defaultValue);
     const [options, setOptions] = useState([]);
 
@@ -19,10 +19,16 @@ const InputSelect = (props: any) => {
     }, []);
 
     const handleChange = (event: any) => {
-        const name = event.target.name;
+        let name = event.target.name;
         const value = event.target.value;
+        let attr = "id";
+        if(name.includes(".")){
+            const params = name.split(".");
+            name = params[0];
+            attr = params[1];
+        }
         setDefaultValue(value);
-        props.stateFormData((values: any) => ({...values, [name]: {"id":value} }))
+        props.stateFormData((values: any) => ({...values, [name]: {[attr]:value} }))
     }
 
     return(
@@ -55,4 +61,4 @@ const InputSelect = (props: any) => {
     );
 }
 
-export default InputSelect;
+export default InputSelectFilter;
