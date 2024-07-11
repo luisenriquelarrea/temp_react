@@ -201,18 +201,25 @@ const Table = (props: any) => {
                     ref={tableRef}>
                     <thead>
                         <tr>
+                            <th className="no-print">Acciones</th>
                             {columns.map((column: any) => {
                                 return(
                                     <th key={ column.id }> { column.inputLabel } </th>
                                 );
                             })}
-                            <th className="no-print">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.map((record: any) => {
                             return(
                                 <tr key={ record.id }>
+                                    <td>
+                                        {tableActions.map((action: Accion) => {
+                                            return(
+                                                renderAction(action, record)
+                                            );
+                                        })}
+                                    </td>
                                     {columns.map((column: any) => {
                                         return(
                                             <td 
@@ -224,13 +231,6 @@ const Table = (props: any) => {
                                             </td>
                                         );
                                     })}
-                                    <td>
-                                        {tableActions.map((action: Accion) => {
-                                            return(
-                                                renderAction(action, record)
-                                            );
-                                        })}
-                                    </td>
                                 </tr>
                             );
                         })}
