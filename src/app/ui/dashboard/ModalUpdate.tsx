@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
+import InputTextArea from "./InputTextArea";
+import InputFile from "./InputFile";
 import MessageBox from "./MessageBox";
 import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
@@ -11,6 +13,7 @@ const ModalUpdate = (props: any) => {
     const [data, setData] = useState<any>([]);
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
+    const [fileData, setFileData] = useState({});
     const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
@@ -19,7 +22,7 @@ const ModalUpdate = (props: any) => {
     });
 
     useEffect(() => {
-        setInputsText(['text', 'password', 'date']);
+        setInputsText(['text', 'password', 'date', 'datetime-local']);
         getById(props.seccionMenu, props.recordId).then(response => {
             if(!response.ok){
                 console.log("Error al obtener registro");
@@ -64,6 +67,17 @@ const ModalUpdate = (props: any) => {
                 seccionMenu={ props.seccionMenu }
                 defaultValue={ data[inputModelo!] === null ? 0 : data[inputModelo!][inputId!] } />
         }
+        if( input.inputType === "textarea" )
+            return <InputTextArea 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ setFormData } 
+                text={ data[inputName!] } />
+        if( input.inputType === "file" )
+            return <InputFile 
+                key={ input.inputName }
+                inputData={ input }
+                stateFileData={ setFileData } />
         if( input.inputType === "checkbox" )
             return <InputCheckbox 
                 key={ input.inputName }
@@ -139,7 +153,7 @@ const ModalUpdate = (props: any) => {
                     }
                 </section>
                 <footer className="modal-card-foot">
-                    <button onClick={ handleSubmit } className="button is-info is-fullwidth">Guardar cambios</button>
+                    <button onClick={ handleSubmit } className="button is-fullwidth">Guardar cambios</button>
                 </footer>
             </div>
         </div>

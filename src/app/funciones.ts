@@ -4,6 +4,10 @@ export const arrayColumn = (array: any[], column: string) => {
     return [];
 }
 
+export const castNullToString = (input: any) => {
+    return String(input) === "null" ? "" : input;
+}
+
 export const currentSeccionMenu = (pathname: string) => {
     const sm = String(pathname).substring(0, pathname.lastIndexOf("/"));
     return String(sm).substring(sm.lastIndexOf("/") + 1);
