@@ -12,6 +12,7 @@ import { User, Accion } from '../../entities';
 import { flipStatus, arrayColumn } from '../../funciones';
 import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
 import Filters from '@/app/ui/dashboard/Filters';
+import Pagination from "./Pagination";
 import { useDownloadExcel } from "react-export-table-to-excel";
 
 const Table = (props: any) => {
@@ -88,7 +89,8 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 title={ action.label }
-                className={`fa fa-${action.icon} fa-fw fa-lg`}
+                className={`fa fa-${action.icon} fa-fw`}
+                style={{"fontSize": '14px'}}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
@@ -98,7 +100,8 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 title={ action.label }
-                className={`fa fa-pause fa-fw fa-lg`}
+                className={`fa fa-pause fa-fw`}
+                style={{"fontSize": '14px'}}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
@@ -106,7 +109,8 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 title={ action.label }
-                className={`fa fa-play fa-fw fa-lg`}
+                className={`fa fa-play fa-fw`}
+                style={{"fontSize": '14px'}}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
@@ -193,7 +197,7 @@ const Table = (props: any) => {
                 setDataTable={ setData } />
             <div className="table-container">
                 <table id="myTable" 
-                    className="table is-bordered is-striped is-hoverable is-fullwidth" 
+                    className="table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
                     ref={tableRef}>
                     <thead>
                         <tr>
@@ -233,9 +237,16 @@ const Table = (props: any) => {
                     </tbody>
                 </table> 
             </div>
+            {/*<Pagination 
+                currentPage= { currentPage }
+                totalRows={ totalRows }
+                setCurrentPage={ setCurrentPage }
+                setTableToPaginate={ setTableToPaginate }
+                dataTable={ data }
+                setDataTable={ setData } />*/}
             {
                 Boolean(xls)
-                ? <button onClick={ onDownload } className="button is-info" >Descargar excel</button>
+                ? <button onClick={ onDownload } className="button" >Descargar excel</button>
                 : null
             }
             { 
