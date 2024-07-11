@@ -23,6 +23,9 @@ const Table = (props: any) => {
     const [showModal, setShowModal] = useState(false);
     const [recordId, setRecordId] = useState(0);
     const tableRef = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(15);
+    const [totalRows, setTotalRows] = useState(0);
 
     const recordInactive = {
         backgroundColor: "#ffe4f3"
@@ -65,9 +68,17 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
+                //setData(setTableToPaginate(data));
                 setData(data);
+                setTotalRows(Math.ceil(data.length / rowsPerPage));
             })
         }).catch(error => console.error(error));
+    }
+
+    const setTableToPaginate = (tableData: any) => {
+        const startIndex = (currentPage - 1) * rowsPerPage; 
+        const endIndex = startIndex + rowsPerPage; 
+        return tableData.slice(startIndex, endIndex); 
     }
 
     const renderAction = (action: Accion, record: any) => {
@@ -77,7 +88,7 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 title={ action.label }
-                className={`fa fa-${action.icon} fa-fw`}
+                className={`fa fa-${action.icon} fa-fw fa-lg`}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
@@ -87,7 +98,7 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 title={ action.label }
-                className={`fa fa-pause fa-fw`}
+                className={`fa fa-pause fa-fw fa-lg`}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
@@ -95,7 +106,7 @@ const Table = (props: any) => {
             return <i 
                 key={ action.id } 
                 title={ action.label }
-                className={`fa fa-play fa-fw`}
+                className={`fa fa-play fa-fw fa-lg`}
                 onClick={() => handleAction(String(action.callMethod), record) } >
 
                 </i>
@@ -179,10 +190,10 @@ const Table = (props: any) => {
             <Filters
                 seccionMenuId={ props.seccionMenuId }
                 seccionMenu={ props.seccionMenu }
-                setTable={ setData } />
+                setDataTable={ setData } />
             <div className="table-container">
                 <table id="myTable" 
-                    className="table is-bordered is-striped is-hoverable" 
+                    className="table is-bordered is-striped is-hoverable is-fullwidth" 
                     ref={tableRef}>
                     <thead>
                         <tr>
