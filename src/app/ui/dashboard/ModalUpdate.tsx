@@ -7,7 +7,7 @@ import InputFile from "./InputFile";
 import MessageBox from "./MessageBox";
 import { getInputs, getById, updateRecord, uploadFile } from '../../api';
 import { SeccionMenuInput } from '../../entities';
-import { uncapitalizeFirstLetter, castNullToString } from '../../funciones';
+import { uncapitalizeFirstLetter, castNullToString, toBase64 } from '../../funciones';
 
 const ModalUpdate = (props: any) => {
     const [data, setData] = useState<any>([]);
@@ -26,6 +26,12 @@ const ModalUpdate = (props: any) => {
         message: ""
     });
 
+    const docRelacionadoData = {
+        docRelacionado: "",
+        docRelacionadoCargado: 0,
+        docType: ""
+    }
+
     useEffect(() => {
         setInputsText(['text', 'password', 'date', 'datetime-local']);
         getById(props.seccionMenu, props.recordId).then(response => {
@@ -35,7 +41,6 @@ const ModalUpdate = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                //console.log(data.sucursal.id);
                 setData(data);
                 getInputs(props.seccionMenuId, 'modifica').then(response => {
                     if(!response.ok){
@@ -54,6 +59,8 @@ const ModalUpdate = (props: any) => {
 
     const performUpdate = (obj: any) => {
         for (let [key, value] of Object.entries(formData))
+            obj[key] = value;
+        for (let [key, value] of Object.entries(docRelacionadoData))
             obj[key] = value;
         updateRecord(props.seccionMenu, props.recordId, obj).then(response => {
             if(!response.ok){
@@ -126,29 +133,12 @@ const ModalUpdate = (props: any) => {
                 return;
             }
             if(castNullToString(fileData) !== ""){
-                const fd = new FormData();
-                fd.append("file", fileData);
-                uploadFile(props.seccionMenu, props.recordId, fd).then(resp => {
-                    if(!resp.ok){
-                        console.log("Error al updloadFile");
-                        console.log(resp);
-                        setMessageFile({
-                            messageType: "danger",
-                            message: "Ocurrió un error al subir archivo."
-                        });
-                        setShowMessageFileBox(true);
-                        return;
-                    }
-                    resp.json().then(d => {
-                        console.log(d);
-                        setMessageFile({
-                            messageType: "success",
-                            message: "Éxito al subir archivo."
-                        });
-                        setShowMessageFileBox(true);
-                        response.json().then(data => {
-                            performUpdate(data);
-                        })
+                toBase64(fileData).then(strBase64 => {
+                    docRelacionadoData.docRelacionado = String(strBase64);
+                    docRelacionadoData.docRelacionadoCargado = 1;
+                    docRelacionadoData.docType = String(fileData.type);
+                    response.json().then(data => {
+                        performUpdate(data);
                     })
                 });
             }

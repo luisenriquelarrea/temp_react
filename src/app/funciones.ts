@@ -39,7 +39,14 @@ const removeSpecialChars = (str: string) => {
     str = str.replace(/ó/g, "o");
     str = str.replace(/ú/g, "u");
     return str;
-} 
+}
+
+export const toBase64 = (file: any) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});
 
 export const uncapitalizeFirstLetter = (cadena: string) => {
     return cadena.charAt(0).toLowerCase() + cadena.slice(1);
