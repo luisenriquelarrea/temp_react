@@ -21,6 +21,13 @@ export const updateRecord = async (seccionMenu: string, id: number, formdata: an
     })
 }
 
+export const uploadFile = async (seccionMenu: string, id: number, formdata: any) => {
+    return fetch(urlAPI+seccionMenu+"/"+id+"/uploadFile", {
+        method: 'POST',
+        body: formdata,
+    })
+}
+
 export const deleteRecord = async (seccionMenu: string, id: number) => {
     return fetch(urlAPI+seccionMenu+"/"+id, {
         method: 'DELETE',

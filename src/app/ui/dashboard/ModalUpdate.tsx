@@ -5,18 +5,23 @@ import InputCheckbox from "./InputCheckbox";
 import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
 import MessageBox from "./MessageBox";
-import { getInputs, getById, updateRecord } from '../../api';
+import { getInputs, getById, updateRecord, uploadFile } from '../../api';
 import { SeccionMenuInput } from '../../entities';
-import { uncapitalizeFirstLetter } from '../../funciones';
+import { uncapitalizeFirstLetter, castNullToString } from '../../funciones';
 
 const ModalUpdate = (props: any) => {
     const [data, setData] = useState<any>([]);
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
-    const [fileData, setFileData] = useState({});
+    const [fileData, setFileData] = useState<any>(null);
     const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
+    const [showMessageFileBox, setShowMessageFileBox] = useState(false);
     const [messageData, setMessageData] = useState({
+        messageType: "",
+        message: ""
+    });
+    const [messageFile, setMessageFile] = useState({
         messageType: "",
         message: ""
     });
@@ -46,6 +51,32 @@ const ModalUpdate = (props: any) => {
             })
         }).catch(error => console.error(error));
     }, []);
+
+    const performUpdate = (obj: any) => {
+        for (let [key, value] of Object.entries(formData))
+            obj[key] = value;
+        updateRecord(props.seccionMenu, props.recordId, obj).then(response => {
+            if(!response.ok){
+                console.log("Error al modificar registro");
+                console.log(response);
+                setMessageData({
+                    messageType: "danger",
+                    message: "Ocurrió un error al modificar registro."
+                });
+                setShowMessageBox(true);
+                return;
+            }
+            response.json().then(data => {
+                console.log(data);
+                setMessageData({
+                    messageType: "success",
+                    message: "Éxito al modificar registro."
+                });
+                setShowMessageBox(true);
+                props.setTable();
+            })
+        }).catch(error => console.error(error));
+    }
 
     const renderInput = (input: SeccionMenuInput) => {
         input.inputCols = 6;
@@ -88,38 +119,44 @@ const ModalUpdate = (props: any) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
         getById(props.seccionMenu, props.recordId).then(response => {
             if(!response.ok){
                 console.log("Error al obtener registro");
                 console.log(response);
                 return;
             }
-            response.json().then(data => {
-                for (let [key, value] of Object.entries(formData))
-                    data[key] = value;
-                updateRecord(props.seccionMenu, props.recordId, data).then(response => {
-                    if(!response.ok){
-                        console.log("Error al modificar registro");
-                        console.log(response);
-                        setMessageData({
+            if(castNullToString(fileData) !== ""){
+                const fd = new FormData();
+                fd.append("file", fileData);
+                uploadFile(props.seccionMenu, props.recordId, fd).then(resp => {
+                    if(!resp.ok){
+                        console.log("Error al updloadFile");
+                        console.log(resp);
+                        setMessageFile({
                             messageType: "danger",
-                            message: "Ocurrió un error al modificar registro."
+                            message: "Ocurrió un error al subir archivo."
                         });
-                        setShowMessageBox(true);
+                        setShowMessageFileBox(true);
                         return;
                     }
-                    response.json().then(data => {
-                        console.log(data);
-                        setMessageData({
+                    resp.json().then(d => {
+                        console.log(d);
+                        setMessageFile({
                             messageType: "success",
-                            message: "Éxito al modificar registro."
+                            message: "Éxito al subir archivo."
                         });
-                        setShowMessageBox(true);
-                        props.setTable();
+                        setShowMessageFileBox(true);
+                        response.json().then(data => {
+                            performUpdate(data);
+                        })
                     })
-                }).catch(error => console.error(error));
-            })
+                });
+            }
+            else{
+                response.json().then(data => {
+                    performUpdate(data);
+                })
+            }
         }).catch(error => console.error(error));
     }
 
@@ -137,6 +174,9 @@ const ModalUpdate = (props: any) => {
                 </header>
                 <section className="modal-card-body">
                     {
+                        Boolean(showMessageFileBox) ? <MessageBox data={messageFile} /> : null
+                    }
+                    {
                         Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
                     }
                     <div className="field" >
@@ -148,6 +188,9 @@ const ModalUpdate = (props: any) => {
                             })}
                         </div>
                     </div>
+                    {
+                        Boolean(showMessageFileBox) ? <MessageBox data={messageFile} /> : null
+                    }
                     {
                         Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
                     }
