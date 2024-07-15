@@ -3,12 +3,18 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getUser } from '../api'
+import MessageBox from '../ui/dashboard/MessageBox';
 import Image from 'next/image'
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState({
         username: "", 
         password: ""
+    });
+    const [showMessageBox, setShowMessageBox] = useState(false);
+    const [messageData, setMessageData] = useState({
+        messageType: "",
+        message: ""
     });
     const { login } = useAuth();
 
@@ -22,12 +28,20 @@ const LoginPage = () => {
         event.preventDefault();
         if(String(inputs.username).length === 0 || String(inputs.password).length === 0)
         {
-            console.log('inputs required');
+            setMessageData({
+                messageType: "danger",
+                message: "Ingresa un usuario y contraseña."
+            });
+            setShowMessageBox(true);
             return;
         }
         getUser(inputs).then(response => {
             if(!response.ok){
-                console.log("Bad credentials!");
+                setMessageData({
+                    messageType: "danger",
+                    message: "Las credenciales ingresadas no son válidas."
+                });
+                setShowMessageBox(true);
                 console.log(response);
                 return;
             }
@@ -42,9 +56,15 @@ const LoginPage = () => {
         <div className="my-login">
             <Image 
                 src="/logo.png" 
-                width={200}
-                height={100} 
-                alt="Logo" />
+                width={100}
+                height={200} 
+                alt="Logo"
+                loading="eager" 
+                priority={true}
+                style={{"marginBottom": "15px"}} />
+            {
+                Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
+            }
             <form onSubmit={handleSubmit}>
                 <div className="field">
                     <div className="control">
@@ -54,7 +74,7 @@ const LoginPage = () => {
                             name="username" 
                             value={ inputs.username || "" }
                             onChange={ handleChange }
-                            placeholder="username" />
+                            placeholder="usuario" />
                     </div>
                 </div>
                 <div className="field">
@@ -65,12 +85,12 @@ const LoginPage = () => {
                             name="password"
                             value={ inputs.password || "" } 
                             onChange={ handleChange }
-                            placeholder="Password" />
+                            placeholder="contraseña" />
                     </div>
                 </div>
                 <div className="field">
                     <div className="control">
-                        <button type="submit" className="button is-info is-fullwidth">Login</button>
+                        <button type="submit" className="button is-fullwidth">Entrar</button>
                     </div>
                 </div>
             </form>
