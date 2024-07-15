@@ -7,7 +7,9 @@ export const arrayColumn = (array: any[], column: string) => {
 }
 
 export const castNullToString = (input: any) => {
-    return String(input) === "null" ? "" : input;
+    return (String(input) === "null" || String(input).trim() === "") 
+        ? "" 
+        : input;
 }
 
 const convertBase64ToFile = (base64String: string, fileName: string) => {
