@@ -5,7 +5,7 @@ import InputCheckbox from "./InputCheckbox";
 import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
 import MessageBox from "./MessageBox";
-import { getInputs, getById, updateRecord, uploadFile } from '../../api';
+import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter, castNullToString, toBase64 } from '../../funciones';
 
@@ -16,12 +16,7 @@ const ModalUpdate = (props: any) => {
     const [fileData, setFileData] = useState<any>(null);
     const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
-    const [showMessageFileBox, setShowMessageFileBox] = useState(false);
     const [messageData, setMessageData] = useState({
-        messageType: "",
-        message: ""
-    });
-    const [messageFile, setMessageFile] = useState({
         messageType: "",
         message: ""
     });
@@ -164,9 +159,6 @@ const ModalUpdate = (props: any) => {
                 </header>
                 <section className="modal-card-body">
                     {
-                        Boolean(showMessageFileBox) ? <MessageBox data={messageFile} /> : null
-                    }
-                    {
                         Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
                     }
                     <div className="field" >
@@ -178,9 +170,6 @@ const ModalUpdate = (props: any) => {
                             })}
                         </div>
                     </div>
-                    {
-                        Boolean(showMessageFileBox) ? <MessageBox data={messageFile} /> : null
-                    }
                     {
                         Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
                     }

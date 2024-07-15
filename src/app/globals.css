@@ -116,7 +116,7 @@ td i {
 
 .my-main{
   background-color: rgb(255, 255, 255);
-  margin-left:320px;
+  margin-left:280px;
   margin-top:43px;
   padding:22px;
 }
@@ -125,7 +125,7 @@ td i {
   background-color: rgb(250, 250, 250);
   z-index:3;
   padding: 22px 0;
-  width:300px;
+  width:260px;
 }
 
 @media (prefers-color-scheme: dark) {

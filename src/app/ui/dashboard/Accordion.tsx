@@ -25,7 +25,6 @@ const Accordion = () => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setSeccionMenu(Object.groupBy(data, ( {menu}:any ) => menu.label));
             })
         }).catch(error => console.error(error));
@@ -54,7 +53,10 @@ const Accordion = () => {
                     const links = seccionMenu[menu];        
                     return <div key={ menu }>            
                         <button onClick={() => myAccordion(parseStr) } className="w3-button w3-block w3-left-align">
-                            <p><i className="fa fa-angle-down fa-fw" aria-hidden="true"></i>{ menu }</p>
+                            <p>
+                                { menu } 
+                                <i className="fa fa-angle-down fa-fw" aria-hidden="true" style={{float: "right"}}></i>
+                            </p>
                         </button>
                         <div id={ parseStr } className="w3-container w3-white w3-hide">
                         {
