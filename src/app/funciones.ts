@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 export const arrayColumn = (array: any[], column: string) => {
     if(array.length > 0)
         return array.map(item => item[column])
@@ -8,9 +10,27 @@ export const castNullToString = (input: any) => {
     return String(input) === "null" ? "" : input;
 }
 
+const convertBase64ToFile = (base64String: string, fileName: string) => {
+    const arr = base64String.split(',');
+    const mime = arr[0].match(/:(.*?);/)![1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    let uint8Array = new Uint8Array(n);
+    while (n--) {
+       uint8Array[n] = bstr.charCodeAt(n);
+    }
+    const file = new File([uint8Array], fileName, { type: mime });
+    return file;
+}
+
 export const currentSeccionMenu = (pathname: string) => {
     const sm = String(pathname).substring(0, pathname.lastIndexOf("/"));
     return String(sm).substring(sm.lastIndexOf("/") + 1);
+}
+
+export const downloadBase64Data = (base64String: string, fileName: string) => {
+    const file = convertBase64ToFile(base64String, fileName);
+    saveAs(file, fileName);
 }
 
 export const flipStatus = (status: number) => {
