@@ -58,7 +58,9 @@ const SideNav = () => {
                             src="/logo.png" 
                             width={60}
                             height={80} 
-                            alt="Logo" />
+                            alt="Logo"
+                            loading="eager" 
+                            priority={true} />
                     </div>
                     <div className="w3-col s8 w3-bar">
                         <span>Welcome, <strong>{ username }</strong></span><br/>

@@ -4,7 +4,7 @@ import { memo } from "react";
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import Alta from '@/app/ui/dashboard/Alta';
-import Table from '@/app/ui/dashboard/Table';
+import Lista from '@/app/ui/dashboard/Lista';
 import { arrayColumn, currentSeccionMenu } from '../../funciones';
 import { User, Accion } from '../../entities';
 import {getSeccionMenu, getBreadcrumbs } from '../../api';
@@ -88,7 +88,7 @@ const Page = () => {
             { Boolean(alta) ? <Alta 
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
-            { Boolean(lista) ? <Table
+            { Boolean(lista) ? <Lista
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
         </>

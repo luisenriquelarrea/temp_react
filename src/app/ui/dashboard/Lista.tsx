@@ -15,7 +15,7 @@ import Filters from '@/app/ui/dashboard/Filters';
 import Pagination from "./Pagination";
 import { useDownloadExcel } from "react-export-table-to-excel";
 
-const Table = (props: any) => {
+const Lista = (props: any) => {
     const { getItem } = useLocalStorage();
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -263,4 +263,4 @@ const Table = (props: any) => {
     );
 }
 
-export default Table;
+export default Lista;
