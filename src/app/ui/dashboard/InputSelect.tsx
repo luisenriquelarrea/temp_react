@@ -65,6 +65,7 @@ const InputSelect = (props: any) => {
                         <div className="select is-info is-fullwidth">
                             <select 
                                 value={ defaultValue }
+                                id={ props.inputData.inputName }
                                 name={ props.inputData.inputName } 
                                 onChange={ handleChange } >
                                 <option value="0">Selecciona una opción</option>

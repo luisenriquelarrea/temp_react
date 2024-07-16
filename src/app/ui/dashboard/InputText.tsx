@@ -23,6 +23,7 @@ const InputText = (props: any) => {
                     </label>
                     <div className="control">
                         <input className="input is-info" 
+                            id={ props.inputData.inputId }
                             name={ props.inputData.inputName }
                             type={ props.inputData.inputType } 
                             value={ text }
