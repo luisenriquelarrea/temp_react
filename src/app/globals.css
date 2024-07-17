@@ -125,7 +125,7 @@ td i {
   background-color: rgb(250, 250, 250);
   z-index:3;
   padding: 22px 0;
-  width:260px;
+  width:280px;
 }
 
 @media (prefers-color-scheme: dark) {
