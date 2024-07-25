@@ -7,25 +7,18 @@ import InputFile from "./InputFile";
 import MessageBox from "./MessageBox";
 import { getInputs, getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
-import { uncapitalizeFirstLetter, castNullToString, toBase64 } from '../../funciones';
+import { uncapitalizeFirstLetter } from '../../funciones';
 
 const ModalUpdate = (props: any) => {
     const [data, setData] = useState<any>([]);
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
-    const [fileData, setFileData] = useState<any>(null);
     const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
         messageType: "",
         message: ""
     });
-
-    const docRelacionadoData = {
-        docRelacionado: "",
-        docRelacionadoCargado: 0,
-        docType: ""
-    }
 
     useEffect(() => {
         setInputsText(['text', 'password', 'date', 'datetime-local']);
@@ -44,7 +37,6 @@ const ModalUpdate = (props: any) => {
                         return;
                     }
                     response.json().then(data => {
-                        console.log(data);
                         setInputs(data);
                     })
                 }).catch(error => console.error(error));
@@ -54,8 +46,6 @@ const ModalUpdate = (props: any) => {
 
     const performUpdate = (obj: any) => {
         for (let [key, value] of Object.entries(formData))
-            obj[key] = value;
-        for (let [key, value] of Object.entries(docRelacionadoData))
             obj[key] = value;
         updateRecord(props.seccionMenu, props.recordId, obj).then(response => {
             if(!response.ok){
@@ -110,7 +100,7 @@ const ModalUpdate = (props: any) => {
             return <InputFile 
                 key={ input.inputName }
                 inputData={ input }
-                stateFileData={ setFileData } />
+                stateFormData={ setFormData } />
         if( input.inputType === "checkbox" )
             return <InputCheckbox 
                 key={ input.inputName }
@@ -127,21 +117,7 @@ const ModalUpdate = (props: any) => {
                 console.log(response);
                 return;
             }
-            if(castNullToString(fileData) !== ""){
-                toBase64(fileData).then(strBase64 => {
-                    docRelacionadoData.docRelacionado = String(strBase64);
-                    docRelacionadoData.docRelacionadoCargado = 1;
-                    docRelacionadoData.docType = String(fileData.type);
-                    response.json().then(data => {
-                        performUpdate(data);
-                    })
-                });
-            }
-            else{
-                response.json().then(data => {
-                    performUpdate(data);
-                })
-            }
+            performUpdate(data);
         }).catch(error => console.error(error));
     }
 

@@ -1,3 +1,5 @@
+import { toBase64 } from '../../funciones';
+
 const InputFile = (props: any) => {
 
     const handleChange = (event: any) => {
@@ -5,7 +7,9 @@ const InputFile = (props: any) => {
         const name = event.target.name;
         const file = event.target.files[0];
         (document.getElementById("span"+id) as HTMLInputElement).innerHTML = file.name;
-        props.stateFileData(file);
+        toBase64(file).then(strBase64 => {
+            props.stateFormData((values: any) => ({...values, [name]: String(strBase64)}))
+        });
     }
 
     return(
