@@ -101,9 +101,11 @@ td i {
 
 .my-login{
   text-align: center;
-  margin: 50px auto;
+  margin: 75px auto;
   padding: 30px;
   max-width: 500px;
+  background-color: rgb(245, 245, 245);
+  border-radius: 10px;
 }
 
 #myTable {
