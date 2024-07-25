@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { 
     getInputs, 
-    getSeccionMenuList, 
+    getSeccionMenuListFiltered,
     getTableActions
 } from '../../api';
 import { User } from '../../entities';
-import { arrayColumn } from '../../funciones';
+import { arrayColumn, objectClean } from '../../funciones';
 import Filters from '@/app/ui/dashboard/Filters';
 import Pagination from "./Pagination";
 import Table from "./Table";
@@ -14,6 +14,7 @@ import Table from "./Table";
 const Lista = (props: any) => {
     const { getItem } = useLocalStorage();
     const [inputsFilters, setInputsFilters] = useState([]);
+    const [filterData, setFilterData] = useState({});
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [tableActions, setTableActions] = useState([]);
@@ -62,16 +63,14 @@ const Lista = (props: any) => {
     }, []);
 
     const setTable = () => {
-        getSeccionMenuList(props.seccionMenu).then(response => {
+        getSeccionMenuListFiltered(props.seccionMenu, objectClean(filterData)).then(response => {
             if(!response.ok){
-                console.log("Error al obtener "+props.seccionMenu);
+                console.log("Error al obtener lista filtrada");
                 console.log(response);
                 return;
             }
             response.json().then(data => {
-                //setData(setTableToPaginate(data));
                 setDataTable(data);
-                setTotalRows(Math.ceil(data.length / rowsPerPage));
             })
         }).catch(error => console.error(error));
     }
@@ -88,7 +87,8 @@ const Lista = (props: any) => {
                 seccionMenuId={ props.seccionMenuId }
                 seccionMenu={ props.seccionMenu }
                 inputsFilters={ inputsFilters }
-                setDataTable={ setDataTable } />
+                setFilterData={ setFilterData }
+                setTable={ setTable } />
             <Table
                 seccionMenuId={ props.seccionMenuId }
                 seccionMenu={ props.seccionMenu } 

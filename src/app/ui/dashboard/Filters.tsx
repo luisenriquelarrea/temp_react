@@ -1,13 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import InputTextFilter  from './InputTextFilter';
 import InputSelectFilter  from './InputSelectFilter';
 import InputDatesFilter  from './InputDatesFilter';
-import { getSeccionMenuListFiltered } from '../../api';
 import { SeccionMenuInput } from '../../entities';
-import { objectClean } from '../../funciones';
 
 const Filters = (props: any) => {
-    const [formData, setFormData] = useState({});
     const inputs = props.inputsFilters;
     const inputsText = ['text', 'password', 'date'];
 
@@ -24,34 +21,25 @@ const Filters = (props: any) => {
                 return <InputDatesFilter
                     key={ input.inputName }
                     inputData={ input }
-                    stateFormData={ setFormData } /> 
+                    stateFormData={ props.setFilterData } /> 
             return <InputTextFilter 
                 key={ input.inputName }
                 inputData={ input }
-                stateFormData={ setFormData } 
+                stateFormData={ props.setFilterData } 
                 text="" />
         }
         if(input.inputType === "select")
              return <InputSelectFilter 
                 key={ input.inputName }
                 inputData={ input }
-                stateFormData={ setFormData }
+                stateFormData={ props.setFilterData }
                 seccionMenu={ props.seccionMenu } 
                 defaultValue="0" />
         return null
     }
 
     const handleSubmit = () => {
-        getSeccionMenuListFiltered(props.seccionMenu, objectClean(formData)).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener lista filtrada");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                props.setDataTable(data);
-            })
-        }).catch(error => console.error(error));
+        props.setTable();
     }
 
     return(
