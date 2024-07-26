@@ -4,45 +4,21 @@ import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
 import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
+import Section from "./Section";
 import MessageBox from "./MessageBox";
-import { getInputs, getById, updateRecord } from '../../api';
+import { getById, updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter } from '../../funciones';
 
 const ModalUpdate = (props: any) => {
-    const [data, setData] = useState<any>([]);
-    const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({});
-    const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
         messageType: "",
         message: ""
     });
 
-    useEffect(() => {
-        setInputsText(['text', 'password', 'date', 'datetime-local']);
-        getById(props.seccionMenu, props.recordId).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener registro");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setData(data);
-                getInputs(props.seccionMenuId, 'modifica').then(response => {
-                    if(!response.ok){
-                        console.log("Error al obtener inputs");
-                        console.log(response);
-                        return;
-                    }
-                    response.json().then(data => {
-                        setInputs(data);
-                    })
-                }).catch(error => console.error(error));
-            })
-        }).catch(error => console.error(error));
-    }, []);
+    const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 
     const performUpdate = (obj: any) => {
         for (let [key, value] of Object.entries(formData))
@@ -78,7 +54,7 @@ const ModalUpdate = (props: any) => {
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData }
-                text={ data[inputName!] === null ? "" : data[inputName!]} />
+                text={ props.record[inputName!] === null ? "" : props.record[inputName!]} />
         if(input.inputType === "select")
         {
             let inputModelo = uncapitalizeFirstLetter(String(input.modelo));
@@ -88,14 +64,14 @@ const ModalUpdate = (props: any) => {
                 inputData={ input }
                 stateFormData={ setFormData }
                 seccionMenu={ props.seccionMenu }
-                defaultValue={ data[inputModelo!] === null ? 0 : data[inputModelo!][inputId!] } />
+                defaultValue={ props.record[inputModelo!] === null ? 0 : props.record[inputModelo!][inputId!] } />
         }
         if( input.inputType === "textarea" )
             return <InputTextArea 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData } 
-                text={ data[inputName!] } />
+                text={ props.record[inputName!] } />
         if( input.inputType === "file" )
             return <InputFile 
                 key={ input.inputName }
@@ -106,7 +82,14 @@ const ModalUpdate = (props: any) => {
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData } 
-                text={ data[inputName!] } />
+                text={ props.record[inputName!] } />
+        if( input.inputType === "section" )
+        {
+            input.inputCols = 12;
+            return <Section 
+                key={ input.inputName }
+                inputData={ input } />
+        }
         return null
     }
 
@@ -117,7 +100,7 @@ const ModalUpdate = (props: any) => {
                 console.log(response);
                 return;
             }
-            performUpdate(data);
+            performUpdate(props.record);
         }).catch(error => console.error(error));
     }
 
@@ -139,7 +122,7 @@ const ModalUpdate = (props: any) => {
                     }
                     <div className="field" >
                         <div className="columns is-multiline">
-                            {inputs.map((input: SeccionMenuInput) => {
+                            {props.inputs.map((input: SeccionMenuInput) => {
                                 return (
                                     renderInput(input)
                                 );
