@@ -13,6 +13,7 @@ import { useDownloadExcel } from "react-export-table-to-excel";
 const Table = (props: any) => {
     const tableRef = useRef(null);
 
+    const [formdata, setFormData] = useState<any>({});
     const [showModal, setShowModal] = useState(false);
     const [recordId, setRecordId] = useState<any>([]);
     const [record, setRecord] = useState<any>([]);
@@ -211,6 +212,7 @@ const Table = (props: any) => {
                     recordId={ recordId }
                     record={ record }
                     inputs={ inputs }
+                    formdata={ formdata }
                     stateShowModal={ setShowModal }
                     setTable={ props.setTable } /> 
                 : null 

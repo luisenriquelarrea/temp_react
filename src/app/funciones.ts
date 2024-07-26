@@ -7,7 +7,9 @@ export const arrayColumn = (array: any[], column: string) => {
 }
 
 export const castNullToString = (input: any) => {
-    return (String(input) === "null" || String(input).trim() === "") 
+    return (String(input) === "null" 
+        || String(input).trim() === ""
+        || typeof input === "undefined") 
         ? "" 
         : input;
 }

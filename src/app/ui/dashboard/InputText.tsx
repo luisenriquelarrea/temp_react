@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { castNullToString } from '../../funciones';
 
 const InputText = (props: any) => {
-    const [text, setText] = useState(props.text);
+    const [text, setText] = useState(castNullToString(props.text));
 
     const handleChange = (event: any) => {
         const name = event.target.name;

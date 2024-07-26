@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import InputText  from './InputText';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
@@ -6,12 +6,12 @@ import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
 import Section from "./Section";
 import MessageBox from "./MessageBox";
-import { getById, updateRecord } from '../../api';
+import { updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter } from '../../funciones';
 
 const ModalUpdate = (props: any) => {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(props.formdata);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
         messageType: "",
@@ -20,10 +20,10 @@ const ModalUpdate = (props: any) => {
 
     const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 
-    const performUpdate = (obj: any) => {
+    const performUpdate = () => {
         for (let [key, value] of Object.entries(formData))
-            obj[key] = value;
-        updateRecord(props.seccionMenu, props.recordId, obj).then(response => {
+            props.record[key] = value;
+        updateRecord(props.seccionMenu, props.recordId, props.record).then(response => {
             if(!response.ok){
                 console.log("Error al modificar registro");
                 console.log(response);
@@ -93,17 +93,6 @@ const ModalUpdate = (props: any) => {
         return null
     }
 
-    const handleSubmit = () => {
-        getById(props.seccionMenu, props.recordId).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener registro");
-                console.log(response);
-                return;
-            }
-            performUpdate(props.record);
-        }).catch(error => console.error(error));
-    }
-
     const closeModal = () => {
         props.stateShowModal(false);
     }
@@ -134,7 +123,7 @@ const ModalUpdate = (props: any) => {
                     }
                 </section>
                 <footer className="modal-card-foot">
-                    <button onClick={ handleSubmit } className="button is-fullwidth">Guardar cambios</button>
+                    <button onClick={ performUpdate } className="button is-fullwidth">Guardar cambios</button>
                 </footer>
             </div>
         </div>
