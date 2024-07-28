@@ -102,7 +102,7 @@ const ModalUpdate = (props: any) => {
             <div className="modal-background"></div>
             <div className="modal-card">
                 <header className="modal-card-head">
-                    <p className="modal-card-title">Modifica registro</p>
+                    <p className="modal-card-title">{ props.titleModal }</p>
                     <button onClick={ closeModal } className="delete" aria-label="close" ></button>
                 </header>
                 <section className="modal-card-body">

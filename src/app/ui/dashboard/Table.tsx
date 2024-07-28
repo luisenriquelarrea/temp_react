@@ -15,6 +15,7 @@ const Table = (props: any) => {
 
     const [formdata, setFormData] = useState<any>({});
     const [showModal, setShowModal] = useState(false);
+    const [titleModal, setTitleModal] = useState("Modifica registro");
     const [recordId, setRecordId] = useState<any>([]);
     const [record, setRecord] = useState<any>([]);
     const [inputs, setInputs] = useState([]);
@@ -53,6 +54,7 @@ const Table = (props: any) => {
                         return;
                     }
                     response.json().then(data => {
+                        setTitleModal("Modifica registro");
                         setRecordId(recordId);
                         setInputs(data);
                         setShowModal(true);
@@ -223,6 +225,7 @@ const Table = (props: any) => {
                 ? <ModalUpdate 
                     seccionMenuId={ props.seccionMenuId } 
                     seccionMenu={ props.seccionMenu }
+                    titleModal={ titleModal }
                     recordId={ recordId }
                     record={ record }
                     inputs={ inputs }
