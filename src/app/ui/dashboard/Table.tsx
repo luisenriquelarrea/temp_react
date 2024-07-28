@@ -25,8 +25,17 @@ const Table = (props: any) => {
     const xls = props.xls;
 
     const recordInactive = {
-        backgroundColor: "#ffe4f3"
+        backgroundColor: "MistyRose",
     };
+    const columnOk = {
+        color: "DodgerBlue",
+        fontSize: "17px"
+    };
+    const columnXmark = {
+        color: "red",
+        fontSize: "17px"
+    };
+    const columnsStatus = [0, 1];
 
     const update = (recordId: number) => {
         getById(props.seccionMenu, recordId).then(response => {
@@ -146,7 +155,12 @@ const Table = (props: any) => {
         if(typeof(record[columnName]) === 'object' && String(record[columnName]) !== "null"){
             return record[columnName][column.inputId];
         }
-        return record[columnName];
+        
+        return ( columnsStatus.includes(parseInt(record[columnName])) ) 
+        ? (parseInt(record[columnName])) 
+            ? <i className="fa fa-circle-check" style={ columnOk }></i> 
+            : <i className="fa fa-circle-xmark" style={ columnXmark }></i> 
+        : record[columnName];
     }
 
     const { onDownload } = useDownloadExcel({
