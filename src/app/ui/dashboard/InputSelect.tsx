@@ -67,8 +67,9 @@ const InputSelect = (props: any) => {
                                 value={ defaultValue }
                                 id={ props.inputData.inputName }
                                 name={ props.inputData.inputName } 
+                                required={Boolean(parseInt(props.inputData.inputRequired))}
                                 onChange={ handleChange } >
-                                <option value="0">Selecciona una opción</option>
+                                <option value="">Selecciona una opción</option>
                                 {options.map((option: any) => {
                                     const selectColumnas = renderSelectColumnas(option, props.inputData.selectColumnas);
                                     return(

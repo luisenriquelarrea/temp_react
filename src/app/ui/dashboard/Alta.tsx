@@ -44,7 +44,7 @@ const Alta = (props: any) => {
                 inputData={ input }
                 stateFormData={ setFormData }
                 seccionMenu={ props.seccionMenu } 
-                defaultValue="0" />
+                defaultValue="" />
         if( input.inputType === "checkbox" )
             return <InputCheckbox 
                 key={ input.inputName }
@@ -54,8 +54,8 @@ const Alta = (props: any) => {
         return null
     }
 
-    const handleSubmit = () => {
-        console.log(objectClean(formData));
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
         save(props.seccionMenu, objectClean(formData)).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");
@@ -83,16 +83,18 @@ const Alta = (props: any) => {
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
-            <div className="columns is-multiline">
-            {inputs.map((input: SeccionMenuInput) => {
-                return (
-                    renderInput(input)
-                );
-            })}
-            </div>
-            <div className="column is-2">
-                <button onClick={ handleSubmit } className="button is-info is-fullwidth">Guardar</button>
-            </div>
+            <form onSubmit={ handleSubmit }>
+                <div className="columns is-multiline">
+                {inputs.map((input: SeccionMenuInput) => {
+                    return (
+                        renderInput(input)
+                    );
+                })}
+                </div>
+                <div className="column is-3">
+                    <button type="submit" className="button is-fullwidth">Guardar</button>
+                </div>
+            </form>
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }

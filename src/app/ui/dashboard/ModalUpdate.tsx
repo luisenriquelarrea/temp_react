@@ -20,7 +20,8 @@ const ModalUpdate = (props: any) => {
 
     const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 
-    const performUpdate = () => {
+    const performUpdate = (event: any) => {
+        event.preventDefault();
         for (let [key, value] of Object.entries(formData))
             props.record[key] = value;
         updateRecord(props.seccionMenu, props.recordId, props.record).then(response => {
@@ -100,7 +101,7 @@ const ModalUpdate = (props: any) => {
     return (
         <div className="modal is-active">
             <div className="modal-background"></div>
-            <div className="modal-card">
+            <form className="modal-card" onSubmit={ performUpdate }>
                 <header className="modal-card-head">
                     <p className="modal-card-title">{ props.titleModal }</p>
                     <button onClick={ closeModal } className="delete" aria-label="close" ></button>
@@ -123,9 +124,9 @@ const ModalUpdate = (props: any) => {
                     }
                 </section>
                 <footer className="modal-card-foot">
-                    <button onClick={ performUpdate } className="button is-fullwidth">Guardar cambios</button>
+                    <button type="submit" className="button is-fullwidth">Guardar cambios</button>
                 </footer>
-            </div>
+            </form>
         </div>
     );
 }

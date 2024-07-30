@@ -28,6 +28,7 @@ const InputText = (props: any) => {
                             name={ props.inputData.inputName }
                             type={ props.inputData.inputType } 
                             value={ text }
+                            required={Boolean(parseInt(props.inputData.inputRequired))}
                             onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel } />
                     </div>
