@@ -11,6 +11,7 @@ import {getSeccionMenu, getBreadcrumbs } from '../../api';
 
 const Page = () => {
     const { getItem } = useLocalStorage();
+    const [user, setUser] = useState({});
     const [seccionMenuId, setSecccionMenuId] = useState(0);
     const [seccionMenu, setSecccionMenu] = useState("");
     const [navbarLabel, setNavbarLabel] = useState("");
@@ -20,6 +21,7 @@ const Page = () => {
 
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
+        setUser(user);
         const sm = currentSeccionMenu(window.location.pathname);
         setSecccionMenu(sm);
         getSeccionMenu(sm).then(response => {
@@ -89,6 +91,7 @@ const Page = () => {
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
             { Boolean(lista) ? <Lista
+                user={ user }
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
         </>

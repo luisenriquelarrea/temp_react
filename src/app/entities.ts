@@ -11,6 +11,7 @@ export interface Grupo {
 }
 export interface User {
     grupo?: Grupo,
+    userId?: number,
     username?: string,
     name?: string
 }

@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { 
     getInputs, 
     getSeccionMenuListFiltered,
     getTableActions
 } from '../../api';
-import { User } from '../../entities';
 import { arrayColumn, objectClean } from '../../funciones';
 import Filters from '@/app/ui/dashboard/Filters';
 import Pagination from "./Pagination";
 import Table from "./Table";
 
 const Lista = (props: any) => {
-    const { getItem } = useLocalStorage();
     const [inputsFilters, setInputsFilters] = useState([]);
-    const [filterData, setFilterData] = useState({});
+    const [filterData, setFilterData] = useState({
+        userId: props.user.userId
+    });
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [tableActions, setTableActions] = useState([]);
@@ -45,8 +44,7 @@ const Lista = (props: any) => {
             })
         }).catch(error => console.error(error));
 
-        const user: User = JSON.parse(String(getItem("user")));
-        getTableActions(props.seccionMenuId, user.grupo).then(response => {
+        getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
             if(!response.ok){
                 console.log("Error al obtener tableActions");
                 console.log(response);
@@ -58,7 +56,6 @@ const Lista = (props: any) => {
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
-
         setTable();
     }, []);
 
