@@ -11,6 +11,11 @@ const InputText = (props: any) => {
         props.stateFormData((values: any) => ({...values, [name]: value}))
     }
 
+    const handleKeyDown = (event: any) => {
+        if(event.target.type === 'datetime-local')
+            event.preventDefault();
+    }
+
     return(
         <>
             <div className={ `column is-${props.inputData.inputCols}` } >
@@ -30,6 +35,7 @@ const InputText = (props: any) => {
                             value={ text }
                             required={Boolean(parseInt(props.inputData.inputRequired))}
                             onChange={ handleChange }
+                            onKeyDown={ (event) => handleKeyDown(event) }
                             placeholder={ props.inputData.inputLabel } />
                     </div>
                 </div>
