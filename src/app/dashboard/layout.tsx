@@ -19,7 +19,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         return (
             <div>
                 <SideNav />
-                <div className="w3-main my-main" >
+                <div className="w3-main my-main" id="myMain" >
                     {children}
                 </div>
             </div>

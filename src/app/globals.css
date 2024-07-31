@@ -123,17 +123,17 @@ td i {
 }
 
 .my-main{
+  transition: margin-left .3s;
   background-color: rgb(255, 255, 255);
-  margin-left:280px;
   margin-top:43px;
   padding:22px;
 }
 
 .my-sidebar{
+  display: none;
   background-color: rgb(248, 248, 255);
   z-index:3;
   padding: 22px 0;
-  width:280px;
 }
 
 @media (prefers-color-scheme: dark) {

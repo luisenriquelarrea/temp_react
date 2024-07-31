@@ -10,6 +10,7 @@ const SideNav = () => {
 
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");
+    var myMain = document.getElementById("myMain");
 
     // Get the DIV with overlay effect
     var overlayBg = document.getElementById("myOverlay");
@@ -21,10 +22,11 @@ const SideNav = () => {
 
     // Toggle between showing and hiding the sidebar, and add overlay effect
     const w3Open = () => {
-        if (mySidebar!.style.display === 'block') {
-            mySidebar!.style.display = 'none';
-            overlayBg!.style.display = "none";
-        } else {
+        if (mySidebar!.style.display === 'block')
+            w3Close();
+        else{
+            mySidebar!.style.width = '280px';
+            myMain!.style.marginLeft = '280px';
             mySidebar!.style.display = 'block';
             overlayBg!.style.display = "block";
         }
@@ -32,6 +34,8 @@ const SideNav = () => {
 
     // Close the sidebar with the close button
     const w3Close = () => {
+        mySidebar!.style.width = '0';
+        myMain!.style.marginLeft = '0';
         mySidebar!.style.display = "none";
         overlayBg!.style.display = "none";
     }
@@ -43,27 +47,27 @@ const SideNav = () => {
 
     return (
         <>
-            <div className="w3-bar w3-top w3-blue w3-large my-top-bar">
+            <div className="w3-bar w3-top w3-deep-orange w3-large my-top-bar">
                 <button
                     onClick={ w3Open } 
-                    className="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey">
+                    className="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey">
                     <i className="fa fa-bars"></i> Menu
                 </button>
-                <span className="w3-bar-item w3-right">Visual Studio Code</span>
+                <span className="w3-bar-item w3-right">Logistica</span>
             </div>
-            <nav className="w3-sidebar w3-collapse my-sidebar" id="mySidebar">
+            <nav className="w3-sidebar my-sidebar" id="mySidebar">
                 <div className="w3-container w3-row">
-                    <div className="w3-col s4">
+                    <div className="w3-col s3">
                         <Image 
                             src="/logo.png" 
-                            width={60}
-                            height={80} 
+                            width={40}
+                            height={60} 
                             alt="Logo"
                             loading="eager" 
                             priority={true} />
                     </div>
-                    <div className="w3-col s8 w3-bar">
-                        <span>Welcome, <strong>{ username }</strong></span><br/>
+                    <div className="w3-col s9 w3-bar">
+                        <span>Bienvenido, <strong>{ username }</strong></span><br/>
                         <a href="#" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
                         <a href="#" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
                         <a href="#" onClick={logOut} className="w3-bar-item w3-button"><i className="fa fa-power-off"></i></a>
