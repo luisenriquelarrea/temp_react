@@ -73,6 +73,11 @@
   }
 }
 
+[data-theme=light],
+.theme-light {
+  /* Update CSS variables */
+  background-color: white;
+}
 
 a {
   color: inherit;
