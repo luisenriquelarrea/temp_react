@@ -179,7 +179,9 @@ const Table = (props: any) => {
                     ref={ tableRef }>
                     <thead>
                         <tr>
-                            <th className="no-print">Acciones</th>
+                            { Object.keys(tableActions).length > 0 
+                                ? <th className="no-print">Acciones</th> 
+                                : null }
                             {columns.map((column: any) => {
                                 return(
                                     <th key={ column.id }> { column.inputLabel } </th>
@@ -191,13 +193,14 @@ const Table = (props: any) => {
                         {dataTable.map((record: any) => {
                             return(
                                 <tr key={ record.id }>
-                                    <td>
+                                    { Object.keys(tableActions).length > 0 
+                                        ? <td>
                                         {tableActions.map((action: Accion) => {
                                             return(
                                                 renderAction(action, record)
                                             );
                                         })}
-                                    </td>
+                                        </td> : null }
                                     {columns.map((column: any) => {
                                         return(
                                             <td 
