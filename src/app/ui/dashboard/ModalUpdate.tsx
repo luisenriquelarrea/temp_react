@@ -9,6 +9,7 @@ import MessageBox from "./MessageBox";
 import { updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter } from '../../funciones';
+import Encabezado from "./Encabezado";
 
 const ModalUpdate = (props: any) => {
     const [formData, setFormData] = useState(props.formdata);
@@ -110,6 +111,10 @@ const ModalUpdate = (props: any) => {
                     {
                         Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
                     }
+                    <Encabezado
+                        seccionMenuId={ props.seccionMenuId }
+                        seccionMenu={ props.seccionMenu } 
+                        recordId={ props.recordId } />
                     <div className="field" >
                         <div className="columns is-multiline">
                             {props.inputs.map((input: SeccionMenuInput) => {
