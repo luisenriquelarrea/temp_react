@@ -141,3 +141,13 @@ export const getUser = async (data: User) => {
         body: JSON.stringify(data),
     })
 }
+
+export const validateUserIsActive = async (username: string) => {
+    return fetch(urlAPI+"user_is_active", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({username: username}),
+    })
+}

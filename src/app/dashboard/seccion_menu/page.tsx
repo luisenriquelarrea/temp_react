@@ -7,7 +7,11 @@ import Alta from '@/app/ui/dashboard/Alta';
 import Lista from '@/app/ui/dashboard/Lista';
 import { arrayColumn, currentSeccionMenu } from '../../funciones';
 import { User, Accion } from '../../entities';
-import {getSeccionMenu, getBreadcrumbs } from '../../api';
+import {
+    getSeccionMenu, 
+    getBreadcrumbs, 
+    validateUserIsActive 
+} from '../../api';
 
 const Page = () => {
     const { getItem } = useLocalStorage();
@@ -21,36 +25,41 @@ const Page = () => {
 
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
-        setUser(user);
-        const sm = currentSeccionMenu(window.location.pathname);
-        setSecccionMenu(sm);
-        getSeccionMenu(sm).then(response => {
+        validateUserIsActive(String(user.username)).then(response => {
             if(!response.ok){
-                console.log("Error al obtener seccionMenu");
-                console.log(response);
-                return;
+                window.location.href = '/';
             }
-            response.json().then(data => {
-                setNavbarLabel(data.navbarLabel);
-                const seccionMenuId = data.id;
-                setSecccionMenuId(seccionMenuId);
-                getBreadcrumbs(seccionMenuId, user.grupo).then(response => {
-                    if(!response.ok){
-                        console.log("Error al obtener breadcrumbs");
-                        console.log(response);
-                        return;
-                    }
-                    response.json().then(data => {
-                        let tmp: any = {};
-                        arrayColumn(data, 'callMethod').forEach(key => {
-                            tmp[key] = false;
-                        });
-                        if(arrayColumn(data, 'descripcion').includes('read'))
-                            read();
-                        setBreadcrumbs(data);
-                    })
-                }).catch(error => console.error(error));
-            })
+            setUser(user);
+            const sm = currentSeccionMenu(window.location.pathname);
+            setSecccionMenu(sm);
+            getSeccionMenu(sm).then(response => {
+                if(!response.ok){
+                    console.log("Error al obtener seccionMenu");
+                    console.log(response);
+                    return;
+                }
+                response.json().then(data => {
+                    setNavbarLabel(data.navbarLabel);
+                    const seccionMenuId = data.id;
+                    setSecccionMenuId(seccionMenuId);
+                    getBreadcrumbs(seccionMenuId, user.grupo).then(response => {
+                        if(!response.ok){
+                            console.log("Error al obtener breadcrumbs");
+                            console.log(response);
+                            return;
+                        }
+                        response.json().then(data => {
+                            let tmp: any = {};
+                            arrayColumn(data, 'callMethod').forEach(key => {
+                                tmp[key] = false;
+                            });
+                            if(arrayColumn(data, 'descripcion').includes('read'))
+                                read();
+                            setBreadcrumbs(data);
+                        })
+                    }).catch(error => console.error(error));
+                })
+            }).catch(error => console.error(error));
         }).catch(error => console.error(error));
     }, []);
 

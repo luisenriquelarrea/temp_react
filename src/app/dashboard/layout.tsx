@@ -9,9 +9,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const [isAuth, setIsAuth] = useState(false);
     
     useEffect(() => {
-      if(getItem("user") === null){
-          window.location.href = '/';
-      }
+        if(getItem("user") === null){
+            window.location.href = '/';
+        }
       setIsAuth(true);
     }, []);
 
