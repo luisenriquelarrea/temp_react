@@ -88,6 +88,7 @@ const Page = () => {
                 </ul>
             </nav>
             { Boolean(alta) ? <Alta 
+                user={ user }
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
             { Boolean(lista) ? <Lista

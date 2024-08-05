@@ -5,11 +5,16 @@ import InputCheckbox from "./InputCheckbox";
 import MessageBox from "./MessageBox";
 import { getInputs, save } from '../../api';
 import { SeccionMenuInput } from '../../entities';
-import { objectClean } from '../../funciones';
+import { objectClean, mysqlTimeStamp } from '../../funciones';
 
 const Alta = (props: any) => {
     const [inputs, setInputs] = useState([]);
-    const [formData, setFormData] = useState({'status':1});
+    const [formData, setFormData] = useState({
+        'status':1,
+        'userCreatedId': props.user.userId,
+        'createdAt': '',
+        'updatedAt': ''
+    });
     const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
@@ -56,6 +61,9 @@ const Alta = (props: any) => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+        const recordAt = mysqlTimeStamp();
+        formData.createdAt = recordAt;
+        formData.updatedAt = recordAt;
         save(props.seccionMenu, objectClean(formData)).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");

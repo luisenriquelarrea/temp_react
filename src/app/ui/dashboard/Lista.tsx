@@ -87,6 +87,7 @@ const Lista = (props: any) => {
                 setFilterData={ setFilterData }
                 setTable={ setTable } />
             <Table
+                userId={ props.user.userId }
                 seccionMenuId={ props.seccionMenuId }
                 seccionMenu={ props.seccionMenu } 
                 columns={ columns } 

@@ -6,14 +6,17 @@ import {
     updateRecord,
     deleteRecord 
 } from '../../api';
-import { flipStatus } from '../../funciones';
+import { flipStatus, mysqlTimeStamp } from '../../funciones';
 import { Accion } from '../../entities';
 import { useDownloadExcel } from "react-export-table-to-excel";
 
 const Table = (props: any) => {
     const tableRef = useRef(null);
 
-    const [formdata, setFormData] = useState<any>({});
+    const [formdata, setFormData] = useState<any>({
+        'userUpdatedId': props.userId,
+        'updatedAt': mysqlTimeStamp()
+    });
     const [showModal, setShowModal] = useState(false);
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [recordId, setRecordId] = useState<any>([]);
