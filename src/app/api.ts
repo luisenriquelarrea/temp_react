@@ -1,7 +1,11 @@
 import { urlAPI } from './constants';
 import { User } from './entities';
+import { mysqlTimeStamp } from './funciones';
 
 export const save = async (seccionMenu: string, formdata: any) => {
+    const recordAt = mysqlTimeStamp();
+    formdata.createdAt = recordAt;
+    formdata.updatedAt = recordAt;
     return fetch(urlAPI+seccionMenu+"/add", {
         method: 'POST',
         headers: {

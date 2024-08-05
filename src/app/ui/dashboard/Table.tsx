@@ -13,10 +13,7 @@ import { useDownloadExcel } from "react-export-table-to-excel";
 const Table = (props: any) => {
     const tableRef = useRef(null);
 
-    const [formdata, setFormData] = useState<any>({
-        'userUpdatedId': props.userId,
-        'updatedAt': mysqlTimeStamp()
-    });
+    const [formdata, setFormData] = useState<any>({});
     const [showModal, setShowModal] = useState(false);
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [recordId, setRecordId] = useState<any>([]);
@@ -102,6 +99,10 @@ const Table = (props: any) => {
     }
 
     const handleAction = (action: string, record: any) => {
+        setFormData({
+            'userUpdatedId': props.userId,
+            'updatedAt': mysqlTimeStamp()
+        });
         if(action === "changeStatus")
             changeStatus(record.id, record.status);
         if(action === "eliminar")
