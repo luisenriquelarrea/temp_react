@@ -83,6 +83,8 @@ const Table = (props: any) => {
                 return;
             }
             response.json().then(data => {
+                data.userUpdatedId = props.userId;
+                data.updatedAt = mysqlTimeStamp();
                 data.status = flipStatus(recordStatus);
                 updateRecord(props.seccionMenu, recordId, data).then(response => {
                     if(!response.ok){
