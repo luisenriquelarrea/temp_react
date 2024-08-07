@@ -27,11 +27,13 @@ const ModalUpdate = (props: any) => {
             props.record[key] = value;
         updateRecord(props.seccionMenu, props.recordId, props.record).then(response => {
             if(!response.ok){
-                console.log("Error al modificar registro");
-                console.log(response);
+                const httpStatus = String(response.status);
+                let message = "Ocurrió un error, contacte a su equipo de sistemas.";
+                if(parseInt(httpStatus) == 422)
+                    message = "Ocurrió un error, la información ingresada no es valida.";
                 setMessageData({
                     messageType: "danger",
-                    message: "Ocurrió un error al modificar registro."
+                    message: "("+httpStatus+") "+message
                 });
                 setShowMessageBox(true);
                 return;
