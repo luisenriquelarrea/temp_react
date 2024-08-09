@@ -74,7 +74,7 @@ const Lista = (props: any) => {
             return buttons;
         do{
             buttons.push(i++);
-        }while(i <= maxButtons && i < tPages - 1);
+        }while(i <= maxButtons && i < tPages);
         return buttons;
     }
 
