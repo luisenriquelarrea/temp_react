@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { 
     getInputs, 
     getSeccionMenuListFiltered,
-    getTableActions
+    getTableActions,
+    countFilteredList
 } from '../../api';
 import { arrayColumn, objectClean } from '../../funciones';
 import Filters from '@/app/ui/dashboard/Filters';
@@ -10,17 +11,24 @@ import Pagination from "./Pagination";
 import Table from "./Table";
 
 const Lista = (props: any) => {
+    const off = 0;
+    const lim = 5;
+
     const [inputsFilters, setInputsFilters] = useState([]);
     const [filterData, setFilterData] = useState({
-        userId: props.user.userId
+        userId: props.user.userId,
+        offset: off,
+        limit: lim
     });
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [tableActions, setTableActions] = useState([]);
     const [xls, setXls] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(15);
-    const [totalRows, setTotalRows] = useState(0);
+    const [limit, setLimit] = useState(lim);
+    const [maxButtons, setMaxButtons] = useState(7);
+    const [totalPages, setTotalPages] = useState(0);
+    const [paginationButtons, setPaginationButtons] = useState<any>([]);
 
     useEffect(() => {
         getInputs(props.seccionMenuId, 'filtro').then(response => {
@@ -43,7 +51,6 @@ const Lista = (props: any) => {
                 setColumns(data);
             })
         }).catch(error => console.error(error));
-
         getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
             if(!response.ok){
                 console.log("Error al obtener tableActions");
@@ -56,10 +63,52 @@ const Lista = (props: any) => {
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
-        setTable();
+        setCountFilteredList();
+        setTable(0);
     }, []);
 
-    const setTable = () => {
+    const renderPaginationButtons = (tPages: number) => {
+        var i = 2;
+        var buttons: any = [];
+        if(tPages - i  < 1)
+            return buttons;
+        do{
+            buttons.push(i++);
+        }while(i <= maxButtons && i < tPages - 1);
+        return buttons;
+    }
+
+    const renderPaginationButtonsReverse = (tPages: number) => {
+        if(maxButtons >= tPages)
+            return renderPaginationButtons(tPages);
+        var i = tPages - maxButtons;
+        if(i === 1) i++;
+        var buttons: any = [];
+        var j = 1;
+        do{
+            buttons.push(i++);
+            j++;
+        }while(j <= maxButtons && i < tPages);
+        return buttons;
+    }
+
+    const setCountFilteredList = () => {
+        countFilteredList(props.seccionMenu, objectClean(filterData)).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener count");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                const tPages = Math.ceil(parseFloat(String(data / limit)));
+                setTotalPages(tPages);
+                setPaginationButtons(renderPaginationButtons(tPages));
+            })
+        }).catch(error => console.error(error));
+    }
+
+    const setTable = (offset: number) => {
+        filterData.offset = offset;
         getSeccionMenuListFiltered(props.seccionMenu, objectClean(filterData)).then(response => {
             if(!response.ok){
                 console.log("Error al obtener lista filtrada");
@@ -72,12 +121,6 @@ const Lista = (props: any) => {
         }).catch(error => console.error(error));
     }
 
-    const setTableToPaginate = (tableData: any) => {
-        const startIndex = (currentPage - 1) * rowsPerPage; 
-        const endIndex = startIndex + rowsPerPage; 
-        return tableData.slice(startIndex, endIndex); 
-    }
-
     return (
         <>
             <Filters
@@ -85,7 +128,8 @@ const Lista = (props: any) => {
                 seccionMenu={ props.seccionMenu }
                 inputsFilters={ inputsFilters }
                 setFilterData={ setFilterData }
-                setTable={ setTable } />
+                setTable={ setTable }
+                setCountFilteredList={ setCountFilteredList } />
             <Table
                 userId={ props.user.userId }
                 seccionMenuId={ props.seccionMenuId }
@@ -94,14 +138,20 @@ const Lista = (props: any) => {
                 dataTable={ dataTable }
                 tableActions={ tableActions }
                 setTable={ setTable }
+                currentPage={ currentPage }
                 xls={ xls } />
-            {/*<Pagination 
+            <Pagination 
                 currentPage= { currentPage }
-                totalRows={ totalRows }
                 setCurrentPage={ setCurrentPage }
-                setTableToPaginate={ setTableToPaginate }
-                dataTable={ data }
-                setDataTable={ setData } />*/}
+                limit={ limit }
+                maxButtons={ maxButtons }
+                totalPages={ totalPages }
+                paginationButtons={ paginationButtons }
+                setPaginationButtons={ setPaginationButtons }
+                renderPaginationButtons={ renderPaginationButtons }
+                renderPaginationButtonsReverse={ renderPaginationButtonsReverse }
+                setFilterData={ setFilterData }
+                setTable={ setTable } />
         </>
     );
 }

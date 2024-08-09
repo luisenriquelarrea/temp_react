@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import InputTextFilter  from './InputTextFilter';
 import InputSelectFilter  from './InputSelectFilter';
 import InputDatesFilter  from './InputDatesFilter';
+import InputCheckboxFilter  from './InputCheckboxFilter';
 import { SeccionMenuInput } from '../../entities';
 
 const Filters = (props: any) => {
@@ -35,11 +36,18 @@ const Filters = (props: any) => {
                 stateFormData={ props.setFilterData }
                 seccionMenu={ props.seccionMenu } 
                 defaultValue="0" />
+        if( input.inputType === "checkbox" )
+            return <InputCheckboxFilter 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ props.setFilterData } 
+                text="0" />
         return null
     }
 
     const handleSubmit = () => {
-        props.setTable();
+        props.setCountFilteredList();
+        props.setTable(0);
     }
 
     return(

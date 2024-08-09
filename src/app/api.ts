@@ -50,6 +50,16 @@ export const getById = async (seccionMenu: string, id: number) => {
     })
 }
 
+export const countFilteredList = async (seccionMenu: string, formdata: any) => {
+    return fetch(urlAPI+seccionMenu+"/countFilteredList", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
 export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
     return fetch(urlAPI+"accion_grupo/allowed_breadcrumbs", {
         method: 'POST',

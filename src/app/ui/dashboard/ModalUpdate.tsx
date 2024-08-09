@@ -45,7 +45,7 @@ const ModalUpdate = (props: any) => {
                     message: "Éxito al modificar registro."
                 });
                 setShowMessageBox(true);
-                props.setTable();
+                props.setTable(props.currentPage);
             })
         }).catch(error => console.error(error));
     }

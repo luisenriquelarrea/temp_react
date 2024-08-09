@@ -6,7 +6,9 @@ import {
     updateRecord,
     deleteRecord 
 } from '../../api';
-import { flipStatus, mysqlTimeStamp } from '../../funciones';
+import { 
+    flipStatus,
+    mysqlTimeStamp } from '../../funciones';
 import { Accion } from '../../entities';
 import { useDownloadExcel } from "react-export-table-to-excel";
 
@@ -71,7 +73,7 @@ const Table = (props: any) => {
                 console.log(response);
                 return;
             }
-            props.setTable();
+            props.setTable(props.currentPage);
         }).catch(error => console.error(error));
     }
 
@@ -93,7 +95,7 @@ const Table = (props: any) => {
                         return;
                     }
                     response.json().then(data => {
-                        props.setTable();
+                        props.setTable(props.currentPage);
                     })
                 }).catch(error => console.error(error));
             })
@@ -179,6 +181,11 @@ const Table = (props: any) => {
 
     return (
         <>
+            {
+                Boolean(xls)
+                ? <button onClick={ onDownload } style={{marginBottom: '10px'}} className="button is-small" >Excel</button>
+                : null
+            }
             <div className="table-container">
                 <table id="myTable" 
                     className="table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
@@ -224,11 +231,6 @@ const Table = (props: any) => {
                     </tbody>
                 </table>
             </div>
-            {
-                Boolean(xls)
-                ? <button onClick={ onDownload } className="button" >Descargar excel</button>
-                : null
-            }
             { 
                 Boolean(showModal) 
                 ? <ModalUpdate 
@@ -240,7 +242,8 @@ const Table = (props: any) => {
                     inputs={ inputs }
                     formdata={ formdata }
                     stateShowModal={ setShowModal }
-                    setTable={ props.setTable } /> 
+                    setTable={ props.setTable }
+                    currentPage={ props.currentPage } /> 
                 : null 
             }
         </>
