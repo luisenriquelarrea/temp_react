@@ -1,19 +1,16 @@
 import { useState, useEffect } from "react";
-import InputText  from './InputText';
-import InputSelect  from './InputSelect';
-import InputCheckbox from "./InputCheckbox";
 import MessageBox from "./MessageBox";
+import Formulario from "./Formulario";
 import { getInputs, save } from '../../api';
-import { SeccionMenuInput } from '../../entities';
-import { objectClean } from '../../funciones';
+import { objectClean, flipStatus } from '../../funciones';
 
 const Alta = (props: any) => {
+    const [key, setKey] = useState(0);
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({
         'status':1,
         'userCreatedId': props.user.userId
     });
-    const [inputsText, setInputsText] = useState<any>([]);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
         messageType: "",
@@ -21,7 +18,6 @@ const Alta = (props: any) => {
     });
 
     useEffect(() => {
-        setInputsText(['text', 'password', 'date', 'number']);
         getInputs(props.seccionMenuId, 'alta').then(response => {
             if(!response.ok){
                 console.log("Error al obtener inputs");
@@ -33,29 +29,6 @@ const Alta = (props: any) => {
             })
         }).catch(error => console.error(error));
     }, []);
-
-    const renderInput = (input: SeccionMenuInput) => {
-        if( inputsText.includes(String(input.inputType)) )
-            return <InputText 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData } 
-                text="" />
-        if(input.inputType === "select")
-            return <InputSelect 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData }
-                seccionMenu={ props.seccionMenu } 
-                defaultValue="" />
-        if( input.inputType === "checkbox" )
-            return <InputCheckbox 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData } 
-                text="0" />
-        return null
-    }
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
@@ -77,6 +50,7 @@ const Alta = (props: any) => {
                     message: "Éxito al crear registro."
                 });
                 setShowMessageBox(true);
+                setKey(flipStatus(key));
             })
         }).catch(error => console.error(error));
     }
@@ -86,18 +60,11 @@ const Alta = (props: any) => {
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
-            <form onSubmit={ handleSubmit }>
-                <div className="columns is-multiline">
-                {inputs.map((input: SeccionMenuInput) => {
-                    return (
-                        renderInput(input)
-                    );
-                })}
-                </div>
-                <div className="column is-3">
-                    <button type="submit" className="button is-fullwidth">Guardar</button>
-                </div>
-            </form>
+            <Formulario
+                key={ key }
+                inputs={ inputs }
+                setFormData={ setFormData }
+                handleSubmit={ handleSubmit } />
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
