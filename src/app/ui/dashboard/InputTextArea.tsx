@@ -28,7 +28,8 @@ const InputTextArea = (props: any) => {
                             className="textarea"
                             value={ text }
                             onChange={ handleChange }
-                            placeholder={ props.inputData.inputLabel }>
+                            placeholder={ props.inputData.inputLabel }
+                            rows={ 2 } >
                         </textarea>
                     </div>
                 </div>

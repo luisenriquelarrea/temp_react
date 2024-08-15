@@ -1,4 +1,5 @@
 import InputText  from './InputText';
+import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
 import { SeccionMenuInput } from '../../entities';
@@ -20,6 +21,12 @@ const Formulario = (props: any) => {
                 stateFormData={ props.setFormData }
                 seccionMenu={ props.seccionMenu } 
                 defaultValue="" />
+        if( input.inputType === "textarea" )
+            return <InputTextArea 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ props.setFormData } 
+                text="" />
         if( input.inputType === "checkbox" )
             return <InputCheckbox 
                 key={ input.inputName }
