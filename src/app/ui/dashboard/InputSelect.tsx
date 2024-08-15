@@ -52,6 +52,10 @@ const InputSelect = (props: any) => {
 
     return(
         <>
+            { (parseInt(props.inputData.newLine) === 1) 
+                ? <div style={{marginBottom: "-25px"}} className={ `column is-12` } ></div>
+                : null
+            }
             <div className={ `column is-${props.inputData.inputCols}` } >
                 <div className="field">
                     <label className="label"> 
