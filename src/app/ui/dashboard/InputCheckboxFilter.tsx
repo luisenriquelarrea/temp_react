@@ -20,12 +20,21 @@ const InputCheckbox = (props: any) => {
         const name = event.target.name;
         const value = flipStatus(parseInt(event.target.value));
         setInputCheck(value);
-        props.stateFormData((values: any) => ({...values, [name]: value}))
+        if(props.recordId !== undefined)
+            props.stateFormData((values: any) => 
+                ({
+                    ...values, 
+                    [props.recordId]: {
+                        ...values[props.recordId], [name]: value
+                    }
+                }))
+        else
+            props.stateFormData((values: any) => ({...values, [name]: value}))
     }
 
     return(
         <>
-            <div className={ `column is-2 ` } >
+            <div className={ `column is-${props.inputData.inputCols}` } >
                 <label className="checkbox label is-small">
                     <input
                         className="my-check"
