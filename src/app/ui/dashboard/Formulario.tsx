@@ -47,7 +47,11 @@ const Formulario = (props: any) => {
                 })}
                 </div>
                 <div className="column is-3">
-                    <button type="submit" className="button is-fullwidth">Guardar</button>
+                    <button type="submit" className="button is-fullwidth">
+                        {
+                            (props.btnLabel !== undefined) ? props.btnLabel : "Guardar"
+                        }
+                    </button>
                 </div>
             </form>
         </>
