@@ -29,12 +29,18 @@ const ModalUpdate = (props: any) => {
             if(!response.ok){
                 const httpStatus = String(response.status);
                 let message = "Ocurrió un error, contacte a su equipo de sistemas.";
-                if(parseInt(httpStatus) == 422)
-                    message = "Ocurrió un error, la información ingresada no es valida.";
                 setMessageData({
                     messageType: "danger",
                     message: "("+httpStatus+") "+message
                 });
+                if(parseInt(httpStatus) == 422)
+                    response.json().then(data => {
+                        message = "Ocurrió un error, "+data.message;
+                        setMessageData({
+                            messageType: "danger",
+                            message: "("+httpStatus+") "+message
+                        });
+                    })
                 setShowMessageBox(true);
                 return;
             }
