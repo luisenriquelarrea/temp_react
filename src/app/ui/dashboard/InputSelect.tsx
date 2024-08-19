@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { getSeccionMenuList } from '../../api';
+import { getSeccionMenuListFiltered } from '../../api';
 
 const InputSelect = (props: any) => {
     const [defaultValue, setDefaultValue] = useState(props.defaultValue);
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        getSeccionMenuList(props.inputData.urlGet).then(response => {
+        const selectFilters = getSelectFilters();
+        getSeccionMenuListFiltered(props.inputData.urlGet, selectFilters).then(response => {
             if(!response.ok){
                 console.log("Error al obtener "+props.inputData.urlGet+" lista");
                 console.log(response);
@@ -48,6 +49,17 @@ const InputSelect = (props: any) => {
                 str += option[columna]+" ";
         });
         return str;
+    }
+
+    const getSelectFilters = () => {
+        let selectFilters = {
+            offset: 0,
+            limit: 1000
+        };
+        if(props.selectFilters){
+            selectFilters = {...selectFilters, ...props.selectFilters};
+        }
+        return selectFilters;
     }
 
     return(

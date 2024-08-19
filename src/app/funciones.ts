@@ -41,6 +41,10 @@ export const flipStatus = (status: number) => {
     return 1 - status;
 }
 
+export const mysqlDate = () => {
+    return new Date().toISOString().slice(0, 10);
+}
+
 export const mysqlTimeStamp = () => {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 }

@@ -54,6 +54,17 @@ export const getById = async (seccionMenu: string, id: number) => {
     })
 }
 
+export const getByUserId = async (seccionMenu: string, url: string, userId: number) => {
+    return fetch(urlAPI+seccionMenu+"/"+url, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            [apiKey]: apiToken
+        },
+        body: JSON.stringify({userId: userId}),
+    })
+}
+
 export const countFilteredList = async (seccionMenu: string, formdata: any) => {
     return fetch(urlAPI+seccionMenu+"/countFilteredList", {
         method: 'POST',
