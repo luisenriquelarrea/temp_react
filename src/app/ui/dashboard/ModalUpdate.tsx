@@ -35,9 +35,9 @@ const ModalUpdate = (props: any) => {
                 });
                 if(parseInt(httpStatus) == 422)
                     response.json().then(data => {
-                        message = "Ocurrió un error, "+data.message;
+                        message = "Error en la información, "+data.message;
                         setMessageData({
-                            messageType: "danger",
+                            messageType: "warning",
                             message: "("+httpStatus+") "+message
                         });
                     })
