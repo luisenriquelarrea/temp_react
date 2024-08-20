@@ -37,6 +37,12 @@ export const downloadBase64Data = (base64String: string, fileName: string) => {
     saveAs(file, fileName);
 }
 
+export const getObjectValue = (object: any, key: string, defaultValue: any) => {
+    return (object[key] !== undefined) 
+    ? object[key]
+    : defaultValue;
+}
+
 export const flipStatus = (status: number) => {
     return 1 - status;
 }

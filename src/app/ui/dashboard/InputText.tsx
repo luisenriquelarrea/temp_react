@@ -40,7 +40,8 @@ const InputText = (props: any) => {
                             required={Boolean(parseInt(props.inputData.inputRequired))}
                             onChange={ handleChange }
                             onKeyDown={ (event) => handleKeyDown(event) }
-                            placeholder={ props.inputData.inputLabel } />
+                            placeholder={ props.inputData.inputLabel }
+                            disabled={ props.disabled } />
                     </div>
                 </div>
             </div>

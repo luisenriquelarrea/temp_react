@@ -6,8 +6,8 @@ const InputSelect = (props: any) => {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        const selectFilters = getSelectFilters();
-        getSeccionMenuListFiltered(props.inputData.urlGet, selectFilters).then(response => {
+        const filters = getFilters();
+        getSeccionMenuListFiltered(props.inputData.urlGet, filters).then(response => {
             if(!response.ok){
                 console.log("Error al obtener "+props.inputData.urlGet+" lista");
                 console.log(response);
@@ -51,15 +51,15 @@ const InputSelect = (props: any) => {
         return str;
     }
 
-    const getSelectFilters = () => {
-        let selectFilters = {
+    const getFilters = () => {
+        let filters = {
             offset: 0,
             limit: 1000
         };
-        if(props.selectFilters){
-            selectFilters = {...selectFilters, ...props.selectFilters};
+        if(props.filters){
+            filters = {...filters, ...props.filters};
         }
-        return selectFilters;
+        return filters;
     }
 
     return(
@@ -84,7 +84,8 @@ const InputSelect = (props: any) => {
                                 id={ props.inputData.inputName }
                                 name={ props.inputData.inputName } 
                                 required={Boolean(parseInt(props.inputData.inputRequired))}
-                                onChange={ handleChange } >
+                                onChange={ handleChange } 
+                                disabled={ props.disabled } >
                                 <option value="">Selecciona una opción</option>
                                 {options.map((option: any) => {
                                     const selectColumnas = renderSelectColumnas(option, props.inputData.selectColumnas);

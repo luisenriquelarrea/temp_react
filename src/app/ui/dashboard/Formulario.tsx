@@ -2,33 +2,34 @@ import InputText  from './InputText';
 import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
-import { SeccionMenuInput } from '../../entities';
+import { InputConf, SeccionMenuInput } from '../../entities';
+import { getObjectValue } from '@/app/funciones';
 
 const Formulario = (props: any) => {
     const inputsText = ['text', 'password', 'date', 'number'];
 
     const renderInput = (input: SeccionMenuInput) => {
-        const value = (defaultValues[String(input.inputName)] !== undefined) 
-            ?  defaultValues[String(input.inputName)] 
-            : "";
+        const inputConf: InputConf 
+            = getObjectValue(defaultValues, String(input.inputName), {});
+        const value = getObjectValue(inputConf, "value", "");
+        const disabled = getObjectValue(inputConf, "disabled", false);
+        const filters = getObjectValue(inputConf, "filters", {});
         if( inputsText.includes(String(input.inputType)) )
             return <InputText 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ props.setFormData } 
-                text={ value } />
+                text={ value }
+                disabled={ disabled } />
         if(input.inputType === "select"){
-            const selectFilters 
-                = (defaultValues[String(input.inputName)+"SelectFilters"] !== undefined) 
-                ?  defaultValues[String(input.inputName)+"SelectFilters"] 
-                : {};
             return <InputSelect 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ props.setFormData }
                 seccionMenu={ props.seccionMenu } 
                 defaultValue={ value }
-                selectFilters={ selectFilters } />
+                disabled={ disabled }
+                filters={ filters } />
         }
         if( input.inputType === "textarea" )
             return <InputTextArea 

@@ -9,11 +9,10 @@ export interface Grupo {
     id: number,
     descripcion: string
 }
-export interface User {
-    grupo?: Grupo,
-    userId?: number,
-    username?: string,
-    name?: string
+export interface InputConf {
+    value: string,
+    disabled?: boolean,
+    filters?: any
 }
 
 export interface Menu{
@@ -41,4 +40,10 @@ export interface SeccionMenuInput {
     orden?: number,
     urlGet?: string,
     modelo?: string
+}
+export interface User {
+    grupo?: Grupo,
+    userId?: number,
+    username?: string,
+    name?: string
 }
