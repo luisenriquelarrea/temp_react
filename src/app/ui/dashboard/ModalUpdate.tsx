@@ -81,12 +81,14 @@ const ModalUpdate = (props: any) => {
                 seccionMenu={ props.seccionMenu }
                 defaultValue={ props.record[inputModelo!] === null ? 0 : props.record[inputModelo!][inputId!] } />
         }
-        if( input.inputType === "textarea" )
+        if( input.inputType === "textarea" ){
+            input.inputCols = 12;
             return <InputTextArea 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData } 
                 text={ props.record[inputName!] } />
+        }
         if( input.inputType === "file" )
             return <InputFile 
                 key={ input.inputName }
