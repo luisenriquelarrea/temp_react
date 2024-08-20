@@ -5,6 +5,7 @@ import { getInputs, save } from '../../api';
 import { objectClean, flipStatus } from '../../funciones';
 
 const Alta = (props: any) => {
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [key, setKey] = useState(0);
     const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState({
@@ -32,6 +33,7 @@ const Alta = (props: any) => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+        setButtonDisabled(true);
         save(props.seccionMenu, objectClean(formData)).then(response => {
             if(!response.ok){
                 console.log("Error al guardar registro");
@@ -41,6 +43,7 @@ const Alta = (props: any) => {
                     message: "Ocurrió un error al crear registro."
                 });
                 setShowMessageBox(true);
+                setButtonDisabled(false);
                 return;
             }
             response.json().then(data => {
@@ -51,6 +54,7 @@ const Alta = (props: any) => {
                 });
                 setShowMessageBox(true);
                 setKey(flipStatus(key));
+                setButtonDisabled(false);
             })
         }).catch(error => console.error(error));
     }
@@ -64,7 +68,8 @@ const Alta = (props: any) => {
                 key={ key }
                 inputs={ inputs }
                 setFormData={ setFormData }
-                handleSubmit={ handleSubmit } />
+                handleSubmit={ handleSubmit }
+                buttonDisabled={ buttonDisabled } />
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }

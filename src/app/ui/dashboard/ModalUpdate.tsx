@@ -12,6 +12,7 @@ import { uncapitalizeFirstLetter } from '../../funciones';
 import Encabezado from "./Encabezado";
 
 const ModalUpdate = (props: any) => {
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [formData, setFormData] = useState(props.formdata);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
@@ -22,6 +23,9 @@ const ModalUpdate = (props: any) => {
     const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 
     const performUpdate = (event: any) => {
+        if(buttonDisabled)
+            return;
+        setButtonDisabled(true);
         event.preventDefault();
         for (let [key, value] of Object.entries(formData))
             props.record[key] = value;
@@ -42,6 +46,7 @@ const ModalUpdate = (props: any) => {
                         });
                     })
                 setShowMessageBox(true);
+                setButtonDisabled(false);
                 return;
             }
             response.json().then(data => {
@@ -137,7 +142,12 @@ const ModalUpdate = (props: any) => {
                     }
                 </section>
                 <footer className="modal-card-foot">
-                    <button type="submit" className="button is-fullwidth">Guardar cambios</button>
+                    <button 
+                        type="submit" 
+                        className="button is-fullwidth" 
+                        disabled={ buttonDisabled }>
+                        Guardar cambios
+                    </button>
                 </footer>
             </form>
         </div>
