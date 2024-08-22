@@ -3,7 +3,7 @@ import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
 import { InputConf, SeccionMenuInput } from '../../entities';
-import { getObjectValue } from '@/app/funciones';
+import { getObjectValue, uncapitalizeFirstLetter } from '@/app/funciones';
 
 const Formulario = (props: any) => {
     const inputsText = ['text', 'password', 'date', 'number'];
@@ -11,9 +11,23 @@ const Formulario = (props: any) => {
     const renderInput = (input: SeccionMenuInput) => {
         const inputConf: InputConf 
             = getObjectValue(defaultValues, String(input.inputName), {});
-        const value = getObjectValue(inputConf, "value", "");
-        const disabled = getObjectValue(inputConf, "disabled", false);
-        const filters = getObjectValue(inputConf, "filters", {});
+        let value = "";
+        let disabled = false;
+        let filters = {};
+        if(Object.keys(inputConf).length > 0){
+            value = getObjectValue(inputConf, "value", "");
+            disabled = getObjectValue(inputConf, "disabled", false);
+            filters = getObjectValue(inputConf, "filters", {});
+        }
+        if(Object.keys(record).length > 0){
+            value = getObjectValue(record, String(input.inputName), "");
+            if(input.inputType === "select"){
+                const inputModelo = uncapitalizeFirstLetter(String(input.modelo));
+                value = (record[inputModelo] === null) 
+                    ? 0 
+                    : record[inputModelo][input.inputId!]
+            }
+        }
         if( inputsText.includes(String(input.inputType)) )
             return <InputText 
                 key={ input.inputName }
@@ -45,6 +59,14 @@ const Formulario = (props: any) => {
                 text="0" />
         return null
     }
+
+    const getValuesFromRecord = () => {
+        if(props.record)
+            return props.record;
+        return {};
+    }
+
+    const record = getValuesFromRecord();
 
     const getDefaultValues = () => {
         if(props.defaultValues?.[props.seccionMenu]){
