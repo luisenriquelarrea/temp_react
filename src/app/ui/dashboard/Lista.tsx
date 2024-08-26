@@ -3,16 +3,24 @@ import {
     getInputs, 
     getSeccionMenuListFiltered,
     getTableActions,
-    countFilteredList
+    countFilteredList,
+    getById,
+    updateRecord,
+    deleteRecord
 } from '../../api';
-import { arrayColumn, objectClean } from '../../funciones';
-import Filters from '@/app/ui/dashboard/Filters';
+import { 
+    arrayColumn, 
+    objectClean, 
+    flipStatus, 
+    mysqlTimeStamp } from '../../funciones';
+import Filters from './Filters';
+import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";
 import Table from "./Table";
 
 const Lista = (props: any) => {
     const off = 0;
-    const lim = 5;
+    const lim = 30;
 
     const [inputsFilters, setInputsFilters] = useState([]);
     const [filterData, setFilterData] = useState({
@@ -29,6 +37,11 @@ const Lista = (props: any) => {
     const [maxButtons, setMaxButtons] = useState(7);
     const [totalPages, setTotalPages] = useState(0);
     const [paginationButtons, setPaginationButtons] = useState<any>([]);
+    const [formdata, setFormData] = useState<any>({});
+    const [showModal, setShowModal] = useState(false);
+    const [titleModal, setTitleModal] = useState("Modifica registro");
+    const [inputs, setInputs] = useState([]);
+    const [record, setRecord] = useState({});
 
     useEffect(() => {
         getInputs(props.seccionMenuId, 'filtro').then(response => {
@@ -121,6 +134,73 @@ const Lista = (props: any) => {
         }).catch(error => console.error(error));
     }
 
+    const update = (recordId: number) => {
+        getById(props.seccionMenu, recordId).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener registro");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                setRecord(data);
+                getInputs(props.seccionMenuId, 'modifica').then(response => {
+                    if(!response.ok){
+                        console.log("Error al obtener inputs");
+                        console.log(response);
+                        return;
+                    }
+                    response.json().then(data => {
+                        setTitleModal("Modifica registro");
+                        setInputs(data);
+                        setShowModal(true);
+                    })
+                }).catch(error => console.error(error));
+            })
+        }).catch(error => console.error(error));
+    }
+    
+    const eliminar = (recordId: number) => {
+        deleteRecord(props.seccionMenu, recordId).then(response => {
+            if(!response.ok){
+                console.log("Error al eliminar registro");
+                console.log(response);
+                return;
+            }
+            props.setTable(props.currentPage);
+        }).catch(error => console.error(error));
+    }
+
+    const changeStatus = (recordId: number) => {
+        getById(props.seccionMenu, recordId).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener registro");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                data.userUpdatedId = props.userId;
+                data.updatedAt = mysqlTimeStamp();
+                data.status = flipStatus(data.status);
+                updateRecord(props.seccionMenu, props.recordId, data).then(response => {
+                    if(!response.ok){
+                        console.log("Error al modificar registro");
+                        console.log(response);
+                        return;
+                    }
+                    response.json().then(data => {
+                        props.setTable(props.currentPage);
+                    })
+                }).catch(error => console.error(error));
+            })
+        }).catch(error => console.error(error));
+    }
+
+    const functions = {
+        changeStatus: changeStatus,
+        eliminar: eliminar,
+        update: update
+    };
+
     return (
         <>
             <Filters
@@ -139,7 +219,10 @@ const Lista = (props: any) => {
                 tableActions={ tableActions }
                 setTable={ setTable }
                 currentPage={ currentPage }
-                xls={ xls } />
+                xls={ xls }
+                setRecordId={ props.setRecordId }
+                setFormData={ setFormData }
+                functions={ functions } />
             <Pagination 
                 currentPage= { currentPage }
                 setCurrentPage={ setCurrentPage }
@@ -152,6 +235,21 @@ const Lista = (props: any) => {
                 renderPaginationButtonsReverse={ renderPaginationButtonsReverse }
                 setFilterData={ setFilterData }
                 setTable={ setTable } />
+            { 
+                Boolean(showModal) 
+                ? <ModalUpdate 
+                    seccionMenuId={ props.seccionMenuId } 
+                    seccionMenu={ props.seccionMenu }
+                    titleModal={ titleModal }
+                    recordId={ props.recordId }
+                    record={ record }
+                    inputs={ inputs }
+                    formdata={ formdata }
+                    stateShowModal={ setShowModal }
+                    setTable={ setTable }
+                    currentPage={ currentPage } /> 
+                : null 
+            }
         </>
     );
 }

@@ -1,33 +1,28 @@
 import { useState, useRef } from "react";
-import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
-import {
-    getById,
-    getInputs, 
-    updateRecord,
-    deleteRecord 
-} from '../../api';
 import { 
     flipStatus,
     mysqlTimeStamp } from '../../funciones';
 import { Accion } from '../../entities';
 import { useDownloadExcel } from "react-export-table-to-excel";
+import InputTextFilter from "./InputTextFilter";
 
 const Table = (props: any) => {
     const tableRef = useRef(null);
 
-    const [formdata, setFormData] = useState<any>({});
-    const [showModal, setShowModal] = useState(false);
-    const [titleModal, setTitleModal] = useState("Modifica registro");
-    const [recordId, setRecordId] = useState<any>([]);
-    const [record, setRecord] = useState<any>([]);
-    const [inputs, setInputs] = useState([]);
+    const [index, setIndex] = useState(0);
 
     const columns = props.columns;
     const dataTable = props.dataTable;
     const tableActions = props.tableActions;
+    const styledColumns = props.styledColumns;
     const xls = props.xls;
 
-    const recordInactive = {
+    interface ColumnStyle  {
+        backgroundColor?: string,
+        border?: string
+    };
+
+    const recordInactive: ColumnStyle  = {
         backgroundColor: "MistyRose",
     };
     const columnOk = {
@@ -40,79 +35,16 @@ const Table = (props: any) => {
     };
     const columnsStatus = [0, 1];
 
-    const update = (recordId: number) => {
-        getById(props.seccionMenu, recordId).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener registro");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setRecord(data);
-                getInputs(props.seccionMenuId, 'modifica').then(response => {
-                    if(!response.ok){
-                        console.log("Error al obtener inputs");
-                        console.log(response);
-                        return;
-                    }
-                    response.json().then(data => {
-                        setTitleModal("Modifica registro");
-                        setRecordId(recordId);
-                        setInputs(data);
-                        setShowModal(true);
-                    })
-                }).catch(error => console.error(error));
-            })
-        }).catch(error => console.error(error));
-    }
-    
-    const eliminar = (recordId: number) => {
-        deleteRecord(props.seccionMenu, recordId).then(response => {
-            if(!response.ok){
-                console.log("Error al eliminar registro");
-                console.log(response);
-                return;
-            }
-            props.setTable(props.currentPage);
-        }).catch(error => console.error(error));
-    }
-
-    const changeStatus = (recordId: number, recordStatus: number) => {
-        getById(props.seccionMenu, recordId).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener registro");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                data.userUpdatedId = props.userId;
-                data.updatedAt = mysqlTimeStamp();
-                data.status = flipStatus(recordStatus);
-                updateRecord(props.seccionMenu, recordId, data).then(response => {
-                    if(!response.ok){
-                        console.log("Error al modificar registro");
-                        console.log(response);
-                        return;
-                    }
-                    response.json().then(data => {
-                        props.setTable(props.currentPage);
-                    })
-                }).catch(error => console.error(error));
-            })
-        }).catch(error => console.error(error));
-    }
-
     const handleAction = (action: string, record: any) => {
-        setFormData({
+        const recordId = record.id;
+        props.setRecordId(recordId);
+        props.setFormData({
             'userUpdatedId': props.userId,
             'updatedAt': mysqlTimeStamp()
         });
-        if(action === "changeStatus")
-            changeStatus(record.id, record.status);
-        if(action === "eliminar")
-            eliminar(record.id);
-        if(action === "update")
-            update(record.id);
+        if(props.functions[action]){
+            props.functions[action](recordId);
+        }
     }
 
     const renderAction = (action: Accion, record: any) => {
@@ -171,11 +103,59 @@ const Table = (props: any) => {
         : record[columnName];
     }
 
+    const renderColumnExtra = (columnExtra: any, record: any) => {
+        const recordId = record.id;
+        if(columnExtra.inputType === "number")
+            return <InputTextFilter
+                key={ columnExtra.inputName }
+                inputData={ columnExtra }
+                stateFormData={ props.setFormData } 
+                recordId={ recordId }
+                text=""
+                handleIndex={ handleIndex }
+                showLabel={ false } />
+        if( columnExtra.inputType === "math" ){
+            const value = props.mathColumn(record[columnExtra.operateColumn], recordId);
+            return <>
+                <p key={ value }>{ value }</p>
+            </>
+        }
+    }
+
+    const getColumnStyled = (columnName: string, columnValue: string) => {
+        const columnStyle: ColumnStyle = {};
+        if(styledColumns?.[props.seccionMenu]){
+            const styledColumn = styledColumns[props.seccionMenu];
+            if(styledColumn?.[columnName]){
+                const styles = styledColumn[columnName];
+                for (let [key, value] of Object.entries(styles))
+                    if(columnValue === key){
+                        columnStyle.backgroundColor = String(value);
+                        columnStyle.border = "1px solid Gainsboro";
+                    }
+            }
+        }
+        return columnStyle;
+    }
+
+    const getColumnsExtra = () => {
+        if(props.columnsExtra?.[props.seccionMenu]){
+            return props.columnsExtra[props.seccionMenu];
+        }
+        return [];
+    }
+
+    const handleIndex = () => {
+        setIndex(flipStatus(index));
+    }
+
     const { onDownload } = useDownloadExcel({
         currentTableRef: tableRef.current,
         filename: props.seccionMenu,
         sheet: props.seccionMenu
     })
+
+    const columnsExtra = getColumnsExtra();
 
     return (
         <>
@@ -193,7 +173,12 @@ const Table = (props: any) => {
                             { Object.keys(tableActions).length > 0 
                                 ? <th className="no-print">Acciones</th> 
                                 : null }
-                            {columns.map((column: any) => {
+                            { columns.map((column: any) => {
+                                return(
+                                    <th key={ column.id }> { column.inputLabel } </th>
+                                );
+                            })}
+                            { columnsExtra.map((column: any) => {
                                 return(
                                     <th key={ column.id }> { column.inputLabel } </th>
                                 );
@@ -212,16 +197,24 @@ const Table = (props: any) => {
                                             );
                                         })}
                                         </td> : null }
-                                    {columns.map((column: any) => {
+                                    { columns.map((column: any) => {
                                         const columnName: string = column.inputName;
                                         const columnValue = renderColumn(columnName, record, column);
+                                        const recordStyled = getColumnStyled(columnName, columnValue);
                                         return(
                                             <td 
                                                 key={ column.id } 
-                                                style={ parseInt(record.status) === 0 ? recordInactive : {} }> 
+                                                style={ parseInt(record.status) === 0 ? recordInactive : recordStyled }> 
                                                 { 
                                                     columnValue
                                                 } 
+                                            </td>
+                                        );
+                                    })}
+                                    { columnsExtra.map((columnExtra: any) => {
+                                        return(
+                                            <td key={ columnExtra.id }>
+                                                { renderColumnExtra(columnExtra, record) }
                                             </td>
                                         );
                                     })}
@@ -231,21 +224,6 @@ const Table = (props: any) => {
                     </tbody>
                 </table>
             </div>
-            { 
-                Boolean(showModal) 
-                ? <ModalUpdate 
-                    seccionMenuId={ props.seccionMenuId } 
-                    seccionMenu={ props.seccionMenu }
-                    titleModal={ titleModal }
-                    recordId={ recordId }
-                    record={ record }
-                    inputs={ inputs }
-                    formdata={ formdata }
-                    stateShowModal={ setShowModal }
-                    setTable={ props.setTable }
-                    currentPage={ props.currentPage } /> 
-                : null 
-            }
         </>
     );
 }

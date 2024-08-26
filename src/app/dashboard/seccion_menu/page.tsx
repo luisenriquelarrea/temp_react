@@ -22,6 +22,7 @@ const Page = () => {
     const [alta, setAlta] = useState(false);
     const [lista, setLista] = useState(false);
     const [breadcrumbs, setBreadcrumbs] = useState([]);
+    const [recordId, setRecordId] = useState(0);
 
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
@@ -103,7 +104,9 @@ const Page = () => {
             { Boolean(lista) ? <Lista
                 user={ user }
                 seccionMenuId={ seccionMenuId } 
-                seccionMenu={ seccionMenu } /> : null }
+                seccionMenu={ seccionMenu }
+                setRecordId={ setRecordId }
+                recordId={ recordId } /> : null }
         </>
     );
 }
