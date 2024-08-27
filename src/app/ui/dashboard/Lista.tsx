@@ -166,7 +166,7 @@ const Lista = (props: any) => {
                 console.log(response);
                 return;
             }
-            props.setTable(props.currentPage);
+            setTable(currentPage);
         }).catch(error => console.error(error));
     }
 
@@ -188,7 +188,7 @@ const Lista = (props: any) => {
                         return;
                     }
                     response.json().then(data => {
-                        props.setTable(props.currentPage);
+                        setTable(currentPage);
                     })
                 }).catch(error => console.error(error));
             })
