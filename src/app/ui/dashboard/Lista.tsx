@@ -12,7 +12,7 @@ import {
     arrayColumn, 
     objectClean, 
     flipStatus, 
-    mysqlTimeStamp } from '../../funciones';
+    mysqlTimeStamp} from '../../funciones';
 import Filters from './Filters';
 import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";
@@ -42,43 +42,6 @@ const Lista = (props: any) => {
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [inputs, setInputs] = useState([]);
     const [record, setRecord] = useState({});
-
-    useEffect(() => {
-        getInputs(props.seccionMenuId, 'filtro').then(response => {
-            if(!response.ok){
-                console.log("Error al obtener inputs filtro");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setInputsFilters(data);
-            })
-        }).catch(error => console.error(error));
-        getInputs(props.seccionMenuId, 'lista').then(response => {
-            if(!response.ok){
-                console.log("Error al obtener inputs");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setColumns(data);
-            })
-        }).catch(error => console.error(error));
-        getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener tableActions");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                if(arrayColumn(data, 'descripcion').includes('xls'))
-                    setXls(true);
-                setTableActions(data);
-            })
-        }).catch(error => console.error(error));
-        setCountFilteredList();
-        setTable(0);
-    }, []);
 
     const renderPaginationButtons = (tPages: number) => {
         var i = 2;
@@ -200,6 +163,43 @@ const Lista = (props: any) => {
         eliminar: eliminar,
         update: update
     };
+
+    useEffect(() => {
+        getInputs(props.seccionMenuId, 'filtro').then(response => {
+            if(!response.ok){
+                console.log("Error al obtener inputs filtro");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                setInputsFilters(data);
+            })
+        }).catch(error => console.error(error));
+        getInputs(props.seccionMenuId, 'lista').then(response => {
+            if(!response.ok){
+                console.log("Error al obtener inputs");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                setColumns(data);
+            })
+        }).catch(error => console.error(error));
+        getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener tableActions");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                if(arrayColumn(data, 'descripcion').includes('xls'))
+                    setXls(true);
+                setTableActions(data);
+            })
+        }).catch(error => console.error(error));
+        setCountFilteredList();
+        setTable(0);
+    }, []);
 
     return (
         <>
