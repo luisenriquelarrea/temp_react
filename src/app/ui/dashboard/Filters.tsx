@@ -7,7 +7,7 @@ import { SeccionMenuInput } from '../../entities';
 
 const Filters = (props: any) => {
     const inputs = props.inputsFilters;
-    const inputsText = ['text', 'password', 'date'];
+    const inputsText = ['text', 'number', 'password', 'date'];
 
     useEffect(() => {
         window.addEventListener('keypress', e => {
@@ -17,6 +17,7 @@ const Filters = (props: any) => {
     }, []);
 
     const renderInput = (input: SeccionMenuInput) => {
+        input.inputCols = 2;
         if( inputsText.includes(String(input.inputType)) ){
             if(input.inputType === "date")
                 return <InputDatesFilter
@@ -27,7 +28,8 @@ const Filters = (props: any) => {
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ props.setFilterData } 
-                text="" />
+                text=""
+                showLabel={ true } />
         }
         if(input.inputType === "select")
              return <InputSelectFilter 

@@ -69,14 +69,16 @@ const Lista = (props: any) => {
     }
 
     const setCountFilteredList = () => {
-        countFilteredList(props.seccionMenu, objectClean(filterData)).then(response => {
+        const fd = objectClean(filterData);
+        const lim = (fd.limit !== undefined) ? fd.limit : limit;
+        countFilteredList(props.seccionMenu, fd).then(response => {
             if(!response.ok){
                 console.log("Error al obtener count");
                 console.log(response);
                 return;
             }
             response.json().then(data => {
-                const tPages = Math.ceil(parseFloat(String(data / limit)));
+                const tPages = Math.ceil(parseFloat(String(data / lim)));
                 setTotalPages(tPages);
                 setPaginationButtons(renderPaginationButtons(tPages));
             })
@@ -84,8 +86,11 @@ const Lista = (props: any) => {
     }
 
     const setTable = (offset: number) => {
-        filterData.offset = offset;
-        getSeccionMenuListFiltered(props.seccionMenu, objectClean(filterData)).then(response => {
+        const fd = objectClean(filterData);
+        if(fd.limit === undefined)
+            fd.limit = limit;
+        fd.offset = offset;
+        getSeccionMenuListFiltered(props.seccionMenu, fd).then(response => {
             if(!response.ok){
                 console.log("Error al obtener lista filtrada");
                 console.log(response);
