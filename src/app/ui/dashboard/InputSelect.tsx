@@ -6,7 +6,15 @@ const InputSelect = (props: any) => {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        const filters = getFilters();
+        let filters = getFilters();
+        if(props.inputData.filters)
+            filters = { 
+                ...props.inputData.filters,
+                ...{
+                    offset: 0,
+                    limit: 1000
+                }
+            }
         getSeccionMenuListFiltered(props.inputData.urlGet, filters).then(response => {
             if(!response.ok){
                 console.log("Error al obtener "+props.inputData.urlGet+" lista");
