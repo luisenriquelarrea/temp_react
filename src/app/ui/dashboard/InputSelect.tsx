@@ -32,6 +32,10 @@ const InputSelect = (props: any) => {
         const value = event.target.value;
         setDefaultValue(value);
         props.stateFormData((values: any) => ({...values, [name]: {"id":value} }))
+        if(props.handleInputChange)
+            props.handleInputChange({
+                [name]: value
+            });
     }
 
     const renderSelectColumnas = (option: any, selectColumnas: string) => {

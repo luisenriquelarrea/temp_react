@@ -40,7 +40,7 @@ const Formulario = (props: any) => {
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ props.setFormData }
-                seccionMenu={ props.seccionMenu } 
+                handleInputChange={ props.handleInputChange }
                 defaultValue={ value }
                 disabled={ disabled }
                 filters={ filters } />
