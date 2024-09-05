@@ -2,8 +2,8 @@ import { urlAPI, apiKey, apiToken } from './constants';
 import { User } from './entities';
 import { mysqlTimeStamp } from './funciones';
 
-export const downloadPDFFile = async (seccionMenu: string) => {
-    const response = await fetch(urlAPI+seccionMenu+"/downloadPDF", {
+export const downloadPDFFile = async (seccionMenu: string, id: number) => {
+    const response = await fetch(urlAPI+seccionMenu+"/downloadPDF"+"/"+id, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
