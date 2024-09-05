@@ -2,6 +2,23 @@ import { urlAPI, apiKey, apiToken } from './constants';
 import { User } from './entities';
 import { mysqlTimeStamp } from './funciones';
 
+export const downloadPDFFile = async (seccionMenu: string) => {
+    const response = await fetch(urlAPI+seccionMenu+"/downloadPDF", {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            [apiKey]: apiToken
+        },
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'document.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
+
 export const save = async (seccionMenu: string, formdata: any) => {
     const recordAt = mysqlTimeStamp();
     formdata.createdAt = recordAt;
