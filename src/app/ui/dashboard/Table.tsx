@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
 import { 
     flipStatus,
-    mysqlTimeStamp } from '../../funciones';
+    mysqlTimeStamp,
+    toCurrencyFormat } from '../../funciones';
 import { Accion } from '../../entities';
 import { useDownloadExcel } from "react-export-table-to-excel";
 import InputTextFilter from "./InputTextFilter";
@@ -199,7 +200,10 @@ const Table = (props: any) => {
                                         </td> : null }
                                     { columns.map((column: any) => {
                                         const columnName: string = column.inputName;
-                                        const columnValue = renderColumn(columnName, record, column);
+                                        let columnValue = renderColumn(columnName, record, column);
+                                        columnValue = (parseInt(column.currencyFormat) === 1) 
+                                            ? toCurrencyFormat(columnValue) 
+                                            : columnValue;
                                         const recordStyled = getColumnStyled(columnName, columnValue);
                                         return(
                                             <td 

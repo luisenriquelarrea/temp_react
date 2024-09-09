@@ -79,6 +79,10 @@ const removeSpecialChars = (str: string) => {
     return str;
 }
 
+export const toCurrencyFormat = (num: number) => {
+    return num.toLocaleString("en-US", {style:"currency", currency:"USD"});
+}
+
 export const toBase64 = (file: any) => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
