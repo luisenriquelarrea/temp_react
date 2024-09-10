@@ -13,11 +13,10 @@ const InputDatesFilter = (props: any) => {
 
     return(
         <>
-            <div className="column is-12" ></div>
             <div className="column is-2" >
                 <div className="field">
-                    <label className="label">
-                        { props.inputData.inputLabel }
+                    <label className="label is-small">
+                        { props.inputData.inputLabel } desde
                     </label>
                     <div className="control">
                         <input className="input is-info is-small" 
@@ -31,8 +30,8 @@ const InputDatesFilter = (props: any) => {
             </div>
             <div className="column is-2" >
                 <div className="field">
-                    <label className="label">
-                        -
+                    <label className="label is-small">
+                        - hasta
                     </label>
                     <div className="control">
                         <input className="input is-info is-small" 
