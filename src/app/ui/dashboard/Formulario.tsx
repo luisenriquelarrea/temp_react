@@ -1,4 +1,5 @@
 import InputText  from './InputText';
+import InputFile  from './InputFile';
 import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
@@ -35,6 +36,11 @@ const Formulario = (props: any) => {
                 stateFormData={ props.setFormData } 
                 text={ value }
                 disabled={ disabled } />
+        if( input.inputType === "file" )
+            return <InputFile 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ props.setFormData } />
         if(input.inputType === "select"){
             return <InputSelect 
                 key={ input.inputName }
@@ -88,10 +94,12 @@ const Formulario = (props: any) => {
                 })}
                 </div>
                 <div className="column is-3">
-                    <button 
+                    <button
+                        id="btnSiguiente"
                         type="submit" 
                         className="button is-fullwidth" 
-                        disabled={ props.buttonDisabled }>
+                        disabled={ props.buttonDisabled }
+                        style={ (props.styles !== undefined) ? props.styles : {} }>
                         {
                             (props.btnLabel !== undefined) ? props.btnLabel : "Guardar"
                         }
