@@ -89,11 +89,13 @@ const ModalUpdate = (props: any) => {
                 stateFormData={ setFormData } 
                 text={ props.record[inputName!] } />
         }
-        if( input.inputType === "file" )
+        if( input.inputType === "file" ){
+            input.inputCols = 12;
             return <InputFile 
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ setFormData } />
+        }
         if( input.inputType === "checkbox" )
             return <InputCheckbox 
                 key={ input.inputName }
