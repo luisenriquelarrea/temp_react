@@ -2,7 +2,7 @@ import { urlAPI, apiKey, apiToken } from './constants';
 import { User } from './entities';
 import { mysqlTimeStamp } from './funciones';
 
-export const downloadPDFFile = async (seccionMenu: string, id: number) => {
+export const downloadPDFFile = async (seccionMenu: string, id: number, filename: string) => {
     const response = await fetch(urlAPI+seccionMenu+"/downloadPDF"+"/"+id, {
         method: 'GET',
         headers: {
@@ -14,9 +14,10 @@ export const downloadPDFFile = async (seccionMenu: string, id: number) => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'document.pdf';
+    a.download = filename+id+".pdf";
     a.click();
     window.URL.revokeObjectURL(url);
+    return true;
 };
 
 export const save = async (seccionMenu: string, formdata: any) => {
