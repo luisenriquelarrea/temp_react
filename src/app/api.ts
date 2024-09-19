@@ -2,8 +2,9 @@ import { urlAPI, apiKey, apiToken } from './constants';
 import { User } from './entities';
 import { mysqlTimeStamp } from './funciones';
 
-export const downloadPDFFile = async (seccionMenu: string, id: number, filename: string) => {
-    const response = await fetch(urlAPI+seccionMenu+"/downloadPDF"+"/"+id, {
+export const downloadPDFFile = async (seccionMenu: string, endpoint: string, 
+        recordId:number, filename: string) => {
+    const response = await fetch(urlAPI+seccionMenu+"/"+endpoint+"/"+recordId, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
@@ -14,7 +15,26 @@ export const downloadPDFFile = async (seccionMenu: string, id: number, filename:
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename+id+".pdf";
+    a.download = filename+".pdf";
+    a.click();
+    window.URL.revokeObjectURL(url);
+    return true;
+};
+
+export const downloadXLSFile = async (seccionMenu: string, endpoint: string, 
+        filename: string) => {
+    const response = await fetch(urlAPI+seccionMenu+"/"+endpoint, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            [apiKey]: apiToken
+        },
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename+".xls";
     a.click();
     window.URL.revokeObjectURL(url);
     return true;
