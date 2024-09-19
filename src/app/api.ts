@@ -108,6 +108,20 @@ export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
     })
 }
 
+export const getNavbarActions = async (seccionMenuId: number, grupo: any) => {
+    return fetch(urlAPI+"accion_grupo/allowed_navbar", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            [apiKey]: apiToken
+        },
+        body: JSON.stringify({ 
+            'seccionMenuId': seccionMenuId,
+            'grupoId': grupo.id
+        }),
+    })
+}
+
 export const getTableActions = async (seccionMenuId: number, grupo: any) => {
     return fetch(urlAPI+"accion_grupo/allowed_table_actions", {
         method: 'POST',

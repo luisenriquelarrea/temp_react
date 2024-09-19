@@ -1,24 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
     getInputs, 
     getSeccionMenuListFiltered,
+    getNavbarActions,
     getTableActions,
     countFilteredList,
     getById,
     updateRecord,
     deleteRecord
 } from '../../api';
-import { 
-    arrayColumn, 
+import {  
     objectClean, 
     flipStatus, 
-    mysqlTimeStamp} from '../../funciones';
+    mysqlTimeStamp
+} from '../../funciones';
 import Filters from './Filters';
 import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";
 import Table from "./Table";
+import Navbar from "./Navbar";
+import { useDownloadExcel } from "react-export-table-to-excel";
 
 const Lista = (props: any) => {
+    const tableRef = useRef(null);
+
     const off = 0;
     const lim = 30;
 
@@ -28,10 +33,10 @@ const Lista = (props: any) => {
         offset: off,
         limit: lim
     });
+    const [navbarActions, setNavbarActions] = useState([]);
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [tableActions, setTableActions] = useState([]);
-    const [xls, setXls] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(lim);
     const [maxButtons, setMaxButtons] = useState(7);
@@ -163,10 +168,19 @@ const Lista = (props: any) => {
         }).catch(error => console.error(error));
     }
 
+    const xls = () => { onDownload() }
+
+    const { onDownload } = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: props.seccionMenu,
+        sheet: props.seccionMenu
+    })
+
     const functions = {
         changeStatus: changeStatus,
         eliminar: eliminar,
-        update: update
+        update: update,
+        xls: xls
     };
 
     useEffect(() => {
@@ -178,6 +192,16 @@ const Lista = (props: any) => {
             }
             response.json().then(data => {
                 setInputsFilters(data);
+            })
+        }).catch(error => console.error(error));
+        getNavbarActions(props.seccionMenuId, props.user.grupo).then(response => {
+            if(!response.ok){
+                console.log("Error al obtener navbarActions");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                setNavbarActions(data);
             })
         }).catch(error => console.error(error));
         getInputs(props.seccionMenuId, 'lista').then(response => {
@@ -197,8 +221,6 @@ const Lista = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                if(arrayColumn(data, 'descripcion').includes('xls'))
-                    setXls(true);
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
@@ -215,6 +237,9 @@ const Lista = (props: any) => {
                 setFilterData={ setFilterData }
                 setTable={ setTable }
                 setCountFilteredList={ setCountFilteredList } />
+            <Navbar
+                navbarActions={ navbarActions }
+                functions={ functions } />
             <Table
                 userId={ props.user.userId }
                 seccionMenuId={ props.seccionMenuId }
@@ -224,7 +249,7 @@ const Lista = (props: any) => {
                 tableActions={ tableActions }
                 setTable={ setTable }
                 currentPage={ currentPage }
-                xls={ xls }
+                tableRef={ tableRef }
                 setRecordId={ props.setRecordId }
                 setFormData={ setFormData }
                 functions={ functions } />

@@ -1,22 +1,18 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { 
     flipStatus,
     mysqlTimeStamp,
     toCurrencyFormat } from '../../funciones';
 import { Accion } from '../../entities';
-import { useDownloadExcel } from "react-export-table-to-excel";
 import InputTextFilter from "./InputTextFilter";
 
 const Table = (props: any) => {
-    const tableRef = useRef(null);
-
     const [index, setIndex] = useState(0);
 
     const columns = props.columns;
     const dataTable = props.dataTable;
     const tableActions = props.tableActions;
     const styledColumns = props.styledColumns;
-    const xls = props.xls;
 
     interface ColumnStyle  {
         backgroundColor?: string,
@@ -28,10 +24,6 @@ const Table = (props: any) => {
     };
     const columnOk = {
         color: "DodgerBlue",
-        fontSize: "17px"
-    };
-    const columnXmark = {
-        color: "red",
         fontSize: "17px"
     };
     const columnsStatus = [0, 1];
@@ -150,25 +142,14 @@ const Table = (props: any) => {
         setIndex(flipStatus(index));
     }
 
-    const { onDownload } = useDownloadExcel({
-        currentTableRef: tableRef.current,
-        filename: props.seccionMenu,
-        sheet: props.seccionMenu
-    })
-
     const columnsExtra = getColumnsExtra();
 
     return (
         <>
-            {
-                Boolean(xls)
-                ? <button onClick={ onDownload } style={{marginBottom: '10px'}} className="button is-small" >Excel</button>
-                : null
-            }
             <div className="table-container">
                 <table id="myTable" 
                     className="table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
-                    ref={ tableRef }>
+                    ref={ props.tableRef }>
                     <thead>
                         <tr>
                             { Object.keys(tableActions).length > 0 
