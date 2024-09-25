@@ -28,7 +28,8 @@ const InputFile = (props: any) => {
                                     type="file" 
                                     onChange={ handleChange } 
                                     id={ props.inputData.inputId } 
-                                    name={ props.inputData.inputName } />
+                                    name={ props.inputData.inputName }
+                                    required={Boolean(parseInt(props.inputData.inputRequired))} />
                                 <span className="file-cta">
                                     <span className="file-icon">
                                         <i className="fa fa-upload fa-fw"></i>

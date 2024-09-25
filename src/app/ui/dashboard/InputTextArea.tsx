@@ -33,7 +33,8 @@ const InputTextArea = (props: any) => {
                             value={ text }
                             onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel }
-                            rows={ 2 } >
+                            rows={ 2 }
+                            required={Boolean(parseInt(props.inputData.inputRequired))} >
                         </textarea>
                     </div>
                 </div>
