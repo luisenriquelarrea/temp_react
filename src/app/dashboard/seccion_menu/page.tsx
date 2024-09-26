@@ -16,6 +16,7 @@ import {
 const Page = () => {
     const { getItem } = useLocalStorage();
     const [user, setUser] = useState({});
+    const [initFormAlta, setInitFormAlta] = useState({});
     const [seccionMenuId, setSecccionMenuId] = useState(0);
     const [seccionMenu, setSecccionMenu] = useState("");
     const [navbarLabel, setNavbarLabel] = useState("");
@@ -26,6 +27,10 @@ const Page = () => {
 
     useEffect(() => {
         const user: User = JSON.parse(String(getItem("user")));
+        setInitFormAlta({
+            'status':1,
+            'userCreatedId': user.userId
+        });
         validateUserIsActive(String(user.username)).then(response => {
             if(!response.ok){
                 window.location.href = '/';
@@ -98,7 +103,7 @@ const Page = () => {
                 </ul>
             </nav>
             { Boolean(alta) ? <Alta 
-                user={ user }
+                initFormAlta={ initFormAlta }
                 seccionMenuId={ seccionMenuId } 
                 seccionMenu={ seccionMenu } /> : null }
             { Boolean(lista) ? <Lista

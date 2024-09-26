@@ -8,10 +8,7 @@ const Alta = (props: any) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [key, setKey] = useState(0);
     const [inputs, setInputs] = useState([]);
-    const [formData, setFormData] = useState({
-        'status':1,
-        'userCreatedId': props.user.userId
-    });
+    const [formData, setFormData] = useState(props.initFormAlta);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
         messageType: "",
@@ -69,7 +66,8 @@ const Alta = (props: any) => {
                 inputs={ inputs }
                 setFormData={ setFormData }
                 handleSubmit={ handleSubmit }
-                buttonDisabled={ buttonDisabled } />
+                buttonDisabled={ buttonDisabled }
+                buttonSize={ props.buttonSize } />
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
