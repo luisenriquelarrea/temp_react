@@ -32,6 +32,12 @@ export const currentSeccionMenu = (pathname: string) => {
     return String(sm).substring(sm.lastIndexOf("/") + 1);
 }
 
+const dateWithTimezone = (date: Date, timezone: number) => {
+    // Create a Date object with the specified timezone
+    const dateWithTimezone = new Date(date.getTime() + timezone * 60 * 60 * 1000);
+    return dateWithTimezone;
+}
+
 export const downloadBase64Data = (base64String: string, fileName: string) => {
     const file = convertBase64ToFile(base64String, fileName);
     saveAs(file, fileName);
@@ -48,11 +54,11 @@ export const flipStatus = (status: number) => {
 }
 
 export const mysqlDate = () => {
-    return new Date().toISOString().slice(0, 10);
+    return dateWithTimezone(new Date(), -6).toISOString().slice(0, 10);
 }
 
 export const mysqlTimeStamp = () => {
-    return new Date().toISOString().slice(0, 19).replace('T', ' ');
+    return dateWithTimezone(new Date(), -6).toISOString().slice(0, 19).replace('T', ' ');
 }
 
 export const objectClean = (obj: any) => {
@@ -89,6 +95,10 @@ export const toBase64 = (file: any) => new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
 });
+
+export const capitalizeFirstLetter = (cadena: string) => {
+    return cadena.charAt(0).toUpperCase() + cadena.slice(1);
+}
 
 export const uncapitalizeFirstLetter = (cadena: string) => {
     return cadena.charAt(0).toLowerCase() + cadena.slice(1);
