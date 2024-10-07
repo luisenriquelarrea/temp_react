@@ -1,13 +1,10 @@
-import { useState } from "react";
-import { 
-    flipStatus,
+import {
     mysqlTimeStamp,
     toCurrencyFormat } from '../../funciones';
 import { Accion } from '../../entities';
 import InputTextFilter from "./InputTextFilter";
 
 const Table = (props: any) => {
-    const [index, setIndex] = useState(0);
 
     const columns = props.columns;
     const dataTable = props.dataTable;
@@ -105,12 +102,12 @@ const Table = (props: any) => {
                 stateFormData={ props.setFormData } 
                 recordId={ recordId }
                 text=""
-                handleIndex={ handleIndex }
+                handlePropEvent={ props.handlePropEvent }
                 showLabel={ false } />
         if( columnExtra.inputType === "math" ){
             const value = props.mathColumn(record[columnExtra.operateColumn], recordId);
             return <>
-                <p key={ value }>{ value }</p>
+                <p key={ value } className={ `input-${columnExtra.inputName}` }>{ value }</p>
             </>
         }
     }
@@ -136,10 +133,6 @@ const Table = (props: any) => {
             return props.columnsExtra[props.seccionMenu];
         }
         return [];
-    }
-
-    const handleIndex = () => {
-        setIndex(flipStatus(index));
     }
 
     const columnsExtra = getColumnsExtra();

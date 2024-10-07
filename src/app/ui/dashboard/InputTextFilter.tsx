@@ -17,6 +17,10 @@ const InputTextFilter = (props: any) => {
                 }))
         else
             props.stateFormData((values: any) => ({...values, [name]: value}))
+        if(props.handlePropEvent !== undefined)
+            props.handlePropEvent({
+                inputName: name
+            });
     }
 
     return(
@@ -29,12 +33,13 @@ const InputTextFilter = (props: any) => {
                         : null
                     }
                     <div className="control">
-                        <input className="input is-info is-small" 
+                        <input className={`input is-info is-small input-${ props.inputData.inputName }`} 
                             name={ props.inputData.inputName }
                             type={ props.inputData.inputType } 
                             value={ text }
                             onChange={ handleChange }
-                            placeholder={ props.inputData.inputLabel } />
+                            placeholder={ props.inputData.inputLabel }
+                            disabled={ props.inputData.inputDisabled } />
                     </div>
                 </div>
             </div>
