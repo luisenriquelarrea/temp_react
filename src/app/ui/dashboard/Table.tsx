@@ -3,6 +3,7 @@ import {
     toCurrencyFormat } from '../../funciones';
 import { Accion } from '../../entities';
 import InputTextFilter from "./InputTextFilter";
+import InputCheckboxFilter from "./InputCheckboxFilter";
 
 const Table = (props: any) => {
 
@@ -95,6 +96,13 @@ const Table = (props: any) => {
 
     const renderColumnExtra = (columnExtra: any, record: any) => {
         const recordId = record.id;
+        if( columnExtra.inputType === "checkbox" )
+            return <InputCheckboxFilter 
+                key={ columnExtra.inputName }
+                inputData={ columnExtra }
+                stateFormData={ props.setFormData } 
+                text="0"
+                noLabel="1" />
         if(columnExtra.inputType === "number")
             return <InputTextFilter
                 key={ columnExtra.inputName }
@@ -148,12 +156,21 @@ const Table = (props: any) => {
                             { Object.keys(tableActions).length > 0 
                                 ? <th className="no-print">Acciones</th> 
                                 : null }
+                            { columnsExtra.map((column: any) => {
+                                if(column.inputType !== "checkbox")
+                                    return null;
+                                return(
+                                    <th key={ column.id }> { column.inputLabel } </th>
+                                );
+                            })}
                             { columns.map((column: any) => {
                                 return(
                                     <th key={ column.id }> { column.inputLabel } </th>
                                 );
                             })}
                             { columnsExtra.map((column: any) => {
+                                if(column.inputType === "checkbox")
+                                    return null;
                                 return(
                                     <th key={ column.id }> { column.inputLabel } </th>
                                 );
@@ -171,7 +188,17 @@ const Table = (props: any) => {
                                                 renderAction(action, record)
                                             );
                                         })}
-                                        </td> : null }
+                                        </td> : null 
+                                    }
+                                    { columnsExtra.map((columnExtra: any) => {
+                                        if(columnExtra.inputType !== "checkbox")
+                                            return null;
+                                        return(
+                                            <td key={ columnExtra.id }>
+                                                { renderColumnExtra(columnExtra, record) }
+                                            </td>
+                                        );
+                                    })}
                                     { columns.map((column: any) => {
                                         const columnName: string = column.inputName;
                                         let columnValue = renderColumn(columnName, record, column);
@@ -190,6 +217,8 @@ const Table = (props: any) => {
                                         );
                                     })}
                                     { columnsExtra.map((columnExtra: any) => {
+                                        if(columnExtra.inputType === "checkbox")
+                                            return null;
                                         return(
                                             <td key={ columnExtra.id }>
                                                 { renderColumnExtra(columnExtra, record) }

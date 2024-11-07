@@ -43,7 +43,7 @@ const InputCheckbox = (props: any) => {
                         value={ text }
                         onChange={ handleChange }
                         checked={Boolean(checked) === true} />
-                    { props.inputData.inputLabel }
+                    { (props.noLabel !== undefined) ? null : props.inputData.inputLabel }
                 </label>
             </div>
         </>
