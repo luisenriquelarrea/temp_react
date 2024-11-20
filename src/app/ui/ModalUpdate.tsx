@@ -6,9 +6,9 @@ import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
 import Section from "./Section";
 import MessageBox from "./MessageBox";
-import { updateRecord } from '../../api';
-import { SeccionMenuInput } from '../../entities';
-import { uncapitalizeFirstLetter } from '../../funciones';
+import { updateRecord } from '@/app/api';
+import { SeccionMenuInput } from '@/app/entities';
+import { uncapitalizeFirstLetter } from '@/app/funciones';
 import Encabezado from "./Encabezado";
 
 const ModalUpdate = (props: any) => {

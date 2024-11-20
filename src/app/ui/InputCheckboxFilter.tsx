@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { flipStatus } from '../../funciones';
+import { flipStatus } from '@/app/funciones';
 
 const InputCheckbox = (props: any) => {
     const [text, setText] = useState(props.text);
@@ -20,13 +20,22 @@ const InputCheckbox = (props: any) => {
         const name = event.target.name;
         const value = flipStatus(parseInt(event.target.value));
         setInputCheck(value);
-        props.stateFormData((values: any) => ({...values, [name]: value}))
+        if(props.recordId !== undefined)
+            props.stateFormData((values: any) => 
+                ({
+                    ...values, 
+                    [props.recordId]: {
+                        ...values[props.recordId], [name]: value
+                    }
+                }))
+        else
+            props.stateFormData((values: any) => ({...values, [name]: value}))
     }
 
     return(
         <>
-            <div className={ `column is-12` } >
-                <label className="checkbox label">
+            <div className={ `column is-${props.inputData.inputCols}` } >
+                <label className="checkbox label is-small">
                     <input
                         className="my-check"
                         type="checkbox"
@@ -34,7 +43,7 @@ const InputCheckbox = (props: any) => {
                         value={ text }
                         onChange={ handleChange }
                         checked={Boolean(checked) === true} />
-                    { props.inputData.inputLabel }
+                    { (props.noLabel !== undefined) ? null : props.inputData.inputLabel }
                 </label>
             </div>
         </>

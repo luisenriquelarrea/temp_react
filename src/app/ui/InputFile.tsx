@@ -1,4 +1,4 @@
-import { toBase64 } from '../../funciones';
+import { toBase64 } from '@/app/funciones';
 
 const InputFile = (props: any) => {
 

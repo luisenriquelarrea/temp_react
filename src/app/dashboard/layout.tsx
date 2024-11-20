@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import SideNav from '@/app/ui/dashboard/SideNav';
+import SideNav from '@/app/ui/SideNav';
  
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const { getItem } = useLocalStorage();

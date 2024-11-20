@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { 
     getInputs,
     getById
-} from '../../api';
+} from '@/app/api';
 import Table from "./Table";
 
 const Encabezado = (props: any) => {

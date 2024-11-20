@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { castNullToString } from '../../funciones';
+import { castNullToString } from '@/app/funciones';
 
 const InputText = (props: any) => {
     const [text, setText] = useState(castNullToString(props.text));

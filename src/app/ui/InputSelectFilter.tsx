@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSeccionMenuListFiltered } from '../../api';
+import { getSeccionMenuListFiltered } from '@/app/api';
 
 const InputSelectFilter = (props: any) => {
     const [defaultValue, setDefaultValue] = useState(props.defaultValue);

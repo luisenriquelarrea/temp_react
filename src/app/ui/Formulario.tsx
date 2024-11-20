@@ -3,7 +3,7 @@ import InputFile  from './InputFile';
 import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
-import { InputConf, SeccionMenuInput } from '../../entities';
+import { InputConf, SeccionMenuInput } from '@/app/entities';
 import { getObjectValue, uncapitalizeFirstLetter } from '@/app/funciones';
 
 const Formulario = (props: any) => {

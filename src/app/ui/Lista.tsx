@@ -8,12 +8,12 @@ import {
     getById,
     updateRecord,
     deleteRecord
-} from '../../api';
+} from '@/app/api';
 import {  
     objectClean, 
     flipStatus, 
     mysqlTimeStamp
-} from '../../funciones';
+} from '@/app/funciones';
 import Filters from './Filters';
 import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";

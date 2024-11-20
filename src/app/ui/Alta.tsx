@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import MessageBox from "./MessageBox";
 import Formulario from "./Formulario";
-import { getInputs, save } from '../../api';
-import { objectClean, flipStatus } from '../../funciones';
+import { getInputs, save } from '@/app/api';
+import { objectClean, flipStatus } from '@/app/funciones';
 
 const Alta = (props: any) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);

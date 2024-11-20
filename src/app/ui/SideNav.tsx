@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import Image from 'next/image'
-import Accordion from '@/app/ui/dashboard/Accordion';
+import Accordion from '@/app/ui/Accordion';
 
 const SideNav = () => {
     const { removeItem } = useLocalStorage();

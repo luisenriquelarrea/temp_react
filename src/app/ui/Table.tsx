@@ -1,7 +1,7 @@
 import {
     mysqlTimeStamp,
-    toCurrencyFormat } from '../../funciones';
-import { Accion } from '../../entities';
+    toCurrencyFormat } from '@/app/funciones';
+import { Accion } from '@/app/entities';
 import InputTextFilter from "./InputTextFilter";
 import InputCheckboxFilter from "./InputCheckboxFilter";
 

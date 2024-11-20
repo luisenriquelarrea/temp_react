@@ -1,4 +1,4 @@
-import { castNullToString } from '../../funciones';
+import { castNullToString } from '@/app/funciones';
 import { useState } from 'react';
 
 const InputTextArea = (props: any) => {

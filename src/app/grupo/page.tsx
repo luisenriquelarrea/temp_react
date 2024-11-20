@@ -2,16 +2,16 @@
 
 import { memo } from "react";
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import Alta from '@/app/ui/dashboard/Alta';
-import Lista from '@/app/ui/dashboard/Lista';
-import { arrayColumn, currentSeccionMenu } from '../../funciones';
-import { User, Accion } from '../../entities';
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import Alta from '@/app/ui/Alta';
+import Lista from '@/app/ui/Lista';
+import { arrayColumn, currentSeccionMenu } from '@/app/funciones';
+import { User, Accion } from '@/app/entities';
 import {
     getSeccionMenu, 
     getBreadcrumbs, 
     validateUserIsActive 
-} from '../../api';
+} from '@/app/api';
 
 const Page = () => {
     const { getItem } = useLocalStorage();

@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { getUser } from '../api'
-import MessageBox from '../ui/dashboard/MessageBox';
+import { getUser } from '@/app/api'
+import MessageBox from '../ui/MessageBox';
 import Image from 'next/image'
 
 const LoginPage = () => {
