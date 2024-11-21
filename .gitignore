@@ -51,6 +51,6 @@ jspm_packages
 # Built Visual Studio Code Extensions
 *.vsix
 
-#App
+# App
 constants.ts
 .env.local
