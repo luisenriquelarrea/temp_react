@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import SideNav from '@/app/ui/SideNav';
  
 const Layout = ({ children }: { children: React.ReactNode }) => {

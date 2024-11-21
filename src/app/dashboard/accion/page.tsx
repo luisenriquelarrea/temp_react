@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import Alta from '@/app/ui/Alta';
 import Lista from '@/app/ui/Lista';
 import { arrayColumn, currentSeccionMenu } from '@/app/funciones';

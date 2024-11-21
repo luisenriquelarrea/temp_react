@@ -5,7 +5,7 @@ const NavLink = (props: any) => {
         <Link 
             key={ props.seccion.descripcion }
             className="dropdown-item w3-button"
-            href={ '/'+props.seccion.descripcion } >
+            href={ '/dashboard/'+props.seccion.descripcion } >
             <p>
                 { props.seccion.navbarLabel }
             </p>

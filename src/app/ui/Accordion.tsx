@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import NavLink from "./NavLink";
 import { getNavLinks } from '@/app/api';
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { User } from '@/app/entities';
 import { parseString } from "../funciones";
 

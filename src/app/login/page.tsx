@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@/app/hooks/useAuth';
 import { getUser } from '@/app/api'
 import MessageBox from '../ui/MessageBox';
 import Image from 'next/image'

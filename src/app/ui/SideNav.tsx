@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import Image from 'next/image'
 import Accordion from '@/app/ui/Accordion';
 
