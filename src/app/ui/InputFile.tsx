@@ -1,4 +1,7 @@
-import { toBase64 } from '@/app/funciones';
+import { 
+    toBase64,
+    castNullToString
+} from '@/app/funciones';
 
 const InputFile = (props: any) => {
 
@@ -29,7 +32,8 @@ const InputFile = (props: any) => {
                                     onChange={ handleChange } 
                                     id={ props.inputData.inputId } 
                                     name={ props.inputData.inputName }
-                                    required={Boolean(parseInt(props.inputData.inputRequired))} />
+                                    required={Boolean(parseInt(props.inputData.inputRequired))}
+                                    accept={castNullToString(props.inputData.inputAccepts)} />
                                 <span className="file-cta">
                                     <span className="file-icon">
                                         <i className="fa fa-upload fa-fw"></i>
