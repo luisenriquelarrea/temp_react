@@ -178,9 +178,9 @@ const Table = (props: any) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {dataTable.map((record: any) => {
+                        {dataTable.map((record: any, index: number) => {
                             return(
-                                <tr key={ record.id }>
+                                <tr key={ index }>
                                     { Object.keys(tableActions).length > 0 
                                         ? <td>
                                         {tableActions.map((action: Accion) => {
