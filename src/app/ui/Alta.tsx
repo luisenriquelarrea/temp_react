@@ -44,11 +44,11 @@ const Alta = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setMessageData({
                     messageType: "success",
                     message: "Éxito al crear registro."
                 });
+                setFormData(props.initFormAlta);
                 setShowMessageBox(true);
                 setKey(flipStatus(key));
                 setButtonDisabled(false);
