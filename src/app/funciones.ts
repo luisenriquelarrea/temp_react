@@ -6,6 +6,14 @@ export const arrayColumn = (array: any[], column: string) => {
     return [];
 }
 
+export const arraySum = (array: any[]) => {
+    return array.reduce((partialSum, a) => partialSum + a, 0);
+}
+
+export const arrayUnique = (array: any[]) => {
+    return [...new Set(array)];
+}
+
 export const castNullToString = (input: any) => {
     return (String(input) === "null" 
         || String(input).trim() === ""
