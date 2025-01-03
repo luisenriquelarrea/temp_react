@@ -47,7 +47,7 @@ const SideNav = () => {
 
     return (
         <>
-            <div className="w3-bar w3-top w3-deep-orange w3-large my-top-bar">
+            <div className="w3-bar w3-top w3-deep-orange w3-large my-top-bar no-print">
                 <button
                     onClick={ w3Open } 
                     className="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey">
