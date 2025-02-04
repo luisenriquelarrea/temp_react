@@ -1,7 +1,5 @@
 const titleApp = "Development app";
 
-const urlAPI = "http://localhost:8080/api/"
-const apiKey = "";
-const apiToken = "";
-
-export {urlAPI, titleApp, apiKey, apiToken};
+export {
+    titleApp
+};

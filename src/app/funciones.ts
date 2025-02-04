@@ -6,6 +6,25 @@ export const arrayColumn = (array: any[], column: string) => {
     return [];
 }
 
+export const arrayGroup = (array: any[], path: any[]) => {
+    const transform = pipe( groupBy( getPath(path) ), values);
+    return transform(array);
+}
+
+const groupBy = (fn: any) => (list: any) => list.reduce((all: any, curr: any) => {
+    const key = fn(curr);
+    (all[key] || (all[key] = [])).push(curr);
+    return all;
+},{});
+  
+const values = (obj: any) => Object.values(obj);
+
+const pipe = (f1: any, ...fns: any) => (...args: any) => {
+    return fns.reduce((res: any, fn: any) => fn(res), f1.apply(null, args));
+};
+
+const getPath = (nodes: any) => (obj: any) => nodes.reduce((o: any, node: any) => o[node], obj);
+
 export const arraySum = (array: any[]) => {
     return array.reduce((partialSum, a) => partialSum + a, 0);
 }

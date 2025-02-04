@@ -1,14 +1,17 @@
-import { urlAPI, apiKey, apiToken } from './constants';
 import { User } from './entities';
 import { mysqlTimeStamp } from './funciones';
 
+var urlAPI = process.env.urlAPI;
+var apiKey = process.env.apiKey;
+var apiToken = process.env.apiToken;
+
 export const downloadPDFFile = async (seccionMenu: string, endpoint: string, 
         recordId:number, filename: string) => {
-    const response = await fetch(urlAPI+seccionMenu+"/"+endpoint+"/"+recordId, {
+    const response = await fetch(`${urlAPI}${seccionMenu}/${endpoint}/${recordId}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
     });
     const blob = await response.blob();
@@ -23,18 +26,18 @@ export const downloadPDFFile = async (seccionMenu: string, endpoint: string,
 
 export const downloadXLSFile = async (seccionMenu: string, endpoint: string, 
         filename: string) => {
-    const response = await fetch(urlAPI+seccionMenu+"/"+endpoint, {
+    const response = await fetch(`${urlAPI}${seccionMenu}/${endpoint}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
     });
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename+".xls";
+    a.download = filename+".csv";
     a.click();
     window.URL.revokeObjectURL(url);
     return true;
@@ -44,82 +47,93 @@ export const save = async (seccionMenu: string, formdata: any) => {
     const recordAt = mysqlTimeStamp();
     formdata.createdAt = recordAt;
     formdata.updatedAt = recordAt;
-    return fetch(urlAPI+seccionMenu+"/add", {
+    return fetch(`${urlAPI}${seccionMenu}/add`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify(formdata),
     })
 }
 
 export const updateRecord = async (seccionMenu: string, id: number, formdata: any) => {
-    return fetch(urlAPI+seccionMenu+"/"+id, {
+    return fetch(`${urlAPI}${seccionMenu}/${id}`, {
         method: 'PUT',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify(formdata),
     })
 }
 
 export const uploadFile = async (seccionMenu: string, id: number, formdata: any) => {
-    return fetch(urlAPI+seccionMenu+"/"+id+"/uploadFile", {
+    return fetch(`${urlAPI}${seccionMenu}/${id}/uploadFile`, {
         method: 'POST',
         body: formdata,
     })
 }
 
+export const deleteRecords = async (seccionMenu: string, formdata: any) => {
+    return fetch(`${urlAPI}${seccionMenu}/deleteRecords`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            [`${apiKey}`]: `${apiToken}`
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
 export const deleteRecord = async (seccionMenu: string, id: number) => {
-    return fetch(urlAPI+seccionMenu+"/"+id, {
+    return fetch(`${urlAPI}${seccionMenu}/${id}`, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
     })
 }
 
 export const getById = async (seccionMenu: string, id: number) => {
-    return fetch(urlAPI+seccionMenu+"/"+id, {
+    return fetch(`${urlAPI}${seccionMenu}/${id}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
     })
 }
 
 export const getByUserId = async (seccionMenu: string, url: string, userId: number) => {
-    return fetch(urlAPI+seccionMenu+"/"+url, {
+    return fetch(`${urlAPI}${seccionMenu}/${url}`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({userId: userId}),
     })
 }
 
 export const countFilteredList = async (seccionMenu: string, formdata: any) => {
-    return fetch(urlAPI+seccionMenu+"/countFilteredList", {
+    return fetch(`${urlAPI}${seccionMenu}/countFilteredList`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify(formdata),
     })
 }
 
 export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
-    return fetch(urlAPI+"accion_grupo/allowed_breadcrumbs", {
+    return fetch(`${urlAPI}accion_grupo/allowed_breadcrumbs`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({ 
             'seccionMenuId': seccionMenuId,
@@ -129,11 +143,11 @@ export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
 }
 
 export const getNavbarActions = async (seccionMenuId: number, grupo: any) => {
-    return fetch(urlAPI+"accion_grupo/allowed_navbar", {
+    return fetch(`${urlAPI}accion_grupo/allowed_navbar`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({ 
             'seccionMenuId': seccionMenuId,
@@ -143,11 +157,11 @@ export const getNavbarActions = async (seccionMenuId: number, grupo: any) => {
 }
 
 export const getTableActions = async (seccionMenuId: number, grupo: any) => {
-    return fetch(urlAPI+"accion_grupo/allowed_table_actions", {
+    return fetch(`${urlAPI}accion_grupo/allowed_table_actions`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({ 
             'seccionMenuId': seccionMenuId,
@@ -157,11 +171,11 @@ export const getTableActions = async (seccionMenuId: number, grupo: any) => {
 }
 
 export const getInputs = async (seccionMenuId: number, columna: string) => {
-    return fetch(urlAPI+"seccion_menu_input/inputs", {
+    return fetch(`${urlAPI}seccion_menu_input/inputs`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({ 
             'seccionMenuId': seccionMenuId,
@@ -171,11 +185,11 @@ export const getInputs = async (seccionMenuId: number, columna: string) => {
 }
 
 export const getNavLinks = async (grupo: any) => {
-    return fetch(urlAPI+"accion_grupo/allowed_menus", {
+    return fetch(`${urlAPI}accion_grupo/allowed_menus`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({ 
             'grupoId': grupo.id
@@ -184,11 +198,11 @@ export const getNavLinks = async (grupo: any) => {
 }
 
 export const getSeccionMenu = async (seccionMenu: string) => {
-    return fetch(urlAPI+"seccion_menu/descripcion", {
+    return fetch(`${urlAPI}seccion_menu/descripcion`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({ 
             'descripcion': seccionMenu
@@ -197,43 +211,43 @@ export const getSeccionMenu = async (seccionMenu: string) => {
 }
 
 export const getSeccionMenuList = async (seccionMenu: string) => {
-    return fetch(urlAPI+seccionMenu+"/", {
+    return fetch(`${urlAPI}${seccionMenu}/`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
     })
 }
 
 export const getSeccionMenuListFiltered = async (seccionMenu: string, formdata: any) => {
-    return fetch(urlAPI+seccionMenu+"/filteredList", {
+    return fetch(`${urlAPI}${seccionMenu}/filteredList`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify(formdata),
     })
 }
 
 export const getUser = async (data: User) => {
-    return fetch(urlAPI+"authenticate", {
+    return fetch(`${urlAPI}authenticate`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify(data),
     })
 }
 
 export const validateUserIsActive = async (username: string) => {
-    return fetch(urlAPI+"user_is_active", {
+    return fetch(`${urlAPI}user_is_active`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [apiKey]: apiToken
+            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify({username: username}),
     })
