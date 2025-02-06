@@ -48,6 +48,9 @@ const Filters = (props: any) => {
     }
 
     const handleSubmit = () => {
+        if(props.btnFilterDisabled)
+            return;
+        props.setBtnFilterDisabled(true);
         props.setCountFilteredList();
         props.setTable(0);
     }
@@ -62,7 +65,12 @@ const Filters = (props: any) => {
                 })}
                 <div className="column is-12" style={{"padding": 0}}></div>
                 <div className="column is-2">
-                    <button id="btn" onClick={ handleSubmit } className="button is-small is-fullwidth">Filtrar</button>
+                    <button 
+                        id="btn" 
+                        onClick={ handleSubmit } 
+                        className="button is-small is-fullwidth"
+                        disabled={ props.btnFilterDisabled }>Filtrar
+                    </button>
                 </div>
             </div>
         </>

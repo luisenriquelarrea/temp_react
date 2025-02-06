@@ -19,6 +19,7 @@ import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";
 import Table from "./Table";
 import Navbar from "./Navbar";
+import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { useDownloadExcel } from "react-export-table-to-excel";
 
 const Lista = (props: any) => {
@@ -47,6 +48,7 @@ const Lista = (props: any) => {
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [inputs, setInputs] = useState([]);
     const [record, setRecord] = useState({});
+    const [btnFilterDisabled, setBtnFilterDisabled] = useState(false);
 
     const renderPaginationButtons = (tPages: number) => {
         var i = 2;
@@ -103,6 +105,7 @@ const Lista = (props: any) => {
             }
             response.json().then(data => {
                 setDataTable(data);
+                setBtnFilterDisabled(false);
             })
         }).catch(error => console.error(error));
     }
@@ -135,8 +138,25 @@ const Lista = (props: any) => {
     const eliminar = (recordId: number) => {
         deleteRecord(props.seccionMenu, recordId).then(response => {
             if(!response.ok){
-                console.log("Error al eliminar registro");
                 console.log(response);
+                const httpStatus = String(response.status);
+                if(parseInt(httpStatus) == 422){
+                    response.json().then(data => {
+                        Swal.fire({
+                            title: 'Atención!',
+                            text: data.message,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    })
+                }
+                Swal.fire({
+                    title: 'Atención!',
+                    text: "("+httpStatus+") "+"Ocurrió un error, contacte a su equipo de sistemas.",
+                    icon: "warning",
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             setTable(currentPage);
@@ -168,7 +188,9 @@ const Lista = (props: any) => {
         }).catch(error => console.error(error));
     }
 
-    const xls = () => { onDownload() }
+    const xls = () => { 
+        onDownload();
+    }
 
     const { onDownload } = useDownloadExcel({
         currentTableRef: tableRef.current,
@@ -236,10 +258,14 @@ const Lista = (props: any) => {
                 inputsFilters={ inputsFilters }
                 setFilterData={ setFilterData }
                 setTable={ setTable }
-                setCountFilteredList={ setCountFilteredList } />
+                setCountFilteredList={ setCountFilteredList }
+                btnFilterDisabled={ btnFilterDisabled }
+                setBtnFilterDisabled={ setBtnFilterDisabled } />
             <Navbar
                 navbarActions={ navbarActions }
-                functions={ functions } />
+                functions={ functions }
+                btnFilterDisabled={ btnFilterDisabled }
+                setBtnFilterDisabled={ setBtnFilterDisabled } />
             <Table
                 userId={ props.user.userId }
                 seccionMenuId={ props.seccionMenuId }

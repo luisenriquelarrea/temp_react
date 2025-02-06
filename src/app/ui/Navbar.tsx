@@ -1,5 +1,7 @@
 const Navbar = (props: any) => {
     const handleAction = (action: string) => {
+        if(props.btnFilterDisabled)
+            return;
         if(props.functions[action]){
             props.functions[action]();
         }
@@ -11,12 +13,13 @@ const Navbar = (props: any) => {
                 <div className="buttons">
                 {props.navbarActions.map((action: any) => {
                     return(
-                        <a 
+                        <button 
                             key={ action.id } 
                             className="button is-light is-small"
+                            disabled={ props.btnFilterDisabled }
                             onClick={() => handleAction(String(action.callMethod)) } >
                             { action.label }
-                        </a>
+                        </button>
                     )
                 })}
                 </div>
