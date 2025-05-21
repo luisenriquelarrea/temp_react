@@ -3,6 +3,7 @@ import InputFile  from './InputFile';
 import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
+import BookMark from "./BookMark";
 import { InputConf, SeccionMenuInput } from '@/app/entities';
 import { getObjectValue, uncapitalizeFirstLetter } from '@/app/funciones';
 
@@ -63,6 +64,10 @@ const Formulario = (props: any) => {
                 inputData={ input }
                 stateFormData={ props.setFormData } 
                 text="0" />
+        if( input.inputType === "bookmark" )
+            return <BookMark 
+                key={ input.inputName }
+                inputData={ input } />
         return null
     }
 

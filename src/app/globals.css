@@ -141,6 +141,33 @@ td i {
   padding: 22px 0;
 }
 
+.separator-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 30px 0;
+}
+
+.separator-text::before,
+.separator-text::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.separator-text:not(:empty)::before {
+  margin-right: 10px;
+}
+
+.separator-text:not(:empty)::after {
+  margin-left: 10px;
+}
+
+.separator-text span {
+  font-weight: bold;
+  color: #666;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

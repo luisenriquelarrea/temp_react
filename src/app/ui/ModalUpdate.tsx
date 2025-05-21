@@ -4,7 +4,7 @@ import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
 import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
-import Section from "./Section";
+import BookMark from "./BookMark";
 import MessageBox from "./MessageBox";
 import { updateRecord } from '@/app/api';
 import { SeccionMenuInput } from '@/app/entities';
@@ -102,13 +102,10 @@ const ModalUpdate = (props: any) => {
                 inputData={ input }
                 stateFormData={ setFormData } 
                 text={ props.record[inputName!] } />
-        if( input.inputType === "section" )
-        {
-            input.inputCols = 12;
-            return <Section 
+        if( input.inputType === "bookmark" )
+            return <BookMark 
                 key={ input.inputName }
                 inputData={ input } />
-        }
         return null
     }
 
