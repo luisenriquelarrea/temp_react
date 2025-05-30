@@ -29,11 +29,23 @@ const Lista = (props: any) => {
     const lim = 30;
 
     const [inputsFilters, setInputsFilters] = useState([]);
-    const [filterData, setFilterData] = useState({
-        userId: props.user.userId,
-        offset: off,
-        limit: lim
-    });
+    
+    const getFilters = () => {
+        let filters = {
+            userId: props.user.userId,
+            offset: off,
+            limit: lim
+        };
+        if(props.filters !== undefined)
+            filters = {
+                ...filters,
+                ...props.filters
+            }
+        return filters;
+    }
+
+    const [filterData, setFilterData] = useState(getFilters());
+
     const [navbarActions, setNavbarActions] = useState([]);
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);

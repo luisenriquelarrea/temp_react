@@ -16,10 +16,20 @@ const Formulario = (props: any) => {
         let value = "";
         let disabled = false;
         let filters = {};
+        if(props.userId !== undefined)
+            filters = {
+                ...filters,
+                ...{
+                    userId: props.userId
+                }
+            };
         if(Object.keys(inputConf).length > 0){
             value = getObjectValue(inputConf, "value", "");
             disabled = getObjectValue(inputConf, "disabled", false);
-            filters = getObjectValue(inputConf, "filters", {});
+            filters = {
+                ...filters,
+                ...getObjectValue(inputConf, "filters", {})
+            };
         }
         if(Object.keys(record).length > 0){
             value = getObjectValue(record, String(input.inputName), "");
@@ -30,6 +40,11 @@ const Formulario = (props: any) => {
                     : record[inputModelo][input.inputId!]
             }
         }
+        if(String(input.selectFilters) !== "")
+            filters = {
+                ...filters,
+                ...JSON.parse(String(input.selectFilters))
+            }
         if( inputsText.includes(String(input.inputType)) )
             return <InputText 
                 key={ input.inputName }
@@ -88,6 +103,8 @@ const Formulario = (props: any) => {
 
     const defaultValues = getDefaultValues();
 
+    const buttonSize = props.buttonSize !== undefined ? props.buttonSize : 3;
+
     return (
         <>
             <form onSubmit={ props.handleSubmit }>
@@ -98,7 +115,7 @@ const Formulario = (props: any) => {
                     );
                 })}
                 </div>
-                <div className="column is-3">
+                <div className={`column is-${buttonSize}`}>
                     <button
                         id="btnSiguiente"
                         type="submit" 
