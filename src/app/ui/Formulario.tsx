@@ -40,7 +40,7 @@ const Formulario = (props: any) => {
                     : record[inputModelo][input.inputId!]
             }
         }
-        if(String(input.selectFilters) !== "")
+        if(input.selectFilters !== undefined && String(input.selectFilters) !== "")
             filters = {
                 ...filters,
                 ...JSON.parse(String(input.selectFilters))
