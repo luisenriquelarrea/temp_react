@@ -38,6 +38,12 @@ const Accordion = () => {
             x!.className = x!.className.replace(" w3-show", "");
     }
 
+    const getIcon = (links: { menu: { icon?: string } }[]): string => {
+        if (!links.length) return "bars";
+        const icon = links[0].menu.icon?.trim() ?? "";
+        return icon !== "" ? icon : "bars";
+    };  
+
     const pathname = usePathname();
     return (
         <>
@@ -50,10 +56,11 @@ const Accordion = () => {
             {
                 Object.keys(seccionMenu).map((menu) => {
                     const parseStr = parseString(menu);
-                    const links = seccionMenu[menu];        
+                    const links = seccionMenu[menu];
                     return <div key={ menu }>            
                         <button onClick={() => myAccordion(parseStr) } className="w3-button w3-block w3-left-align">
                             <p>
+                                <i className={`fa fa-${ getIcon(links) } fa-fw`} aria-hidden="true"></i>{' '}
                                 { menu } 
                                 <i className="fa fa-angle-down fa-fw" aria-hidden="true" style={{float: "right"}}></i>
                             </p>
