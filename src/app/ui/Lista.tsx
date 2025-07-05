@@ -45,7 +45,6 @@ const Lista = (props: any) => {
     }
 
     const [filterData, setFilterData] = useState(getFilters());
-
     const [navbarActions, setNavbarActions] = useState([]);
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
@@ -147,33 +146,52 @@ const Lista = (props: any) => {
         }).catch(error => console.error(error));
     }
     
-    const eliminar = (recordId: number) => {
-        deleteRecord(props.seccionMenu, recordId).then(response => {
-            if(!response.ok){
-                console.log(response);
-                const httpStatus = String(response.status);
-                if(parseInt(httpStatus) == 422){
-                    response.json().then(data => {
-                        Swal.fire({
-                            title: 'Atención!',
-                            text: data.message,
-                            icon: 'warning',
-                            confirmButtonText: 'OK'
+    const eliminar = async (recordId: number) => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'No, cancelar',
+            reverseButtons: true
+        });
+        if (result.isConfirmed) {
+            try {
+                const response = await deleteRecord(props.seccionMenu, recordId);
+                if (!response.ok) {
+                    console.log(response);
+                    const httpStatus = response.status;
+                    if (httpStatus === 422) {
+                        const data = await response.json();
+                        await Swal.fire({
+                        title: 'Atención!',
+                        text: data.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
                         });
                         return;
-                    })
+                    }
+                    await Swal.fire({
+                        title: 'Atención!',
+                        text: `(${httpStatus}) Ocurrió un error, contacte a su equipo de sistemas.`,
+                        icon: "warning",
+                        confirmButtonText: 'OK'
+                    });
+                    return;
                 }
-                Swal.fire({
-                    title: 'Atención!',
-                    text: "("+httpStatus+") "+"Ocurrió un error, contacte a su equipo de sistemas.",
-                    icon: "warning",
+                setTable(currentPage);
+            } catch (error) {
+                console.error(error);
+                await Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado. Intente nuevamente.',
+                    icon: 'error',
                     confirmButtonText: 'OK'
                 });
-                return;
             }
-            setTable(currentPage);
-        }).catch(error => console.error(error));
-    }
+        }
+    };
 
     const changeStatus = (recordId: number) => {
         getById(props.seccionMenu, recordId).then(response => {
@@ -210,11 +228,19 @@ const Lista = (props: any) => {
         sheet: props.seccionMenu
     })
 
+    const vistaPrevia = (recordId: number) => {
+        const funct = props.functions;
+        if(funct['vistaPrevia'])
+            funct['vistaPrevia']();
+        //router.push('/dashboard/orden_compra/'+recordId);
+    }
+
     const functions = {
         changeStatus: changeStatus,
         eliminar: eliminar,
         update: update,
-        xls: xls
+        xls: xls,
+        vistaPrevia: vistaPrevia
     };
 
     useEffect(() => {
@@ -265,6 +291,7 @@ const Lista = (props: any) => {
     return (
         <>
             <Filters
+                userId={ props.user.userId }
                 seccionMenuId={ props.seccionMenuId }
                 seccionMenu={ props.seccionMenu }
                 inputsFilters={ inputsFilters }
@@ -290,7 +317,8 @@ const Lista = (props: any) => {
                 tableRef={ tableRef }
                 setRecordId={ props.setRecordId }
                 setFormData={ setFormData }
-                functions={ functions } />
+                functions={ functions }
+                iconsDisabled={ props.iconsDisabled } />
             <Pagination 
                 currentPage= { currentPage }
                 setCurrentPage={ setCurrentPage }
