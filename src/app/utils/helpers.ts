@@ -88,6 +88,10 @@ export const mysqlTimeStamp = () => {
     return dateWithTimezone(new Date(), -6).toISOString().slice(0, 19).replace('T', ' ');
 }
 
+export const numberWithCommas = (num: number): string => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export const objectClean = (obj: any) => {
     for (var propName in obj) {
         if (obj[propName] === null || obj[propName] === undefined 

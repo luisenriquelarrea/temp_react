@@ -1,6 +1,20 @@
+import { numberWithCommas } from '@/app/funciones';
 import { useState } from 'react';
 
-const Pagination = (props: any) => {
+interface PaginationProps {
+    currentPage: number,
+    totalRecords: number,
+    totalPages: number,
+    limit: number,
+    paginationButtons: any[],
+    setCurrentPage: React.Dispatch<React.SetStateAction<any>>,
+    setPaginationButtons: React.Dispatch<React.SetStateAction<any>>,
+    renderPaginationButtons: React.Dispatch<React.SetStateAction<any>>,
+    renderPaginationButtonsReverse: React.Dispatch<React.SetStateAction<any>>,
+    setTable: React.Dispatch<React.SetStateAction<any>>,
+}
+
+const Pagination: React.FC<PaginationProps> = (props) => {
     const [currentPage, setCurrentPage] = useState(props.currentPage);
     
     const handleChanges = (page: number) => {
@@ -23,6 +37,9 @@ const Pagination = (props: any) => {
             <a href="#" className="pagination-previous">Anterior</a>
             <a href="#" className="pagination-next">Siguiente</a>
             <ul className="pagination-list">
+                <li>
+                    <b style={{"fontSize": "14px", "marginRight": "10px"}}>Total de registros: { numberWithCommas(props.totalRecords) }</b>
+                </li>
                 <li>
                     <a 
                         href="#" 

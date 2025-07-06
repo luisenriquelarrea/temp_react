@@ -52,6 +52,7 @@ const Lista = (props: any) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(lim);
     const [maxButtons, setMaxButtons] = useState(7);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [paginationButtons, setPaginationButtons] = useState<any>([]);
     const [formdata, setFormData] = useState<any>({});
@@ -97,6 +98,7 @@ const Lista = (props: any) => {
             }
             response.json().then(data => {
                 const tPages = Math.ceil(parseFloat(String(data / lim)));
+                setTotalRecords(data);
                 setTotalPages(tPages);
                 setPaginationButtons(renderPaginationButtons(tPages));
             })
@@ -323,13 +325,12 @@ const Lista = (props: any) => {
                 currentPage= { currentPage }
                 setCurrentPage={ setCurrentPage }
                 limit={ limit }
-                maxButtons={ maxButtons }
+                totalRecords={ totalRecords }
                 totalPages={ totalPages }
                 paginationButtons={ paginationButtons }
                 setPaginationButtons={ setPaginationButtons }
                 renderPaginationButtons={ renderPaginationButtons }
                 renderPaginationButtonsReverse={ renderPaginationButtonsReverse }
-                setFilterData={ setFilterData }
                 setTable={ setTable } />
             { 
                 Boolean(showModal) 
