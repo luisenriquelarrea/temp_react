@@ -1,14 +1,33 @@
 import { useState, useEffect } from "react";
 import MessageBox from "./MessageBox";
 import Formulario from "./Formulario";
-import { getInputs, save } from '@/app/api';
-import { objectClean, flipStatus } from '@/app/funciones';
+import { 
+    getInputs, 
+    save 
+} from '@/app/utils/api';
+import { 
+    objectClean, 
+    flipStatus 
+} from '@/app/utils/helpers';
+import {
+    User
+} from '@/app/utils/entities';
 
-const Alta = (props: any) => {
+interface AltaProps {
+    user: User,
+    seccionMenuId: number,
+    seccionMenu: string
+};
+
+const Alta = (props: AltaProps) => {
+    const initForm = {
+        status: 1,
+        userCreatedId: props.user.userId
+    };
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [key, setKey] = useState(0);
     const [inputs, setInputs] = useState([]);
-    const [formData, setFormData] = useState(props.initFormAlta);
+    const [formData, setFormData] = useState(initForm);
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState({
         messageType: "",
@@ -48,7 +67,7 @@ const Alta = (props: any) => {
                     messageType: "success",
                     message: "Éxito al crear registro."
                 });
-                setFormData(props.initFormAlta);
+                setFormData(initForm);
                 setShowMessageBox(true);
                 setKey(flipStatus(key));
                 setButtonDisabled(false);
@@ -62,12 +81,12 @@ const Alta = (props: any) => {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
             <Formulario
+                userId={ props.user.userId }
                 key={ key }
                 inputs={ inputs }
                 setFormData={ setFormData }
                 handleSubmit={ handleSubmit }
-                buttonDisabled={ buttonDisabled }
-                buttonSize={ props.buttonSize } />
+                buttonDisabled={ buttonDisabled } />
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }

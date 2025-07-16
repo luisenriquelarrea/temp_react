@@ -5,10 +5,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import NavLink from "./NavLink";
-import { getNavLinks } from '@/app/api';
+import { getNavLinks } from '@/app/utils/api';
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { User } from '@/app/entities';
-import { parseString } from "../funciones";
+import { User } from '@/app/utils/entities';
+import { parseString } from "@/app/utils/helpers";
 
 const Accordion = () => {
     const { getItem } = useLocalStorage();

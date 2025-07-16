@@ -1,21 +1,28 @@
 import {
     mysqlTimeStamp,
-    toCurrencyFormat } from '@/app/funciones';
-import { Accion } from '@/app/entities';
+    toCurrencyFormat,
+    castNullToString 
+} from '@/app/utils/helpers';
+import { Accion, SeccionMenuInput } from '@/app/utils/entities';
 import InputTextFilter from "./InputTextFilter";
 import InputCheckboxFilter from "./InputCheckboxFilter";
+import Link from 'next/link';
+import { ColumnStyle } from '@/app/utils/types';
 
-const Table = (props: any) => {
+interface TableProps {
+    seccionMenu: string,
+    columns: SeccionMenuInput[],
+    dataTable: any[],
+    tableActions: Accion[],
+    styledColumns: any
+};
 
-    const columns = props.columns;
-    const dataTable = props.dataTable;
-    const tableActions = props.tableActions;
+const Table = (props: TableProps) => {
+
+    const columns: SeccionMenuInput[] = props.columns;
+    const dataTable: any[] = props.dataTable;
+    const tableActions: Accion[] = props.tableActions;
     const styledColumns = props.styledColumns;
-
-    interface ColumnStyle  {
-        backgroundColor?: string,
-        border?: string
-    };
 
     const recordInactive: ColumnStyle  = {
         backgroundColor: "MistyRose",
@@ -27,20 +34,25 @@ const Table = (props: any) => {
     const columnsStatus = [0, 1];
 
     const handleAction = (action: string, record: any) => {
-        const recordId = record.id;
-        props.setRecordId(recordId);
         props.setFormData({
             'userUpdatedId': props.userId,
             'updatedAt': mysqlTimeStamp()
         });
-        if(props.functions[action]){
-            props.functions[action](recordId);
-        }
+        if(props.functions[action])
+            props.functions[action](record.id);
     }
 
     const renderAction = (action: Accion, record: any) => {
         if(action.callMethod === "xls")
             return null;
+        if(action.callMethod === "show")
+            return <Link key={record.id} href={`/dashboard/${props.seccionMenu}/${record.id}`} >
+                    <i key={ action.id } 
+                        title={ action.label }
+                        className={`fa fa-${action.icon} fa-fw`}
+                        style={{"fontSize": '14px', "color": "black"}} >
+                    </i>
+                </Link>
         if(action.callMethod !== "changeStatus")
             return <i 
                 key={ action.id } 
@@ -89,9 +101,15 @@ const Table = (props: any) => {
         }
         return (columnName.includes("status") && columnsStatus.includes(parseInt(record[columnName])) ) 
         ? (parseInt(record[columnName])) 
-            ? <i className="fa fa-circle-check" style={ columnOk }></i> 
+            ?  renderIcon()
             : null
         : record[columnName];
+    }
+
+    const renderIcon = () => {
+        return props.iconsDisabled !== undefined 
+            ? 'OK' 
+            : <i className="fa fa-circle-check" style={ columnOk }></i>;
     }
 
     const renderColumnExtra = (columnExtra: any, record: any) => {
@@ -101,6 +119,7 @@ const Table = (props: any) => {
                 key={ columnExtra.inputName }
                 inputData={ columnExtra }
                 stateFormData={ props.setFormData } 
+                recordId={ recordId }
                 text="0"
                 noLabel="1" />
         if(columnExtra.inputType === "number")
@@ -115,21 +134,20 @@ const Table = (props: any) => {
         if( columnExtra.inputType === "math" ){
             const value = props.mathColumn(record[columnExtra.operateColumn], recordId);
             return <>
-                <p key={ value } className={ `input-${columnExtra.inputName}` }>{ value }</p>
+                <p key={ value } className={ `input-${columnExtra.inputName}` }>{ toCurrencyFormat(parseFloat(value)) }</p>
             </>
         }
     }
 
     const getColumnStyled = (columnName: string, columnValue: string) => {
-        const columnStyle: ColumnStyle = {};
+        let columnStyle: any = {};
         if(styledColumns?.[props.seccionMenu]){
             const styledColumn = styledColumns[props.seccionMenu];
             if(styledColumn?.[columnName]){
                 const styles = styledColumn[columnName];
                 for (let [key, value] of Object.entries(styles))
                     if(columnValue === key){
-                        columnStyle.backgroundColor = String(value);
-                        columnStyle.border = "1px solid Gainsboro";
+                        columnStyle = value;
                     }
             }
         }
@@ -156,7 +174,7 @@ const Table = (props: any) => {
                             { Object.keys(tableActions).length > 0 
                                 ? <th className="no-print">Acciones</th> 
                                 : null }
-                            { columnsExtra.map((column: any) => {
+                            { columnsExtra.map((column: SeccionMenuInput) => {
                                 if(column.inputType !== "checkbox")
                                     return null;
                                 return(
@@ -202,7 +220,7 @@ const Table = (props: any) => {
                                     { columns.map((column: any) => {
                                         const columnName: string = column.inputName;
                                         let columnValue = renderColumn(columnName, record, column);
-                                        columnValue = (parseInt(column.currencyFormat) === 1) 
+                                        columnValue = (parseInt(column.currencyFormat) === 1 && castNullToString(columnValue) !== "") 
                                             ? toCurrencyFormat(columnValue) 
                                             : columnValue;
                                         const recordStyled = getColumnStyled(columnName, columnValue);

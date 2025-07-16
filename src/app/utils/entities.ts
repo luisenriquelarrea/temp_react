@@ -9,12 +9,6 @@ export interface Grupo {
     id: number,
     descripcion: string
 }
-export interface InputConf {
-    value: string,
-    disabled?: boolean,
-    filters?: any
-}
-
 export interface Menu{
     descripcion: string,
     label: string
@@ -25,8 +19,8 @@ export interface SeccionMenu {
     navbarLabel?: string,
     icon?: string
 }
-
 export interface SeccionMenuInput {
+    id?: number,
     inputType?: string,
     inputLabel?: string,
     inputId?: string,

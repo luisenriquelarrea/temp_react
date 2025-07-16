@@ -8,12 +8,12 @@ import {
     getById,
     updateRecord,
     deleteRecord
-} from '@/app/api';
+} from '@/app/utils/api';
 import {  
     objectClean, 
     flipStatus, 
     mysqlTimeStamp
-} from '@/app/funciones';
+} from '@/app/utils/helpers';
 import Filters from './Filters';
 import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";
@@ -21,8 +21,16 @@ import Table from "./Table";
 import Navbar from "./Navbar";
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { useDownloadExcel } from "react-export-table-to-excel";
+import { User } from "@/app/utils/entities";
 
-const Lista = (props: any) => {
+interface ListaProps {
+    user: User,
+    seccionMenuId: number,
+    seccionMenu: string,
+    iconsDisabled?: boolean
+};
+
+const Lista = (props: ListaProps) => {
     const tableRef = useRef(null);
 
     const off = 0;
@@ -36,11 +44,6 @@ const Lista = (props: any) => {
             offset: off,
             limit: lim
         };
-        if(props.filters !== undefined)
-            filters = {
-                ...filters,
-                ...props.filters
-            }
         return filters;
     }
 
@@ -60,6 +63,7 @@ const Lista = (props: any) => {
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [inputs, setInputs] = useState([]);
     const [record, setRecord] = useState({});
+    const [recordId, setRecordId] = useState({});
     const [btnFilterDisabled, setBtnFilterDisabled] = useState(false);
 
     const renderPaginationButtons = (tPages: number) => {
@@ -124,6 +128,7 @@ const Lista = (props: any) => {
     }
 
     const update = (recordId: number) => {
+        setRecordId(recordId);
         getById(props.seccionMenu, recordId).then(response => {
             if(!response.ok){
                 console.log("Error al obtener registro");
@@ -203,10 +208,10 @@ const Lista = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                data.userUpdatedId = props.userId;
+                data.userUpdatedId = props.user.userId;
                 data.updatedAt = mysqlTimeStamp();
                 data.status = flipStatus(data.status);
-                updateRecord(props.seccionMenu, props.recordId, data).then(response => {
+                updateRecord(props.seccionMenu, recordId, data).then(response => {
                     if(!response.ok){
                         console.log("Error al modificar registro");
                         console.log(response);
@@ -230,19 +235,11 @@ const Lista = (props: any) => {
         sheet: props.seccionMenu
     })
 
-    const vistaPrevia = (recordId: number) => {
-        const funct = props.functions;
-        if(funct['vistaPrevia'])
-            funct['vistaPrevia']();
-        //router.push('/dashboard/orden_compra/'+recordId);
-    }
-
     const functions = {
         changeStatus: changeStatus,
         eliminar: eliminar,
         update: update,
         xls: xls,
-        vistaPrevia: vistaPrevia
     };
 
     useEffect(() => {
@@ -317,7 +314,7 @@ const Lista = (props: any) => {
                 setTable={ setTable }
                 currentPage={ currentPage }
                 tableRef={ tableRef }
-                setRecordId={ props.setRecordId }
+                
                 setFormData={ setFormData }
                 functions={ functions }
                 iconsDisabled={ props.iconsDisabled } />
@@ -338,7 +335,7 @@ const Lista = (props: any) => {
                     seccionMenuId={ props.seccionMenuId } 
                     seccionMenu={ props.seccionMenu }
                     titleModal={ titleModal }
-                    recordId={ props.recordId }
+                    recordId={ recordId }
                     record={ record }
                     inputs={ inputs }
                     formdata={ formdata }
