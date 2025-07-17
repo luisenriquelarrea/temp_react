@@ -4,8 +4,9 @@ import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
 import BookMark from "./BookMark";
-import { InputConf, SeccionMenuInput } from '@/app/entities';
-import { getObjectValue, uncapitalizeFirstLetter } from '@/app/funciones';
+import { SeccionMenuInput } from '@/app/utils/entities';
+import { getObjectValue, uncapitalizeFirstLetter } from '@/app/utils/helpers';
+import InputFileMultiple from './InputFileMultiple';
 
 const Formulario = (props: any) => {
     const inputsText = ['text', 'password', 'date', 'number'];
@@ -52,6 +53,11 @@ const Formulario = (props: any) => {
                 stateFormData={ props.setFormData } 
                 text={ value }
                 disabled={ disabled } />
+        if( input.inputType === "file" && input.multiple == 1 )
+            return <InputFileMultiple 
+                key={ input.inputName }
+                inputData={ input }
+                stateFormData={ props.setFormData } />
         if( input.inputType === "file" )
             return <InputFile 
                 key={ input.inputName }
@@ -60,7 +66,7 @@ const Formulario = (props: any) => {
         if(input.inputType === "select"){
             return <InputSelect 
                 key={ input.inputName }
-                inputData={ input }
+                input={ input }
                 stateFormData={ props.setFormData }
                 handleInputChange={ props.handleInputChange }
                 defaultValue={ value }

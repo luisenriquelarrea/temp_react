@@ -6,9 +6,9 @@ import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
 import BookMark from "./BookMark";
 import MessageBox from "./MessageBox";
-import { updateRecord } from '@/app/api';
-import { SeccionMenuInput } from '@/app/entities';
-import { uncapitalizeFirstLetter } from '@/app/funciones';
+import { updateRecord } from '../../api';
+import { SeccionMenuInput } from '../../entities';
+import { uncapitalizeFirstLetter } from '../../funciones';
 import Encabezado from "./Encabezado";
 
 const ModalUpdate = (props: any) => {
@@ -50,7 +50,6 @@ const ModalUpdate = (props: any) => {
                 return;
             }
             response.json().then(data => {
-                console.log(data);
                 setMessageData({
                     messageType: "success",
                     message: "Éxito al modificar registro."
@@ -76,9 +75,8 @@ const ModalUpdate = (props: any) => {
             let inputId = input.inputId;
             return <InputSelect 
                 key={ input.inputName }
-                inputData={ input }
+                input={ input }
                 stateFormData={ setFormData }
-                seccionMenu={ props.seccionMenu }
                 defaultValue={ props.record[inputModelo!] === null ? 0 : props.record[inputModelo!][inputId!] } />
         }
         if( input.inputType === "textarea" ){
@@ -102,10 +100,12 @@ const ModalUpdate = (props: any) => {
                 inputData={ input }
                 stateFormData={ setFormData } 
                 text={ props.record[inputName!] } />
-        if( input.inputType === "bookmark" )
+        if( input.inputType === "bookmark" ){
+            input.inputCols = 12;
             return <BookMark 
                 key={ input.inputName }
                 inputData={ input } />
+        }
         return null
     }
 
