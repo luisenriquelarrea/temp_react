@@ -6,8 +6,7 @@ import { User } from "@/app/utils/entities";
 import Alta from "@/app/ui/Alta";
 import { currentSeccionMenu } from '@/app/utils/helpers';
 import {
-    getSeccionMenu, 
-    validateUserIsActive 
+    getSeccionMenu
 } from '@/app/utils/api';
 
 export default function Page() {
