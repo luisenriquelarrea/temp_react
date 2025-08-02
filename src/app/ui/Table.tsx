@@ -1,28 +1,25 @@
 import {
     mysqlTimeStamp,
     toCurrencyFormat,
-    castNullToString 
+    castNullToString, 
+    numberWithCommas
 } from '@/app/utils/helpers';
 import { Accion, SeccionMenuInput } from '@/app/utils/entities';
 import InputTextFilter from "./InputTextFilter";
 import InputCheckboxFilter from "./InputCheckboxFilter";
 import Link from 'next/link';
-import { ColumnStyle } from '@/app/utils/types';
 
-interface TableProps {
-    seccionMenu: string,
-    columns: SeccionMenuInput[],
-    dataTable: any[],
-    tableActions: Accion[],
-    styledColumns: any
-};
+const Table = (props: any) => {
 
-const Table = (props: TableProps) => {
-
-    const columns: SeccionMenuInput[] = props.columns;
-    const dataTable: any[] = props.dataTable;
-    const tableActions: Accion[] = props.tableActions;
+    const columns = props.columns;
+    const dataTable = props.dataTable;
+    const tableActions = props.tableActions;
     const styledColumns = props.styledColumns;
+
+    interface ColumnStyle  {
+        backgroundColor?: string,
+        border?: string
+    };
 
     const recordInactive: ColumnStyle  = {
         backgroundColor: "MistyRose",
@@ -34,12 +31,15 @@ const Table = (props: TableProps) => {
     const columnsStatus = [0, 1];
 
     const handleAction = (action: string, record: any) => {
+        //const recordId = record.id;
+        props.setRecordId(record.id);
         props.setFormData({
             'userUpdatedId': props.userId,
             'updatedAt': mysqlTimeStamp()
         });
-        if(props.functions[action])
+        if(props.functions[action]){
             props.functions[action](record.id);
+        }
     }
 
     const renderAction = (action: Accion, record: any) => {
@@ -166,15 +166,15 @@ const Table = (props: TableProps) => {
     return (
         <>
             <div className="table-container">
-                <table id="myTable" 
-                    className="table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
+                <table 
+                    className="myTable table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
                     ref={ props.tableRef }>
                     <thead>
                         <tr>
                             { Object.keys(tableActions).length > 0 
                                 ? <th className="no-print">Acciones</th> 
                                 : null }
-                            { columnsExtra.map((column: SeccionMenuInput) => {
+                            { columnsExtra.map((column: any) => {
                                 if(column.inputType !== "checkbox")
                                     return null;
                                 return(
@@ -217,13 +217,21 @@ const Table = (props: TableProps) => {
                                             </td>
                                         );
                                     })}
-                                    { columns.map((column: any) => {
-                                        const columnName: string = column.inputName;
+                                    { columns.map((column: SeccionMenuInput) => {
+                                        const columnName = column.inputName!;
                                         let columnValue = renderColumn(columnName, record, column);
-                                        columnValue = (parseInt(column.currencyFormat) === 1 && castNullToString(columnValue) !== "") 
+                                        columnValue = (column.currencyFormat === 1 && castNullToString(columnValue) !== "") 
                                             ? toCurrencyFormat(columnValue) 
                                             : columnValue;
-                                        const recordStyled = getColumnStyled(columnName, columnValue);
+                                        columnValue = (column.numberFormat === 1 && castNullToString(columnValue) !== "") 
+                                            ? numberWithCommas(columnValue) 
+                                            : columnValue;
+                                        let recordStyled = getColumnStyled(columnName, columnValue);
+                                        if(column.currencyFormat === 1 || column.numberFormat === 1)
+                                            recordStyled = {
+                                                ...recordStyled,
+                                                ...{ textAlign: 'right' }
+                                            };
                                         return(
                                             <td 
                                                 key={ column.id } 

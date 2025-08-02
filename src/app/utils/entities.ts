@@ -20,6 +20,7 @@ export interface SeccionMenu {
     icon?: string
 }
 export interface SeccionMenuInput {
+    id?: number,
     inputType?: string,
     inputLabel?: string,
     inputId?: string,
@@ -39,6 +40,8 @@ export interface SeccionMenuInput {
     urlGet?: string,
     modelo?: string,
     filters?: any,
+    currencyFormat?: number,
+    numberFormat?: number,
 }
 export interface User {
     grupo?: Grupo,
