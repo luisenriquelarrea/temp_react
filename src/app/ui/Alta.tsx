@@ -47,33 +47,60 @@ const Alta = (props: AltaProps) => {
         }).catch(error => console.error(error));
     }, []);
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setButtonDisabled(true);
-        save(props.seccionMenu, objectClean(formData)).then(response => {
-            if(!response.ok){
+        try {
+            const response = await save(props.seccionMenu, objectClean(formData));
+            let data;
+            const contentType = response.headers.get("content-type") || "";
+            const isJson = contentType.includes("application/json");
+            if (isJson) {
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    console.warn("Failed to parse JSON from response:", jsonError);
+                    data = null;
+                }
+            }
+            if (!response.ok) {
                 console.log("Error al guardar registro");
                 console.log(response);
-                setMessageData({
-                    messageType: "danger",
-                    message: "Ocurrió un error al crear registro."
-                });
+                const httpStatus = String(response.status);
+                if (parseInt(httpStatus) === 422 && data && data.message) {
+                    setMessageData({
+                        messageType: "warning",
+                        message: `(${httpStatus}) ${data.message}`
+                    });
+                } else {
+                    setMessageData({
+                        messageType: "danger",
+                        message: "Ocurrió un error al crear registro."
+                    });
+                }
                 setShowMessageBox(true);
                 setButtonDisabled(false);
                 return;
             }
-            response.json().then(data => {
-                setMessageData({
-                    messageType: "success",
-                    message: "Éxito al crear registro."
-                });
-                setFormData(initForm);
-                setShowMessageBox(true);
-                setKey(flipStatus(key));
-                setButtonDisabled(false);
-            })
-        }).catch(error => console.error(error));
-    }
+            console.log(data || "Response OK without JSON payload");
+            setMessageData({
+                messageType: "success",
+                message: "Éxito al crear registro."
+            });
+            setFormData(initForm);
+            setShowMessageBox(true);
+            setKey(flipStatus(key));
+            setButtonDisabled(false);
+        } catch (error) {
+            console.error(error);
+            setMessageData({
+                messageType: "danger",
+                message: "Error de red o inesperado al guardar registro."
+            });
+            setShowMessageBox(true);
+            setButtonDisabled(false);
+        }
+    };    
 
     return(
         <>
