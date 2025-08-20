@@ -3,7 +3,7 @@ import InputTextFilter  from './InputTextFilter';
 import InputSelectFilter  from './InputSelectFilter';
 import InputDatesFilter  from './InputDatesFilter';
 import InputCheckboxFilter  from './InputCheckboxFilter';
-import { SeccionMenuInput } from '@/app/entities';
+import { SeccionMenuInput } from '@/app/utils/entities';
 
 const Filters = (props: any) => {
     const inputs = props.inputsFilters;

@@ -7,3 +7,17 @@ export interface InputConf {
     disabled?: boolean,
     filters?: any
 }
+export interface Style {
+    backgroundColor: string;
+    color: string;
+    border: string;
+}
+export interface StatusStyles {
+    [status: string]: Style;
+}  
+export interface ColumnStyles {
+    [columnKey: string]: StatusStyles;
+}  
+export interface StyledColumns {
+    [key: string]: ColumnStyles;
+}

@@ -31,15 +31,13 @@ const Table = (props: any) => {
     const columnsStatus = [0, 1];
 
     const handleAction = (action: string, record: any) => {
-        //const recordId = record.id;
         props.setRecordId(record.id);
         props.setFormData({
             'userUpdatedId': props.userId,
             'updatedAt': mysqlTimeStamp()
         });
-        if(props.functions[action]){
-            props.functions[action](record.id);
-        }
+       if(props.handleAction)
+            props.handleAction(action, record.id);
     }
 
     const renderAction = (action: Accion, record: any) => {

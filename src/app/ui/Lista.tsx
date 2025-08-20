@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { 
     getInputs, 
     getSeccionMenuListFiltered,
@@ -14,20 +14,26 @@ import {
     flipStatus, 
     mysqlTimeStamp
 } from '@/app/utils/helpers';
-import Filters from './Filters';
-import ModalUpdate from './ModalUpdate';
-import Pagination from "./Pagination";
-import Table from "./Table";
-import Navbar from "./Navbar";
-import Swal, { SweetAlertOptions } from 'sweetalert2';
+import {
+    User
+} from '@/app/utils/entities';
+import Filters from '@/app/ui/dashboard/Filters';
+import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
+import Pagination from "@/app/ui/dashboard/Pagination";
+import Table from "@/app/ui/dashboard/Table";
+import Navbar from "@/app/ui/dashboard/Navbar";
+import Swal, { SweetAlertOptions } from 'sweetalert2'
 import { useDownloadExcel } from "react-export-table-to-excel";
-import { User } from "@/app/utils/entities";
+import { StyledColumns } from "@/app/utils/types";
 
 interface ListaProps {
-    user: User,
-    seccionMenuId: number,
-    seccionMenu: string,
-    iconsDisabled?: boolean
+    user: User;
+    seccionMenuId: number;
+    seccionMenu: string;
+    iconsDisabled?: boolean;
+    functions?: any,
+    setRecordId?: Dispatch<SetStateAction<any>>;
+    styledColumns?: StyledColumns;
 };
 
 const Lista = (props: ListaProps) => {
@@ -225,6 +231,18 @@ const Lista = (props: ListaProps) => {
         }).catch(error => console.error(error));
     }
 
+    const handleAction = (callMethod: string, recordId: number) => {
+        const customActions = props.functions;
+        if(customActions && customActions[callMethod]){
+            customActions[callMethod](recordId);
+            return;
+        }
+        if(functions[callMethod]){
+            functions[callMethod](recordId);
+            return;
+        }
+    }
+
     const xls = () => { 
         onDownload();
     }
@@ -235,11 +253,11 @@ const Lista = (props: ListaProps) => {
         sheet: props.seccionMenu
     })
 
-    const functions = {
+    const functions: {[functionName: string]: (...args: any[]) => any} = {
         changeStatus: changeStatus,
         eliminar: eliminar,
         update: update,
-        xls: xls,
+        xls: xls
     };
 
     useEffect(() => {
@@ -314,10 +332,12 @@ const Lista = (props: ListaProps) => {
                 setTable={ setTable }
                 currentPage={ currentPage }
                 tableRef={ tableRef }
-                
+                setRecordId={ props.setRecordId }
                 setFormData={ setFormData }
                 functions={ functions }
-                iconsDisabled={ props.iconsDisabled } />
+                handleAction={ handleAction }
+                iconsDisabled={ props.iconsDisabled }
+                styledColumns={ props.styledColumns } />
             <Pagination 
                 currentPage= { currentPage }
                 setCurrentPage={ setCurrentPage }
