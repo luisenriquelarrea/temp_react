@@ -144,7 +144,7 @@ const Table = (props: any) => {
             if(styledColumn?.[columnName]){
                 const styles = styledColumn[columnName];
                 for (let [key, value] of Object.entries(styles))
-                    if(columnValue === key){
+                    if(columnValue == key){
                         columnStyle = value;
                     }
             }

@@ -3,17 +3,20 @@
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { User } from "@/app/utils/entities";
-import { currentSeccionMenu } from '@/app/utils/helpers';
+import { currentSeccionMenu, toStyledColumns } from '@/app/utils/helpers';
 import {
-    getSeccionMenu
+    getSeccionMenu,
+    getSeccionMenuListFiltered
 } from '@/app/utils/api';
 import Lista from "@/app/ui/Lista";
+import { StyledColumns } from "@/app/utils/types";
 
 export default function Page() {
     const { getItem } = useLocalStorage();
     const [user, setUser] = useState({});
     const [seccionMenuId, setSecccionMenuId] = useState(0);
     const [seccionMenu, setSecccionMenu] = useState("");
+    const [styledColumns, setStyledColumns] = useState<StyledColumns>({});
     const [documentIsReady, setDocumentIsReady] = useState(false);
 
     useEffect(() => {
@@ -39,8 +42,28 @@ export default function Page() {
         }
         const seccionMenuData = await seccionMenuResponse.json();
         setSecccionMenuId(seccionMenuData.id);
+        
+        getStyledColumns(seccionMenuData.id);
 
         setDocumentIsReady(true);
+    }
+
+    const getStyledColumns = async (seccionMenuId: number) => {
+        let filter = {
+            offsset: 0,
+            limit: 1000,
+            seccionMenu: {
+                id: seccionMenuId
+            }
+        };
+        const styledColumnResponse = await getSeccionMenuListFiltered("styled_column", filter);
+        if (!styledColumnResponse.ok) {
+            console.log(styledColumnResponse);
+            return;
+        }
+        const styledColumnArray: any[] = await styledColumnResponse.json();
+        if (styledColumnArray.length !== 0)
+            setStyledColumns(toStyledColumns(styledColumnArray));
     }
     
     return (
@@ -51,6 +74,7 @@ export default function Page() {
                     user={ user }
                     seccionMenuId={ seccionMenuId } 
                     seccionMenu={ seccionMenu }
+                    styledColumns={ styledColumns }
                     iconsDisabled={ true } />
             : null
         }

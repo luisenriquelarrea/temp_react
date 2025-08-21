@@ -1,4 +1,5 @@
 import { saveAs } from "file-saver";
+import { StyledColumns } from "./types";
 
 export const arrayColumn = (array: any[], column: string) => {
     if(array.length > 0)
@@ -126,6 +127,26 @@ export const toBase64 = (file: any) => new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
 });
+
+export const toStyledColumns = (rows: any[]): StyledColumns => {
+    const styledColumns: StyledColumns = {};
+    rows.forEach(row => {
+        const { seccionMenu, columna, valor, backgroundColor, color, border } = row;
+        const table = seccionMenu?.descripcion;
+        if (!table)
+            return;
+        if (!styledColumns[table])
+            styledColumns[table] = {};
+        if (!styledColumns[table][columna])
+            styledColumns[table][columna] = {};
+        styledColumns[table][columna][valor] = {
+            backgroundColor: backgroundColor || undefined,
+            color: color || undefined,
+            border: border || undefined,
+        };
+    });
+    return styledColumns;
+}
 
 export const capitalizeFirstLetter = (cadena: string) => {
     return cadena.charAt(0).toUpperCase() + cadena.slice(1);
