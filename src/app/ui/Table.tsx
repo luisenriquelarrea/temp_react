@@ -137,25 +137,20 @@ const Table = (props: any) => {
         }
     }
 
-    const getColumnStyled = (columnName: string, columnValue: string) => {
-        let columnStyle: any = {};
-        if(styledColumns?.[props.seccionMenu]){
-            const styledColumn = styledColumns[props.seccionMenu];
-            if(styledColumn?.[columnName]){
-                const styles = styledColumn[columnName];
-                for (let [key, value] of Object.entries(styles))
-                    if(columnValue == key){
-                        columnStyle = value;
-                    }
-            }
-        }
-        return columnStyle;
-    }
+    const getColumnStyled = (columnName: string, columnId: string, columnValue: string): 
+            React.CSSProperties | undefined => {
+        const styledSection = styledColumns?.[props.seccionMenu];
+        if (!styledSection) return;
+        const styles =
+            styledSection[`${columnName}.${columnId}`] ?? styledSection[columnName];
+        if (!styles) return;
+        const match = Object.entries(styles).find(([key]) => key === columnValue);
+        return match ? (match[1] as React.CSSProperties) : undefined;
+    };
 
     const getColumnsExtra = () => {
-        if(props.columnsExtra?.[props.seccionMenu]){
+        if(props.columnsExtra?.[props.seccionMenu])
             return props.columnsExtra[props.seccionMenu];
-        }
         return [];
     }
 
@@ -217,6 +212,7 @@ const Table = (props: any) => {
                                     })}
                                     { columns.map((column: SeccionMenuInput) => {
                                         const columnName = column.inputName!;
+                                        const columnId = column.inputId!;
                                         let columnValue = renderColumn(columnName, record, column);
                                         columnValue = (column.currencyFormat === 1 && castNullToString(columnValue) !== "") 
                                             ? toCurrencyFormat(columnValue) 
@@ -224,7 +220,7 @@ const Table = (props: any) => {
                                         columnValue = (column.numberFormat === 1 && castNullToString(columnValue) !== "") 
                                             ? numberWithCommas(columnValue) 
                                             : columnValue;
-                                        let recordStyled = getColumnStyled(columnName, columnValue);
+                                        let recordStyled = getColumnStyled(columnName, columnId, columnValue);
                                         if(column.currencyFormat === 1 || column.numberFormat === 1)
                                             recordStyled = {
                                                 ...recordStyled,
