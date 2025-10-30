@@ -7,6 +7,10 @@ export interface InputConf {
     disabled?: boolean,
     filters?: any
 }
+export type MessageBoxT = {
+    messageType?: "danger" | "warning" | "info" | "success";
+    message?: string;
+};
 export interface Style {
     backgroundColor: string;
     color: string;
