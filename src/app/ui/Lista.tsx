@@ -11,17 +11,16 @@ import {
 } from '@/app/utils/api';
 import {  
     objectClean, 
-    flipStatus, 
-    mysqlTimeStamp
+    flipStatus
 } from '@/app/utils/helpers';
 import {
     User
 } from '@/app/utils/entities';
-import Filters from '@/app/ui/dashboard/Filters';
-import ModalUpdate from '@/app/ui/dashboard/ModalUpdate';
-import Pagination from "@/app/ui/dashboard/Pagination";
-import Table from "@/app/ui/dashboard/Table";
-import Navbar from "@/app/ui/dashboard/Navbar";
+import Filters from './Filters';
+import ModalUpdate from './ModalUpdate';
+import Pagination from "./Pagination";
+import Table from "./Table";
+import Navbar from "./Navbar";
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { StyledColumns } from "@/app/utils/types";
@@ -215,7 +214,6 @@ const Lista = (props: ListaProps) => {
             }
             response.json().then(data => {
                 data.userUpdatedId = props.user.userId;
-                data.updatedAt = mysqlTimeStamp();
                 data.status = flipStatus(data.status);
                 updateRecord(props.seccionMenu, recordId, data).then(response => {
                     if(!response.ok){

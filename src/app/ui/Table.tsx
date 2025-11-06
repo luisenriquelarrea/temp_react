@@ -1,5 +1,4 @@
 import {
-    mysqlTimeStamp,
     toCurrencyFormat,
     castNullToString, 
     numberWithCommas
@@ -33,8 +32,7 @@ const Table = (props: any) => {
     const handleAction = (action: string, record: any) => {
         props.setRecordId(record.id);
         props.setFormData({
-            'userUpdatedId': props.userId,
-            'updatedAt': mysqlTimeStamp()
+            userUpdatedId: props.userId
         });
        if(props.handleAction)
             props.handleAction(action, record.id);
