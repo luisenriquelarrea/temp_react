@@ -1,5 +1,4 @@
 import { User } from './entities';
-import { mysqlTimeStamp } from './funciones';
 
 var urlAPI = process.env.urlAPI;
 var apiKey = process.env.apiKey;
@@ -44,9 +43,6 @@ export const downloadXLSFile = async (seccionMenu: string, endpoint: string,
 };
 
 export const save = async (seccionMenu: string, formdata: any) => {
-    const recordAt = mysqlTimeStamp();
-    formdata.createdAt = recordAt;
-    formdata.updatedAt = recordAt;
     return fetch(`${urlAPI}${seccionMenu}/add`, {
         method: 'POST',
         headers: {
