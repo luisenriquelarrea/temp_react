@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction, RefObject } from 'react';
+import Link from 'next/link';
 import {
     toCurrencyFormat,
     castNullToString, 
@@ -6,9 +8,26 @@ import {
 import { Accion, SeccionMenuInput } from '@/app/utils/entities';
 import InputTextFilter from "./InputTextFilter";
 import InputCheckboxFilter from "./InputCheckboxFilter";
-import Link from 'next/link';
+import TextAreaSmall from './TextAreaSmall';
+import { StyledColumns } from '@/app/utils/types';
 
-const Table = (props: any) => {
+interface TableProps {
+    columns: any[];
+    dataTable: any[];
+    tableActions: any[];
+    seccionMenu: string;
+    tableRef?: RefObject<HTMLTableElement>;
+    styledColumns?: StyledColumns;
+    setFormData?: Dispatch<SetStateAction<any>>;
+    iconsDisabled?: boolean;
+    columnsExtra?: { [key: string]: any };
+    columnExtraDefaultValues?: { [key: string]: any };
+    handleAction?: (callMethod: string, recordId: number) => void;
+    handleButton?: (callMethod: string, recordId: number) => void;
+    handlePropEvent?: (params: any) => any;
+    mathColumn?: (operate: number, pos: string) => any;
+};
+const Table = (props: TableProps) => {
 
     const columns = props.columns;
     const dataTable = props.dataTable;
@@ -28,12 +47,9 @@ const Table = (props: any) => {
         fontSize: "17px"
     };
     const columnsStatus = [0, 1];
+    const inputsText = ['text', 'number'];
 
     const handleAction = (action: string, record: any) => {
-        props.setRecordId(record.id);
-        props.setFormData({
-            userUpdatedId: props.userId
-        });
        if(props.handleAction)
             props.handleAction(action, record.id);
     }
@@ -81,6 +97,17 @@ const Table = (props: any) => {
         return null;
     }
 
+    const renderActionExtra = (action: any, record: any) => {
+        const recordId = (action.auxKey !== undefined ) ? getAuxKey(action, record) : record.id;
+        return <i 
+            key={ action.id } 
+            title={ action.label }
+            className={`fa fa-${action.icon} fa-fw`}
+            style={{"fontSize": '25px', "marginRight": "12px"}}
+            onClick={() => props.handleButton!(action.callMethod, recordId) } >
+        </i>
+    }
+
     const renderColumn = (columnName: string, record: any, column: any) => {
         if(columnName.includes(".")){
             const deepColumns = columnName.split(".");
@@ -108,8 +135,26 @@ const Table = (props: any) => {
             : <i className="fa fa-circle-check" style={ columnOk }></i>;
     }
 
+    const getAuxKey = (columnExtra: any, record: any): string => {
+        return columnExtra.inputName + "-" + columnExtra.auxKey.map((key: string) => record[key]).join("-");
+    }
+    
     const renderColumnExtra = (columnExtra: any, record: any) => {
-        const recordId = record.id;
+        const recordId = (columnExtra.auxKey !== undefined ) ? getAuxKey(columnExtra, record) : record.id;
+        const defaultValue = 
+            (props.columnExtraDefaultValues !== undefined && props.columnExtraDefaultValues[recordId] !== undefined)
+            ? props.columnExtraDefaultValues[recordId]
+            : "";
+        if( columnExtra.inputType === "span" )
+            return <p>{ defaultValue }</p>
+        if( columnExtra.inputType === "textareaSmall" )
+            return <TextAreaSmall 
+                key={ columnExtra.inputName }
+                inputData={ columnExtra }
+                stateFormData={ props.setFormData } 
+                text={ defaultValue }
+                recordId={ recordId }
+                handlePropEvent={ props.handlePropEvent } />
         if( columnExtra.inputType === "checkbox" )
             return <InputCheckboxFilter 
                 key={ columnExtra.inputName }
@@ -118,17 +163,17 @@ const Table = (props: any) => {
                 recordId={ recordId }
                 text="0"
                 noLabel="1" />
-        if(columnExtra.inputType === "number")
+        if( inputsText.includes(String(columnExtra.inputType)) )
             return <InputTextFilter
                 key={ columnExtra.inputName }
                 inputData={ columnExtra }
                 stateFormData={ props.setFormData } 
                 recordId={ recordId }
-                text=""
+                text={ defaultValue }
                 handlePropEvent={ props.handlePropEvent }
                 showLabel={ false } />
         if( columnExtra.inputType === "math" ){
-            const value = props.mathColumn(record[columnExtra.operateColumn], recordId);
+            const value = props.mathColumn!(record[columnExtra.operateColumn], recordId);
             return <>
                 <p key={ value } className={ `input-${columnExtra.inputName}` }>{ toCurrencyFormat(parseFloat(value)) }</p>
             </>
@@ -162,7 +207,7 @@ const Table = (props: any) => {
                     ref={ props.tableRef }>
                     <thead>
                         <tr>
-                            { Object.keys(tableActions).length > 0 
+                            { tableActions.length > 0 
                                 ? <th className="no-print">Acciones</th> 
                                 : null }
                             { columnsExtra.map((column: any) => {
@@ -190,7 +235,7 @@ const Table = (props: any) => {
                         {dataTable.map((record: any, index: number) => {
                             return(
                                 <tr key={ index }>
-                                    { Object.keys(tableActions).length > 0 
+                                    { tableActions.length > 0 
                                         ? <td>
                                         {tableActions.map((action: Accion) => {
                                             return(
@@ -235,6 +280,13 @@ const Table = (props: any) => {
                                         );
                                     })}
                                     { columnsExtra.map((columnExtra: any) => {
+                                        if (columnExtra.inputType === "actions" && columnExtra.actions.length > 0) {
+                                            return (
+                                                <td key={columnExtra.id}>
+                                                    {columnExtra.actions.map((action: any) => renderActionExtra(action, record))}
+                                                </td>
+                                            );
+                                        }
                                         if(columnExtra.inputType === "checkbox")
                                             return null;
                                         return(

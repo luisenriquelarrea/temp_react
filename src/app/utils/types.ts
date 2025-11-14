@@ -2,6 +2,11 @@ export interface ColumnStyle  {
     backgroundColor?: string,
     border?: string
 };
+export type Filter = {
+    limit: number,
+    offset: number,
+    [key: string]: any
+};
 export interface InputConf {
     value: string,
     disabled?: boolean,

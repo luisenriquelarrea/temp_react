@@ -16,43 +16,46 @@ import {
 import {
     User
 } from '@/app/utils/entities';
-import Filters from './Filters';
-import ModalUpdate from './ModalUpdate';
-import Pagination from "./Pagination";
-import Table from "./Table";
-import Navbar from "./Navbar";
+import Filters from '@/app/ui/Filters';
+import ModalUpdate from '@/app/ui/ModalUpdate';
+import Pagination from "@/app/ui/Pagination";
+import Table from "@/app/ui/Table";
+import Navbar from "@/app/ui/Navbar";
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 import { useDownloadExcel } from "react-export-table-to-excel";
-import { StyledColumns } from "@/app/utils/types";
+import { Filter, StyledColumns } from "@/app/utils/types";
 
 interface ListaProps {
     user: User;
     seccionMenuId: number;
     seccionMenu: string;
+    customFilters?: {[key: string]: {}};
     iconsDisabled?: boolean;
-    functions?: any,
+    functions?: { [key: string]: (...args: any) => any },
     setRecordId?: Dispatch<SetStateAction<any>>;
     styledColumns?: StyledColumns;
+    noFilters?: boolean;
+    noNavbar?: boolean;
+    noPagination?: boolean;
 };
-
 const Lista = (props: ListaProps) => {
     const tableRef = useRef(null);
 
     const off = 0;
-    const lim = 30;
+    const lim = props.noPagination ? 30 : 1000;
 
     const [inputsFilters, setInputsFilters] = useState([]);
     
-    const getFilters = () => {
-        let filters = {
-            userId: props.user.userId,
+    const getFilters = (): Filter => {
+        return {
             offset: off,
-            limit: lim
+            limit: lim,
+            userId: props.user.userId,
+            ...(props.customFilters || {})
         };
-        return filters;
-    }
+    };
 
-    const [filterData, setFilterData] = useState(getFilters());
+    const [filterData, setFilterData] = useState<Filter>(getFilters());
     const [navbarActions, setNavbarActions] = useState([]);
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
@@ -229,7 +232,12 @@ const Lista = (props: ListaProps) => {
         }).catch(error => console.error(error));
     }
 
-    const handleAction = (callMethod: string, recordId: number) => {
+    const handleAction = (callMethod: string, recordId: number): void => {
+        setFormData({
+            userUpdatedId: props.user.userId
+        });
+        if(props.setRecordId)
+            props.setRecordId(recordId);
         const customActions = props.functions;
         if(customActions && customActions[callMethod]){
             customActions[callMethod](recordId);
@@ -259,26 +267,28 @@ const Lista = (props: ListaProps) => {
     };
 
     useEffect(() => {
-        getInputs(props.seccionMenuId, 'filtro').then(response => {
-            if(!response.ok){
-                console.log("Error al obtener inputs filtro");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setInputsFilters(data);
-            })
-        }).catch(error => console.error(error));
-        getNavbarActions(props.seccionMenuId, props.user.grupo).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener navbarActions");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setNavbarActions(data);
-            })
-        }).catch(error => console.error(error));
+        if(!props.noFilters)
+            getInputs(props.seccionMenuId, 'filtro').then(response => {
+                if(!response.ok){
+                    console.log("Error al obtener inputs filtro");
+                    console.log(response);
+                    return;
+                }
+                response.json().then(data => {
+                    setInputsFilters(data);
+                })
+            }).catch(error => console.error(error));
+        if(!props.noNavbar)
+            getNavbarActions(props.seccionMenuId, props.user.grupo).then(response => {
+                if(!response.ok){
+                    console.log("Error al obtener navbarActions");
+                    console.log(response);
+                    return;
+                }
+                response.json().then(data => {
+                    setNavbarActions(data);
+                })
+            }).catch(error => console.error(error));
         getInputs(props.seccionMenuId, 'lista').then(response => {
             if(!response.ok){
                 console.log("Error al obtener inputs");
@@ -299,54 +309,61 @@ const Lista = (props: ListaProps) => {
                 setTableActions(data);
             })
         }).catch(error => console.error(error));
-        setCountFilteredList();
+        if(!props.noPagination)
+            setCountFilteredList();
         setTable(0);
     }, []);
 
     return (
         <>
-            <Filters
-                userId={ props.user.userId }
-                seccionMenuId={ props.seccionMenuId }
-                seccionMenu={ props.seccionMenu }
-                inputsFilters={ inputsFilters }
-                setFilterData={ setFilterData }
-                setTable={ setTable }
-                setCountFilteredList={ setCountFilteredList }
-                btnFilterDisabled={ btnFilterDisabled }
-                setBtnFilterDisabled={ setBtnFilterDisabled } />
-            <Navbar
-                navbarActions={ navbarActions }
-                functions={ functions }
-                btnFilterDisabled={ btnFilterDisabled }
-                setBtnFilterDisabled={ setBtnFilterDisabled } />
+            {
+                !props.noPagination ?
+                    <Filters
+                        userId={ props.user.userId }
+                        seccionMenuId={ props.seccionMenuId }
+                        seccionMenu={ props.seccionMenu }
+                        inputsFilters={ inputsFilters }
+                        setFilterData={ setFilterData }
+                        setTable={ setTable }
+                        setCountFilteredList={ setCountFilteredList }
+                        btnFilterDisabled={ btnFilterDisabled }
+                        setBtnFilterDisabled={ setBtnFilterDisabled } />
+                : null
+            }
+            {
+                !props.noNavbar ? 
+                    <Navbar
+                        navbarActions={ navbarActions }
+                        functions={ functions }
+                        btnFilterDisabled={ btnFilterDisabled }
+                        setBtnFilterDisabled={ setBtnFilterDisabled } />
+                : null
+            }
             <Table
-                userId={ props.user.userId }
-                seccionMenuId={ props.seccionMenuId }
                 seccionMenu={ props.seccionMenu } 
                 columns={ columns } 
                 dataTable={ dataTable }
                 tableActions={ tableActions }
-                setTable={ setTable }
-                currentPage={ currentPage }
                 tableRef={ tableRef }
-                setRecordId={ props.setRecordId }
                 setFormData={ setFormData }
-                functions={ functions }
                 handleAction={ handleAction }
                 iconsDisabled={ props.iconsDisabled }
                 styledColumns={ props.styledColumns } />
-            <Pagination 
-                currentPage= { currentPage }
-                setCurrentPage={ setCurrentPage }
-                limit={ limit }
-                totalRecords={ totalRecords }
-                totalPages={ totalPages }
-                paginationButtons={ paginationButtons }
-                setPaginationButtons={ setPaginationButtons }
-                renderPaginationButtons={ renderPaginationButtons }
-                renderPaginationButtonsReverse={ renderPaginationButtonsReverse }
-                setTable={ setTable } />
+            {
+                !props.noPagination ? 
+                    <Pagination 
+                        currentPage= { currentPage }
+                        setCurrentPage={ setCurrentPage }
+                        limit={ limit }
+                        totalRecords={ totalRecords }
+                        totalPages={ totalPages }
+                        paginationButtons={ paginationButtons }
+                        setPaginationButtons={ setPaginationButtons }
+                        renderPaginationButtons={ renderPaginationButtons }
+                        renderPaginationButtonsReverse={ renderPaginationButtonsReverse }
+                        setTable={ setTable } />
+                : null
+            }
             { 
                 Boolean(showModal) 
                 ? <ModalUpdate 
