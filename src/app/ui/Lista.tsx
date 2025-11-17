@@ -37,6 +37,7 @@ interface ListaProps {
     noFilters?: boolean;
     noNavbar?: boolean;
     noPagination?: boolean;
+    noActions?: boolean;
 };
 const Lista = (props: ListaProps) => {
     const tableRef = useRef(null);
@@ -299,16 +300,17 @@ const Lista = (props: ListaProps) => {
                 setColumns(data);
             })
         }).catch(error => console.error(error));
-        getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener tableActions");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                setTableActions(data);
-            })
-        }).catch(error => console.error(error));
+        if(!props.noActions)
+            getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
+                if(!response.ok){
+                    console.log("Error al obtener tableActions");
+                    console.log(response);
+                    return;
+                }
+                response.json().then(data => {
+                    setTableActions(data);
+                })
+            }).catch(error => console.error(error));
         if(!props.noPagination)
             setCountFilteredList();
         setTable(0);
