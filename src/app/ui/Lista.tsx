@@ -43,7 +43,7 @@ const Lista = (props: ListaProps) => {
     const tableRef = useRef(null);
 
     const off = 0;
-    const lim = props.noPagination ? 30 : 1000;
+    const lim = props.noPagination ?? true ? 30 : 1000;
 
     const [inputsFilters, setInputsFilters] = useState([]);
     
