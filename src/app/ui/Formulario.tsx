@@ -1,27 +1,43 @@
+import { Dispatch, SetStateAction } from "react";
 import InputText  from './InputText';
 import InputFile  from './InputFile';
 import InputTextArea  from './InputTextArea';
 import InputSelect  from './InputSelect';
 import InputCheckbox from "./InputCheckbox";
 import BookMark from "./BookMark";
-import { SeccionMenuInput } from '@/app/utils/entities';
+import { SeccionMenuInput, User } from '@/app/utils/entities';
 import { getObjectValue, uncapitalizeFirstLetter } from '@/app/utils/helpers';
 import InputFileMultiple from './InputFileMultiple';
+import { DefaultValues, InputConf } from "@/app/utils/types";
 
-const Formulario = (props: any) => {
+interface FormularioProps {
+    inputs: SeccionMenuInput[];
+    setFormData: Dispatch<SetStateAction<any>>;
+    handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    handleInputChange?: (input: { [key: string]: any }) => void;
+    record?: { [key: string]: any };
+    defaultValues?: DefaultValues;
+    seccionMenu?: string;
+    buttonDisabled?: boolean;
+    btnLabel?: string;
+    buttonSize?: number;
+    styles?: { [key: string]: any };
+    user?: User
+};
+const Formulario = (props: FormularioProps) => {
     const inputsText = ['text', 'password', 'date', 'number'];
 
     const renderInput = (input: SeccionMenuInput) => {
-        const inputConf: InputConf 
+        const inputConf: InputConf
             = getObjectValue(defaultValues, String(input.inputName), {});
         let value = "";
         let disabled = false;
         let filters = {};
-        if(props.userId !== undefined)
+        if(props.user !== undefined)
             filters = {
                 ...filters,
                 ...{
-                    userId: props.userId
+                    userId: props.user.userId
                 }
             };
         if(Object.keys(inputConf).length > 0){
@@ -101,8 +117,8 @@ const Formulario = (props: any) => {
     const record = getValuesFromRecord();
 
     const getDefaultValues = () => {
-        if(props.defaultValues?.[props.seccionMenu]){
-            return props.defaultValues[props.seccionMenu];
+        if(props.defaultValues?.[props.seccionMenu!]){
+            return props.defaultValues[props.seccionMenu!];
         }
         return [];
     }

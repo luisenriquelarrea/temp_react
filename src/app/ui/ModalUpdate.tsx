@@ -10,15 +10,13 @@ import { updateRecord } from '../../api';
 import { SeccionMenuInput } from '../../entities';
 import { uncapitalizeFirstLetter } from '../../funciones';
 import Encabezado from "./Encabezado";
+import { MessageBoxT } from "../utils/types";
 
 const ModalUpdate = (props: any) => {
-    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [formData, setFormData] = useState(props.formdata);
-    const [showMessageBox, setShowMessageBox] = useState(false);
-    const [messageData, setMessageData] = useState({
-        messageType: "",
-        message: ""
-    });
+    const [showMessageBox, setShowMessageBox] = useState<boolean>(false);
+    const [messageData, setMessageData] = useState<MessageBoxT>({});
 
     const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 

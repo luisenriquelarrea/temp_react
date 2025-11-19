@@ -2,12 +2,20 @@ export interface ColumnStyle  {
     backgroundColor?: string,
     border?: string
 };
+export type DefaultValues = {
+    [section: string]: {
+        [field: string]: InputConf
+    }
+};
+export type Entity = {
+    id: number;
+};
 export type Filter = {
     limit: number,
     offset: number,
     [key: string]: any
 };
-export interface InputConf {
+export type InputConf = {
     value: string,
     disabled?: boolean,
     filters?: any

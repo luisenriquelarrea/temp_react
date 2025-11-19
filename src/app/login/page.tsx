@@ -2,20 +2,18 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/app/hooks/useAuth';
-import { getUser } from '@/app/api'
+import { getUser } from '@/app/utils/api'
 import MessageBox from '../ui/MessageBox';
 import Image from 'next/image'
+import { MessageBoxT } from '../utils/types';
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState({
         username: "", 
         password: ""
     });
-    const [showMessageBox, setShowMessageBox] = useState(false);
-    const [messageData, setMessageData] = useState({
-        messageType: "",
-        message: ""
-    });
+    const [showMessageBox, setShowMessageBox] = useState<boolean>(false);
+    const [messageData, setMessageData] = useState<MessageBoxT>({});
     const { login } = useAuth();
 
     const handleChange = (event: any) => {

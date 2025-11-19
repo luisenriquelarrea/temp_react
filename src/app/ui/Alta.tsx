@@ -10,8 +10,10 @@ import {
     flipStatus 
 } from '@/app/utils/helpers';
 import {
+    SeccionMenuInput,
     User
 } from '@/app/utils/entities';
+import { MessageBoxT } from "../utils/types";
 
 interface AltaProps {
     user: User,
@@ -25,14 +27,11 @@ const Alta = (props: AltaProps) => {
         userCreatedId: props.user.userId
     };
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const [key, setKey] = useState(0);
-    const [inputs, setInputs] = useState([]);
+    const [key, setKey] = useState<number>(0);
+    const [inputs, setInputs] = useState<SeccionMenuInput[]>([]);
     const [formData, setFormData] = useState(initForm);
-    const [showMessageBox, setShowMessageBox] = useState(false);
-    const [messageData, setMessageData] = useState({
-        messageType: "",
-        message: ""
-    });
+    const [showMessageBox, setShowMessageBox] = useState<boolean>(false);
+    const [messageData, setMessageData] = useState<MessageBoxT>({});
 
     useEffect(() => {
         getInputs(props.seccionMenuId, 'alta').then(response => {
@@ -108,11 +107,11 @@ const Alta = (props: AltaProps) => {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
             <Formulario
-                userId={ props.user.userId }
                 key={ key }
                 inputs={ inputs }
                 setFormData={ setFormData }
                 handleSubmit={ handleSubmit }
+                user={ props.user }
                 buttonDisabled={ buttonDisabled } />
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
