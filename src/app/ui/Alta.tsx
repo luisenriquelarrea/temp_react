@@ -7,30 +7,36 @@ import {
 } from '@/app/utils/api';
 import { 
     objectClean, 
-    flipStatus 
+    flipStatus, 
+    castNullToString
 } from '@/app/utils/helpers';
 import {
-    SeccionMenuInput,
     User
 } from '@/app/utils/entities';
-import { MessageBoxT } from "../utils/types";
+import { DefaultValues, Entity, MessageBoxT } from "@/app/utils/types";
 
 interface AltaProps {
     user: User,
     seccionMenuId: number,
-    seccionMenu: string
+    seccionMenu: string,
+    defaultValues?: DefaultValues;
+    handleNewRecordResponse?: (response: Entity) => void;
 };
 
 const Alta = (props: AltaProps) => {
     const initForm = {
         status: 1,
-        userCreatedId: props.user.userId
+        userCreatedId: props.user.userId,
+        ...Object.fromEntries(
+            Object.entries(props.defaultValues?.[props.seccionMenu] || {})
+              .map(([k, v]) => [k, v.value])
+        )
     };
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const [key, setKey] = useState<number>(0);
-    const [inputs, setInputs] = useState<SeccionMenuInput[]>([]);
+    const [key, setKey] = useState(0);
+    const [inputs, setInputs] = useState([]);
     const [formData, setFormData] = useState(initForm);
-    const [showMessageBox, setShowMessageBox] = useState<boolean>(false);
+    const [showMessageBox, setShowMessageBox] = useState(false);
     const [messageData, setMessageData] = useState<MessageBoxT>({});
 
     useEffect(() => {
@@ -49,24 +55,32 @@ const Alta = (props: AltaProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setButtonDisabled(true);
+    
         try {
             const response = await save(props.seccionMenu, objectClean(formData));
-            let data;
             const contentType = response.headers.get("content-type") || "";
             const isJson = contentType.includes("application/json");
+    
+            // Read the response body once as text
+            const rawResponse = await response.text();
+    
+            // Attempt to parse JSON if applicable
+            let data = null;
             if (isJson) {
                 try {
-                    data = await response.json();
+                    data = JSON.parse(rawResponse);
                 } catch (jsonError) {
                     console.warn("Failed to parse JSON from response:", jsonError);
-                    data = null;
                 }
             }
+    
+            // Handle errors according to response.ok and parsed data
             if (!response.ok) {
                 console.log("Error al guardar registro");
                 console.log(response);
-                const httpStatus = String(response.status);
-                if (parseInt(httpStatus) === 422 && data && data.message) {
+                const httpStatus = response.status.toString();
+    
+                if (data && data.message) {
                     setMessageData({
                         messageType: "warning",
                         message: `(${httpStatus}) ${data.message}`
@@ -77,19 +91,26 @@ const Alta = (props: AltaProps) => {
                         message: "Ocurrió un error al crear registro."
                     });
                 }
+    
                 setShowMessageBox(true);
                 setButtonDisabled(false);
                 return;
             }
-            console.log(data || "Response OK without JSON payload");
+    
+            // Determine the message to show from rawResponse text
+            const message = castNullToString(rawResponse) !== "" && !isJson ? rawResponse : "Éxito al crear registro.";
+    
             setMessageData({
                 messageType: "success",
-                message: "Éxito al crear registro."
+                message: message
             });
             setFormData(initForm);
             setShowMessageBox(true);
             setKey(flipStatus(key));
             setButtonDisabled(false);
+
+            if(props.handleNewRecordResponse !== undefined)
+                props.handleNewRecordResponse(data);
         } catch (error) {
             console.error(error);
             setMessageData({
@@ -99,7 +120,7 @@ const Alta = (props: AltaProps) => {
             setShowMessageBox(true);
             setButtonDisabled(false);
         }
-    };    
+    };        
 
     return(
         <>
@@ -111,8 +132,10 @@ const Alta = (props: AltaProps) => {
                 inputs={ inputs }
                 setFormData={ setFormData }
                 handleSubmit={ handleSubmit }
+                seccionMenu={ props.seccionMenu }
                 user={ props.user }
-                buttonDisabled={ buttonDisabled } />
+                buttonDisabled={ buttonDisabled }
+                defaultValues={ props.defaultValues } />
             {
                 Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
             }
