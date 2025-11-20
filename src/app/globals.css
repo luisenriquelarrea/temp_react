@@ -175,7 +175,24 @@ td i {
 }
 
 @media print {
+  @page {
+      margin-top: 0;
+  }
+
+  * {
+      overflow: visible !important;
+  }
+
+  html, body {
+      overflow: visible !important;
+  }
+
   .no-print, .no-print * {
       display: none !important;
+  }
+  
+  #pageBreak {
+      margin-top: 100px;
+      page-break-before: always;
   }
 }
