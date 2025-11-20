@@ -66,6 +66,7 @@ const Alta = (props: AltaProps) => {
     
             // Attempt to parse JSON if applicable
             let data = null;
+
             if (isJson) {
                 try {
                     data = JSON.parse(rawResponse);
@@ -76,24 +77,27 @@ const Alta = (props: AltaProps) => {
     
             // Handle errors according to response.ok and parsed data
             if (!response.ok) {
-                console.log("Error al guardar registro");
                 console.log(response);
                 const httpStatus = response.status.toString();
-    
-                if (data && data.message) {
+
+                if (httpStatus === "500") {
+                    setMessageData({
+                        messageType: "danger",
+                        message: "Ocurrió un error inesperado, contacta a tu equipo de sistemas."
+                    });
+                } else if (data?.message) {
                     setMessageData({
                         messageType: "warning",
                         message: `(${httpStatus}) ${data.message}`
                     });
                 } else {
                     setMessageData({
-                        messageType: "danger",
-                        message: "Ocurrió un error al crear registro."
+                        messageType: "warning",
+                        message: `(${httpStatus}) ${rawResponse || "Error desconocido"}`
                     });
                 }
-    
+
                 setShowMessageBox(true);
-                setButtonDisabled(false);
                 return;
             }
     
@@ -107,7 +111,6 @@ const Alta = (props: AltaProps) => {
             setFormData(initForm);
             setShowMessageBox(true);
             setKey(flipStatus(key));
-            setButtonDisabled(false);
 
             if(props.handleNewRecordResponse !== undefined)
                 props.handleNewRecordResponse(data);
@@ -118,6 +121,7 @@ const Alta = (props: AltaProps) => {
                 message: "Error de red o inesperado al guardar registro."
             });
             setShowMessageBox(true);
+        } finally {
             setButtonDisabled(false);
         }
     };        
