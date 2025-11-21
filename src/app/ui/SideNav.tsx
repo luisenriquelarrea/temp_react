@@ -55,7 +55,7 @@ const SideNav = () => {
                 </button>
                 <span className="w3-bar-item w3-right">Logistica</span>
             </div>
-            <nav className="w3-sidebar my-sidebar" id="mySidebar">
+            <nav className="no-print w3-sidebar my-sidebar" id="mySidebar">
                 <div className="w3-container w3-row">
                     <div className="w3-col s3">
                         <Image 
