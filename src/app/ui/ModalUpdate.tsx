@@ -6,11 +6,11 @@ import InputTextArea from "./InputTextArea";
 import InputFile from "./InputFile";
 import BookMark from "./BookMark";
 import MessageBox from "./MessageBox";
-import { updateRecord } from '../../api';
-import { SeccionMenuInput } from '../../entities';
-import { uncapitalizeFirstLetter } from '../../funciones';
+import { updateRecord } from '@/app/utils/api';
+import { SeccionMenuInput } from '@/app/utils/entities';
 import Encabezado from "./Encabezado";
-import { MessageBoxT } from "../utils/types";
+import { MessageBoxT } from "@/app/utils/types";
+import { castNullToString, uncapitalizeFirstLetter } from "@/app/utils/helpers";
 
 const ModalUpdate = (props: any) => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -20,42 +20,76 @@ const ModalUpdate = (props: any) => {
 
     const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 
-    const performUpdate = (event: any) => {
+    const performUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
         if(buttonDisabled)
             return;
-        setButtonDisabled(true);
         event.preventDefault();
-        for (let [key, value] of Object.entries(formData))
-            props.record[key] = value;
-        updateRecord(props.seccionMenu, props.recordId, props.record).then(response => {
-            if(!response.ok){
-                const httpStatus = String(response.status);
-                let message = "Ocurrió un error, contacte a su equipo de sistemas.";
-                setMessageData({
-                    messageType: "danger",
-                    message: "("+httpStatus+") "+message
-                });
-                if(parseInt(httpStatus) == 422)
-                    response.json().then(data => {
-                        message = "Error en la información, "+data.message;
-                        setMessageData({
-                            messageType: "warning",
-                            message: "("+httpStatus+") "+message
-                        });
-                    })
+        setButtonDisabled(true);
+        const updatedRecord = { ...props.record, ...formData };
+        try {
+            const response = await updateRecord(props.seccionMenu, props.recordId, updatedRecord);
+            const contentType = response.headers.get("content-type") || "";
+            const isJson = contentType.includes("application/json");
+            
+            // Read the response body once as text
+            const rawResponse = await response.text();
+            
+            // Attempt to parse JSON if applicable
+            let data = null;
+        
+            if (isJson) {
+                try {
+                    data = JSON.parse(rawResponse);
+                } catch (jsonError) {
+                    console.warn("Failed to parse JSON from response:", jsonError);
+                }
+            }
+            
+            // Handle errors according to response.ok and parsed data
+            if (!response.ok) {
+                console.log(response);
+                const httpStatus = response.status.toString();
+        
+                if (httpStatus === "500") {
+                    setMessageData({
+                        messageType: "danger",
+                        message: "Ocurrió un error inesperado, contacta a tu equipo de sistemas."
+                    });
+                } else if (data?.message) {
+                    setMessageData({
+                        messageType: "warning",
+                        message: `(${httpStatus}) ${data.message}`
+                    });
+                } else {
+                    setMessageData({
+                        messageType: "warning",
+                        message: `(${httpStatus}) ${rawResponse || "Error desconocido"}`
+                    });
+                }
+        
                 setShowMessageBox(true);
                 setButtonDisabled(false);
                 return;
             }
-            response.json().then(data => {
-                setMessageData({
-                    messageType: "success",
-                    message: "Éxito al modificar registro."
-                });
-                setShowMessageBox(true);
-                props.setTable(props.currentPage);
-            })
-        }).catch(error => console.error(error));
+            
+            // Determine the message to show from rawResponse text
+            const message = castNullToString(rawResponse) !== "" && !isJson ? rawResponse : "Éxito al guardar registro.";
+            
+            setMessageData({
+                messageType: "success",
+                message: message
+            });
+            setShowMessageBox(true);
+            props.setTable(props.currentPage);
+        } catch (error) {
+            console.error(error);
+            setMessageData({
+                messageType: "danger",
+                message: "Ocurrio un error de red, intente nuevamente."
+            });
+            setShowMessageBox(true);
+            setButtonDisabled(false);
+        }
     }
 
     const renderInput = (input: SeccionMenuInput) => {
