@@ -53,6 +53,17 @@ export const save = async (seccionMenu: string, formdata: any) => {
     })
 }
 
+export const patchRecord = async (seccionMenu: string, id: number, formdata: any) => {
+    return fetch(`${urlAPI}${seccionMenu}/${id}`, {
+        method: 'PATCH',
+        headers: {
+            "Content-Type": "application/merge-patch+json",
+            [`${apiKey}`]: `${apiToken}`
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
 export const updateRecord = async (seccionMenu: string, id: number, formdata: any) => {
     return fetch(`${urlAPI}${seccionMenu}/${id}`, {
         method: 'PUT',
