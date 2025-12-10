@@ -123,6 +123,17 @@ td i {
   text-align: center;
 }
 
+.myTable td i {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .myTable td i {
+    font-size: 22px;
+    margin: 8px 8px;
+  }
+}
+
 .my-top-bar{
   z-index: 4;
 }

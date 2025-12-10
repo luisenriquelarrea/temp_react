@@ -44,7 +44,7 @@ const Table = (props: TableProps) => {
     };
     const columnOk = {
         color: "DodgerBlue",
-        fontSize: "17px"
+        fontSize: "20px"
     };
     const columnsStatus = [0, 1];
     const inputsText = ['text', 'number'];
@@ -54,46 +54,57 @@ const Table = (props: TableProps) => {
             props.handleAction(action, record.id);
     }
 
-    const renderAction = (action: Accion, record: any) => {
-        if(action.callMethod === "xls")
-            return null;
-        if(action.callMethod === "show")
-            return <Link key={record.id} href={`/dashboard/${props.seccionMenu}/${record.id}`} >
-                    <i key={ action.id } 
-                        title={ action.label }
+    const renderAction = (action: Accion, record: { [key: string]: any }) => {
+        const status = parseInt(record.status);
+        if (action.callMethod === "xls") return null;
+        const IconWrapper = ({ children }: any) => (
+            <span className="action-icon">{children}</span>
+        );
+        if (action.callMethod === "show") {
+            return (
+                <IconWrapper key={action.id}>
+                    <Link key={record.id} href={`/dashboard/${props.seccionMenu}/${record.id}`}>
+                        <i
+                            title={action.label}
+                            className={`fa fa-${action.icon} fa-fw`}
+                        ></i>
+                    </Link>
+                </IconWrapper>
+            );
+        }
+        if (action.callMethod !== "changeStatus") {
+            return (
+                <IconWrapper key={action.id}>
+                    <i
+                        title={action.label}
                         className={`fa fa-${action.icon} fa-fw`}
-                        style={{"fontSize": '14px', "color": "black"}} >
-                    </i>
-                </Link>
-        if(action.callMethod !== "changeStatus")
-            return <i 
-                key={ action.id } 
-                title={ action.label }
-                className={`fa fa-${action.icon} fa-fw`}
-                style={{"fontSize": '14px'}}
-                onClick={() => handleAction(String(action.callMethod), record) } >
-
-                </i>
-        if(action.descripcion === "deactivate" && parseInt(record.status) === 0)
-            return null;
-        if(action.descripcion === "deactivate" && parseInt(record.status) === 1)
-            return <i 
-                key={ action.id } 
-                title={ action.label }
-                className={`fa fa-pause fa-fw`}
-                style={{"fontSize": '14px'}}
-                onClick={() => handleAction(String(action.callMethod), record) } >
-
-                </i>
-        if(action.descripcion === "activate" && parseInt(record.status) === 0)
-            return <i 
-                key={ action.id } 
-                title={ action.label }
-                className={`fa fa-play fa-fw`}
-                style={{"fontSize": '14px'}}
-                onClick={() => handleAction(String(action.callMethod), record) } >
-
-                </i>
+                        onClick={() => handleAction(String(action.callMethod), record)}
+                    ></i>
+                </IconWrapper>
+            );
+        }
+        if (action.descripcion === "deactivate" && status === 1) {
+            return (
+                <IconWrapper key={action.id}>
+                    <i
+                        title={action.label}
+                        className="fa fa-pause fa-fw"
+                        onClick={() => handleAction(String(action.callMethod), record)}
+                    ></i>
+                </IconWrapper>
+            );
+        }
+        if (action.descripcion === "activate" && status === 0) {
+            return (
+                <IconWrapper key={action.id}>
+                    <i
+                        title={action.label}
+                        className="fa fa-play fa-fw"
+                        onClick={() => handleAction(String(action.callMethod), record)}
+                    ></i>
+                </IconWrapper>
+            );
+        }
         return null;
     }
 
