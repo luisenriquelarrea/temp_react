@@ -38,6 +38,7 @@ interface ListaProps {
     noNavbar?: boolean;
     noPagination?: boolean;
     noActions?: boolean;
+    notifyParent?: (...args: any) => any;
 };
 const Lista = (props: ListaProps) => {
     const tableRef = useRef(null);
@@ -162,7 +163,7 @@ const Lista = (props: ListaProps) => {
         }).catch(error => console.error(error));
     }
     
-    const eliminar = async (recordId: number) => {
+    const eliminar = async (recordId: number): Promise<boolean> => {
         const result = await Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer",
@@ -181,12 +182,12 @@ const Lista = (props: ListaProps) => {
                     if (httpStatus === 422) {
                         const data = await response.json();
                         await Swal.fire({
-                        title: 'Atención!',
-                        text: data.message,
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
+                            title: 'Atención!',
+                            text: data.message,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
                         });
-                        return;
+                        return false;
                     }
                     await Swal.fire({
                         title: 'Atención!',
@@ -194,9 +195,10 @@ const Lista = (props: ListaProps) => {
                         icon: "warning",
                         confirmButtonText: 'OK'
                     });
-                    return;
+                    return false;
                 }
                 setTable(currentPage);
+                return true;
             } catch (error) {
                 console.error(error);
                 await Swal.fire({
@@ -205,35 +207,57 @@ const Lista = (props: ListaProps) => {
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
+                return false;
             }
+        }
+        return false;
+    };
+
+    const changeStatus = async (recordId: number): Promise<boolean> => {
+        try {
+            const responseGet = await getById(props.seccionMenu, recordId);
+            if (!responseGet.ok) {
+                console.error(responseGet);
+                await Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado. Intente nuevamente.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+            const data = await responseGet.json();
+            data.userUpdatedId = props.user.userId;
+            data.status = flipStatus(data.status);
+
+            const responseUpdate = await updateRecord(props.seccionMenu, recordId, data);
+            if (!responseUpdate.ok) {
+                console.error(responseUpdate);
+                await Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado. Intente nuevamente.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            setTable(currentPage);
+
+            return true;
+        } catch (error) {
+            console.error(error);
+            await Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error de red. Intente nuevamente.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return false;
         }
     };
 
-    const changeStatus = (recordId: number) => {
-        getById(props.seccionMenu, recordId).then(response => {
-            if(!response.ok){
-                console.log("Error al obtener registro");
-                console.log(response);
-                return;
-            }
-            response.json().then(data => {
-                data.userUpdatedId = props.user.userId;
-                data.status = flipStatus(data.status);
-                updateRecord(props.seccionMenu, recordId, data).then(response => {
-                    if(!response.ok){
-                        console.log("Error al modificar registro");
-                        console.log(response);
-                        return;
-                    }
-                    response.json().then(data => {
-                        setTable(currentPage);
-                    })
-                }).catch(error => console.error(error));
-            })
-        }).catch(error => console.error(error));
-    }
-
-    const handleAction = (callMethod: string, recordId: number): void => {
+    const handleAction = async (callMethod: string, recordId: number) => {
         setFormData({
             userUpdatedId: props.user.userId
         });
@@ -245,7 +269,9 @@ const Lista = (props: ListaProps) => {
             return;
         }
         if(functions[callMethod]){
-            functions[callMethod](recordId);
+            const response = await functions[callMethod](recordId);
+            if(response === true && props.notifyParent)
+                props.notifyParent(recordId);
             return;
         }
     }
