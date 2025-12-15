@@ -176,11 +176,37 @@ const Lista = (props: ListaProps) => {
         if (result.isConfirmed) {
             try {
                 const response = await deleteRecord(props.seccionMenu, recordId);
+                const contentType = response.headers.get("content-type") || "";
+                const isJson = contentType.includes("application/json");
+                    
+                // Read the response body once as text
+                const rawResponse = await response.text();
+                    
+                // Attempt to parse JSON if applicable
+                let data = null;
+                
+                if (isJson) {
+                    try {
+                        data = JSON.parse(rawResponse);
+                    } catch (jsonError) {
+                        console.warn("Failed to parse JSON from response:", jsonError);
+                    }
+                }
+                    
+                // Handle errors according to response.ok and parsed data
                 if (!response.ok) {
                     console.log(response);
-                    const httpStatus = response.status;
-                    if (httpStatus === 422) {
-                        const data = await response.json();
+                    const httpStatus = response.status.toString();
+                
+                    if (httpStatus === "500") {
+                        await Swal.fire({
+                            title: 'Atención!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    } else if (data?.message) {
                         await Swal.fire({
                             title: 'Atención!',
                             text: data.message,
@@ -188,22 +214,23 @@ const Lista = (props: ListaProps) => {
                             confirmButtonText: 'OK'
                         });
                         return false;
+                    } else {
+                        await Swal.fire({
+                            title: 'Atención!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: `(${httpStatus}) ${rawResponse || "Error desconocido"}`
+                        });
+                        return false;
                     }
-                    await Swal.fire({
-                        title: 'Atención!',
-                        text: `(${httpStatus}) Ocurrió un error, contacte a su equipo de sistemas.`,
-                        icon: "warning",
-                        confirmButtonText: 'OK'
-                    });
-                    return false;
                 }
                 setTable(currentPage);
-                return true;
+                return true;  
             } catch (error) {
                 console.error(error);
                 await Swal.fire({
                     title: 'Error',
-                    text: 'Ocurrió un error inesperado. Intente nuevamente.',
+                    text: 'Ocurrió un error de red. Intente nuevamente.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
