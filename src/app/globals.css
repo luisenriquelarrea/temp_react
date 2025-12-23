@@ -98,12 +98,6 @@ a {
   cursor: default;
 }
 
-td i {
-  cursor: pointer;
-  margin-right: 5px;
-  margin-top: 6px;
-}
-
 .my-login{
   text-align: center;
   margin: 75px auto;
@@ -125,6 +119,12 @@ td i {
 
 .myTable td i {
   font-size: 16px;
+  margin-right: 5px;
+  margin-top: 6px;
+}
+
+i  {
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
