@@ -50,7 +50,9 @@ const InputSelect = (props: InputSelectProps) => {
         props.stateFormData((values: any) => ({...values, [name]: {"id":value} }))
         if(props.handleInputChange)
             props.handleInputChange({
-                [name]: value
+                [name]: {
+                    id: value
+                }
             });
     }
 
