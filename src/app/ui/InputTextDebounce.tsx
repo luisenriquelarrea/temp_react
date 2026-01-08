@@ -57,7 +57,8 @@ const InputTextDebounce = (props: InputTextProps) => {
                             onChange={ handleChange }
                             onKeyDown={ (event) => handleKeyDown(event) }
                             placeholder={ props.inputData.inputLabel }
-                            disabled={ props.disabled } />
+                            disabled={ props.disabled }
+                            onWheel={(e) => e.currentTarget.blur()} />
                     </div>
                 </div>
             </div>

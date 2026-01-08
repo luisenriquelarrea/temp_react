@@ -39,7 +39,8 @@ const InputTextFilter = (props: any) => {
                             value={ text }
                             onChange={ handleChange }
                             placeholder={ props.inputData.inputLabel }
-                            disabled={ props.inputData.inputDisabled } />
+                            disabled={ props.inputData.inputDisabled }
+                            onWheel={(e) => e.currentTarget.blur()} />
                     </div>
                 </div>
             </div>
