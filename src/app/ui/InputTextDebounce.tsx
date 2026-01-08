@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { castNullToString } from '@/app/utils/helpers';
 import { SeccionMenuInput } from '@/app/utils/entities';
 
@@ -9,16 +9,22 @@ interface InputTextProps {
     disabled?: boolean;
     handleChange?: (name: string, value: string) => void;
 }
-const InputText = (props: InputTextProps) => {
+const InputTextDebounce = (props: InputTextProps) => {
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
     const [text, setText] = useState(castNullToString(props.text));
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.name;
         const value = event.target.value;
         setText(value);
-        props.stateFormData((values: any) => ({...values, [name]: value}));
-        if(props.handleChange)
-            props.handleChange(name, value);
+        
+        if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+
+        debounceTimeout.current = setTimeout(async () => {
+            props.stateFormData((values: any) => ({...values, [name]: value}));
+            if(props.handleChange)
+                props.handleChange(name, value);
+        }, 1500);
     }
 
     const handleKeyDown = (event: any) => {
@@ -59,4 +65,4 @@ const InputText = (props: InputTextProps) => {
     );
 }
 
-export default InputText;
+export default InputTextDebounce;
