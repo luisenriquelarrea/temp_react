@@ -35,11 +35,11 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
                 style={{ height: `${heightPercent}vh` }}
                 onClick={(e) => e.stopPropagation()} >
             
-            <div className="preview-handle" />
+            <div className="preview-handle no-print" />
 
-                { title && <div className="preview-header">{ title } </div> }
+                { title && <div className="preview-header no-print">{ title } </div> }
 
-                <div className="preview-content">{children}</div>
+                <div className="preview-content print-area">{children}</div>
             </div>
         </div>
     );
