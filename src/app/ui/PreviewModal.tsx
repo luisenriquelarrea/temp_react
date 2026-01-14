@@ -30,14 +30,18 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
 
     return (
         <div className="preview-modal-backdrop" onClick={onClose}>
-            <div
-                className="preview-modal"
+            <div className="preview-modal"
                 style={{ height: `${heightPercent}vh` }}
                 onClick={(e) => e.stopPropagation()} >
             
-            <div className="preview-handle no-print" />
+                <div className="preview-handle no-print" />
 
-                { title && <div className="preview-header no-print">{ title } </div> }
+                <div className="preview-header no-print">
+                    { title }
+                    <button className="preview-close" onClick={ onClose } aria-label="Close">
+                        ✕
+                    </button>
+                </div>
 
                 <div className="preview-content print-area">{children}</div>
             </div>
