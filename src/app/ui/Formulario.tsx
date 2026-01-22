@@ -25,9 +25,11 @@ interface FormularioProps {
     user?: User
 };
 const Formulario = (props: FormularioProps) => {
-    const inputsText = ['text', 'password', 'date', 'number'];
+    const inputsText = ['text', 'password', 'date', 'datetime-local', 'number'];
 
     const renderInput = (input: SeccionMenuInput) => {
+        if(props.buttonSize)
+            input.inputCols = 12;
         const inputConf: InputConf
             = getObjectValue(defaultValues, String(input.inputName), {});
         let value = "";
@@ -100,7 +102,7 @@ const Formulario = (props: FormularioProps) => {
                 key={ input.inputName }
                 inputData={ input }
                 stateFormData={ props.setFormData } 
-                text="0" />
+                text={ value } />
         if( input.inputType === "bookmark" )
             return <BookMark 
                 key={ input.inputName }

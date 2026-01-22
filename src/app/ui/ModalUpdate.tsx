@@ -1,24 +1,29 @@
-import { useState } from "react";
-import InputText  from './InputText';
-import InputSelect  from './InputSelect';
-import InputCheckbox from "./InputCheckbox";
-import InputTextArea from "./InputTextArea";
-import InputFile from "./InputFile";
-import BookMark from "./BookMark";
+import { useState, Dispatch, SetStateAction } from "react";
 import MessageBox from "./MessageBox";
 import { updateRecord } from '@/app/utils/api';
-import { SeccionMenuInput } from '@/app/utils/entities';
+import { castNullToString } from '@/app/utils/helpers';
 import Encabezado from "./Encabezado";
 import { MessageBoxT } from "@/app/utils/types";
-import { castNullToString, uncapitalizeFirstLetter } from "@/app/utils/helpers";
+import Formulario from "./Formulario";
+import { SeccionMenuInput, User } from "@/app/utils/entities";
 
-const ModalUpdate = (props: any) => {
+interface ModalUpdateProps {
+    title: string;
+    inputs: SeccionMenuInput[];
+    formdata: { [key: string]: any };
+    record: { [key: string]: any };
+    setShowModal: Dispatch<SetStateAction<any>>;
+    seccionMenuId: number;
+    seccionMenu: string;
+    setTable: Dispatch<SetStateAction<any>>;
+    currentPage: number;
+    user: User;
+}
+const ModalUpdate = (props: ModalUpdateProps) => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [formData, setFormData] = useState(props.formdata);
     const [showMessageBox, setShowMessageBox] = useState<boolean>(false);
     const [messageData, setMessageData] = useState<MessageBoxT>({});
-
-    const inputsText = ['text', 'number', 'password', 'date', 'datetime-local'];
 
     const performUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
         if(buttonDisabled)
@@ -27,7 +32,7 @@ const ModalUpdate = (props: any) => {
         setButtonDisabled(true);
         const updatedRecord = { ...props.record, ...formData };
         try {
-            const response = await updateRecord(props.seccionMenu, props.recordId, updatedRecord);
+            const response = await updateRecord(props.seccionMenu, props.record.id, updatedRecord);
             const contentType = response.headers.get("content-type") || "";
             const isJson = contentType.includes("application/json");
             
@@ -92,97 +97,39 @@ const ModalUpdate = (props: any) => {
         }
     }
 
-    const renderInput = (input: SeccionMenuInput) => {
-        input.inputCols = 6;
-        let inputName = input.inputName;
-        if( inputsText.includes(String(input.inputType)) )
-            return <InputText 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData }
-                text={ props.record[inputName!] === null ? "" : props.record[inputName!]} />
-        if(input.inputType === "select")
-        {
-            let inputModelo = uncapitalizeFirstLetter(String(input.modelo));
-            let inputId = input.inputId;
-            return <InputSelect 
-                key={ input.inputName }
-                input={ input }
-                stateFormData={ setFormData }
-                defaultValue={ props.record[inputModelo!] === null ? 0 : props.record[inputModelo!][inputId!] } />
-        }
-        if( input.inputType === "textarea" ){
-            input.inputCols = 12;
-            return <InputTextArea 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData } 
-                text={ props.record[inputName!] } />
-        }
-        if( input.inputType === "file" ){
-            input.inputCols = 12;
-            return <InputFile 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData } />
-        }
-        if( input.inputType === "checkbox" )
-            return <InputCheckbox 
-                key={ input.inputName }
-                inputData={ input }
-                stateFormData={ setFormData } 
-                text={ props.record[inputName!] } />
-        if( input.inputType === "bookmark" ){
-            input.inputCols = 12;
-            return <BookMark 
-                key={ input.inputName }
-                inputData={ input } />
-        }
-        return null
-    }
-
     const closeModal = () => {
-        props.stateShowModal(false);
+        props.setShowModal(false);
     }
 
     return (
         <div className="modal is-active">
             <div className="modal-background"></div>
-            <form className="modal-card" onSubmit={ performUpdate }>
+            <div className="modal-card" >
                 <header className="modal-card-head">
-                    <p className="modal-card-title">{ props.titleModal }</p>
+                    <p className="modal-card-title">{ props.title }</p>
                     <button onClick={ closeModal } className="delete" aria-label="close" ></button>
                 </header>
                 <section className="modal-card-body">
-                    {
-                        Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
-                    }
                     <Encabezado
                         seccionMenuId={ props.seccionMenuId }
                         seccionMenu={ props.seccionMenu } 
-                        recordId={ props.recordId } />
-                    <div className="field" >
-                        <div className="columns is-multiline">
-                            {props.inputs.map((input: SeccionMenuInput) => {
-                                return (
-                                    renderInput(input)
-                                );
-                            })}
-                        </div>
-                    </div>
-                    {
-                        Boolean(showMessageBox) ? <MessageBox data={messageData} /> : null
-                    }
+                        recordId={ props.record.id } />
+                    <Formulario
+                        inputs={ props.inputs }
+                        setFormData={ setFormData }
+                        handleSubmit={ performUpdate }
+                        seccionMenu={ props.seccionMenu }
+                        buttonSize={ 12 }
+                        user={ props.user }
+                        buttonDisabled={ buttonDisabled }
+                        record={ props.record } />
                 </section>
                 <footer className="modal-card-foot">
-                    <button 
-                        type="submit" 
-                        className="button is-fullwidth" 
-                        disabled={ buttonDisabled }>
-                        Guardar cambios
-                    </button>
+                    <div className="is-flex-grow-1">
+                        { showMessageBox && <MessageBox data={messageData} /> }
+                    </div>
                 </footer>
-            </form>
+            </div>
         </div>
     );
 }
