@@ -11,19 +11,20 @@ import {
 } from '@/app/utils/api';
 import {  
     objectClean, 
-    flipStatus
+    flipStatus,
+    castNullToString
 } from '@/app/utils/helpers';
 import {
     User
 } from '@/app/utils/entities';
-import Filters from '@/app/ui/Filters';
-import ModalUpdate from '@/app/ui/ModalUpdate';
-import Pagination from "@/app/ui/Pagination";
-import Table from "@/app/ui/Table";
-import Navbar from "@/app/ui/Navbar";
-import Swal, { SweetAlertOptions } from 'sweetalert2'
+import Filters from './Filters';
+import ModalUpdate from './ModalUpdate';
+import Pagination from "./Pagination";
+import Table from "./Table";
+import Navbar from "./Navbar";
+import Swal from 'sweetalert2'
 import { useDownloadExcel } from "react-export-table-to-excel";
-import { Filter, StyledColumns } from "@/app/utils/types";
+import { Filter, MessageBoxT, StyledColumns } from "@/app/utils/types";
 
 interface ListaProps {
     user: User;
@@ -72,7 +73,7 @@ const Lista = (props: ListaProps) => {
     const [showModal, setShowModal] = useState(false);
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [inputs, setInputs] = useState([]);
-    const [record, setRecord] = useState({});
+    const [record, setRecord] = useState<{[key: string]: any}>({});
     const [recordId, setRecordId] = useState({});
     const [btnFilterDisabled, setBtnFilterDisabled] = useState(false);
 
@@ -284,6 +285,67 @@ const Lista = (props: ListaProps) => {
         }
     };
 
+    const performUpdate = async (): Promise<MessageBoxT> => {
+        const updatedRecord = { ...record, ...formdata };
+        try {
+            const response = await updateRecord(props.seccionMenu, record.id, updatedRecord);
+            const contentType = response.headers.get("content-type") || "";
+            const isJson = contentType.includes("application/json");
+                
+            // Read the response body once as text
+            const rawResponse = await response.text();
+                
+            // Attempt to parse JSON if applicable
+            let data = null;
+            
+            if (isJson) {
+                try {
+                    data = JSON.parse(rawResponse);
+                } catch (jsonError) {
+                    console.warn("Failed to parse JSON from response:", jsonError);
+                }
+            }
+                
+            // Handle errors according to response.ok and parsed data
+            if (!response.ok) {
+                console.log(response);
+                const httpStatus = response.status.toString();
+            
+                if (httpStatus === "500") {
+                    return {
+                        messageType: "danger",
+                        message: "Ocurrió un error inesperado, contacta a tu equipo de sistemas."
+                    };
+                } else if (data?.message) {
+                    return {
+                        messageType: "warning",
+                        message: `(${httpStatus}) ${data.message}`
+                    };
+                } else {
+                    return {
+                        messageType: "warning",
+                        message: `(${httpStatus}) ${rawResponse || "Error desconocido"}`
+                    };
+                }
+            }
+            setTable(currentPage);
+    
+            // Determine the message to show from rawResponse text
+            const message = castNullToString(rawResponse) !== "" && !isJson ? rawResponse : "Éxito al guardar registro.";
+                
+            return {
+                messageType: "success",
+                message: message
+            }
+        } catch (error) {
+            console.error(error);
+            return {
+                messageType: "danger",
+                message: "Ocurrio un error de red, intente nuevamente."
+            }
+        }
+    }
+
     const handleAction = async (callMethod: string, recordId: number) => {
         setFormData({
             userUpdatedId: props.user.userId
@@ -424,14 +486,13 @@ const Lista = (props: ListaProps) => {
                 ? <ModalUpdate 
                     seccionMenuId={ props.seccionMenuId } 
                     seccionMenu={ props.seccionMenu }
-                    titleModal={ titleModal }
-                    recordId={ recordId }
+                    title={ titleModal }
                     record={ record }
                     inputs={ inputs }
-                    formdata={ formdata }
-                    stateShowModal={ setShowModal }
-                    setTable={ setTable }
-                    currentPage={ currentPage } /> 
+                    performUpdate={ performUpdate }
+                    setFormData={ setFormData }
+                    setShowModal={ setShowModal }
+                    user={ props.user } /> 
                 : null 
             }
         </>
