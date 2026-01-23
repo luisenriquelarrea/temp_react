@@ -63,19 +63,20 @@ const Lista = (props: ListaProps) => {
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [tableActions, setTableActions] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(lim);
-    const [maxButtons, setMaxButtons] = useState(7);
-    const [totalRecords, setTotalRecords] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [limit, setLimit] = useState<number>(lim);
+    const [maxButtons, setMaxButtons] = useState<number>(7);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>(0);
     const [paginationButtons, setPaginationButtons] = useState<any>([]);
     const [formdata, setFormData] = useState<any>({});
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
     const [titleModal, setTitleModal] = useState("Modifica registro");
     const [inputs, setInputs] = useState([]);
     const [record, setRecord] = useState<{[key: string]: any}>({});
     const [recordId, setRecordId] = useState({});
-    const [btnFilterDisabled, setBtnFilterDisabled] = useState(false);
+    const [btnFilterDisabled, setBtnFilterDisabled] = useState<boolean>(false);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
     const renderPaginationButtons = (tPages: number) => {
         var i = 2;
@@ -347,21 +348,27 @@ const Lista = (props: ListaProps) => {
     }
 
     const handleAction = async (callMethod: string, recordId: number) => {
-        setFormData({
-            userUpdatedId: props.user.userId
-        });
-        if(props.setRecordId)
-            props.setRecordId(recordId);
-        const customActions = props.functions;
-        if(customActions && customActions[callMethod]){
-            customActions[callMethod](recordId);
-            return;
-        }
-        if(functions[callMethod]){
-            const response = await functions[callMethod](recordId);
-            if(response === true && props.notifyParent)
-                props.notifyParent(recordId);
-            return;
+        if (isProcessing) return;
+        setIsProcessing(true);
+        try {
+            setFormData({
+                userUpdatedId: props.user.userId
+            });
+            if(props.setRecordId)
+                props.setRecordId(recordId);
+            const customActions = props.functions;
+            if(customActions && customActions[callMethod]){
+                customActions[callMethod](recordId);
+                return;
+            }
+            if(functions[callMethod]){
+                const response = await functions[callMethod](recordId);
+                if(response === true && props.notifyParent)
+                    props.notifyParent(recordId);
+                return;
+            }
+        } finally {
+            setIsProcessing(false);
         }
     }
 
