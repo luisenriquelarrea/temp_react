@@ -3,7 +3,6 @@
 import { memo } from "react";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import NavLink from "./NavLink";
 import { getNavLinks } from '@/app/utils/api';
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
@@ -12,12 +11,10 @@ import { parseString } from "@/app/utils/helpers";
 
 const Accordion = () => {
     const { getItem } = useLocalStorage();
-    const [seccionMenu, setSeccionMenu] = useState<any>({});
-
-    var user: User = {};
+    const [seccionMenu, setSeccionMenu] = useState< {[key: string]: any} >({});
 
     useEffect(() => {
-        user = JSON.parse(String(getItem("user")));
+        const user: User = JSON.parse(String(getItem("user")));
         getNavLinks(user.grupo).then(response => {
             if(!response.ok){
                 console.log("Error al obtener navLinks");
@@ -25,8 +22,15 @@ const Accordion = () => {
                 return;
             }
             response.json().then(data => {
-                setSeccionMenu(Object.groupBy(data, ( {menu}:any ) => menu.label));
-            })
+                const grouped = data.reduce((acc: any, item: any) => {
+                    const key = item.menu.label;
+                    if (!acc[key]) acc[key] = [];
+                    acc[key].push(item);
+                    return acc;
+                }, {});
+
+                setSeccionMenu(grouped);
+            });
         }).catch(error => console.error(error));
     }, []);
 
@@ -44,7 +48,6 @@ const Accordion = () => {
         return icon !== "" ? icon : "bars";
     };  
 
-    const pathname = usePathname();
     return (
         <>
             <Link 
@@ -68,7 +71,7 @@ const Accordion = () => {
                         <div id={ parseStr } className="w3-container w3-white w3-hide">
                         {
                             Object.keys(links).map((key) => {
-                                const seccion = links[key]
+                                const seccion = links[key];
                                 return <NavLink 
                                     key={ key } 
                                     seccion={ seccion } />
