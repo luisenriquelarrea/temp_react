@@ -1,26 +1,10 @@
-import { User } from './entities';
+import { ApiResponse, Filter } from './types';
 
 var urlAPI = process.env.urlAPI;
-var apiKey = process.env.apiKey;
-var apiToken = process.env.apiToken;
 
-export const downloadPDFFile = async (seccionMenu: string, endpoint: string, 
-        recordId:number, filename: string) => {
-    const response = await fetch(`${urlAPI}${seccionMenu}/${endpoint}/${recordId}`, {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
-        },
-    });
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename+".pdf";
-    a.click();
-    window.URL.revokeObjectURL(url);
-    return true;
+const getToken = () => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser).token : null;
 };
 
 export const downloadXLSFile = async (seccionMenu: string, endpoint: string, 
@@ -29,7 +13,7 @@ export const downloadXLSFile = async (seccionMenu: string, endpoint: string,
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
     });
     const blob = await response.blob();
@@ -47,7 +31,29 @@ export const save = async (seccionMenu: string, formdata: any) => {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
+export const saveAll = async (seccionMenu: string, formdata: any[]) => {
+    return fetch(`${urlAPI}${seccionMenu}/addAll`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
+export const saveCustom = async (seccionMenu: string, endpoint: string, formdata: {[key: string]: any}) => {
+    return fetch(`${urlAPI}${seccionMenu}/${endpoint}`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify(formdata),
     })
@@ -58,7 +64,7 @@ export const patchRecord = async (seccionMenu: string, id: number, formdata: any
         method: 'PATCH',
         headers: {
             "Content-Type": "application/merge-patch+json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify(formdata),
     })
@@ -69,7 +75,7 @@ export const updateRecord = async (seccionMenu: string, id: number, formdata: an
         method: 'PUT',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify(formdata),
     })
@@ -84,10 +90,10 @@ export const uploadFile = async (seccionMenu: string, id: number, formdata: any)
 
 export const deleteRecords = async (seccionMenu: string, formdata: any) => {
     return fetch(`${urlAPI}${seccionMenu}/deleteRecords`, {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify(formdata),
     })
@@ -98,7 +104,7 @@ export const deleteRecord = async (seccionMenu: string, id: number) => {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
     })
 }
@@ -108,19 +114,18 @@ export const getById = async (seccionMenu: string, id: number) => {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
     })
 }
 
-export const getByUserId = async (seccionMenu: string, url: string, userId: number) => {
+export const getByUserId = async (seccionMenu: string, url: string) => {
     return fetch(`${urlAPI}${seccionMenu}/${url}`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
-        },
-        body: JSON.stringify({userId: userId}),
+            "Authorization": `Bearer ${getToken()}`
+        }
     })
 }
 
@@ -129,50 +134,92 @@ export const countFilteredList = async (seccionMenu: string, formdata: any) => {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify(formdata),
     })
 }
 
-export const getBreadcrumbs = async (seccionMenuId: number, grupo: any) => {
+export const getBreadcrumbs = async (seccionMenuId: number) => {
     return fetch(`${urlAPI}accion_grupo/allowed_breadcrumbs`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify({ 
-            'seccionMenuId': seccionMenuId,
-            'grupoId': grupo.id
+            seccionMenu: {
+                id: seccionMenuId
+            }
         }),
     })
 }
 
-export const getNavbarActions = async (seccionMenuId: number, grupo: any) => {
+export const getCustomReport = async (seccionMenu: string, endpoint: string, formdata: any) => {
+    return fetch(`${urlAPI}${seccionMenu}/${endpoint}`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(formdata),
+    })
+}
+
+export const getDataFromAPI = async (urlSource: string, filter: Filter): Promise<ApiResponse> => {
+    const response = await getSeccionMenuListFiltered(urlSource, filter);
+    if (!response.ok) {
+        console.error("Error fetching data:", response);
+        return {
+            error: true,
+            message: "Ocurrió un error inesperado, consulte a su equipo de sistemas.",
+            data: []
+        };
+    }
+    let responseArray: any[] = [];
+    try {
+        responseArray = await response.json();
+    } catch (err) {
+        console.error("Invalid JSON response:", err);
+        return {
+            error: true,
+            message: "Ocurrió un error inesperado, consulte a su equipo de sistemas.",
+            data: []
+        };
+    }
+    return {
+        error: false,
+        message: "ok",
+        data: responseArray
+    };
+}
+
+export const getNavbarActions = async (seccionMenuId: number) => {
     return fetch(`${urlAPI}accion_grupo/allowed_navbar`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify({ 
-            'seccionMenuId': seccionMenuId,
-            'grupoId': grupo.id
+            seccionMenu: {
+                id: seccionMenuId
+            }
         }),
     })
 }
 
-export const getTableActions = async (seccionMenuId: number, grupo: any) => {
+export const getTableActions = async (seccionMenuId: number) => {
     return fetch(`${urlAPI}accion_grupo/allowed_table_actions`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify({ 
-            'seccionMenuId': seccionMenuId,
-            'grupoId': grupo.id
+            seccionMenu: {
+                id: seccionMenuId
+            }
         }),
     })
 }
@@ -182,25 +229,24 @@ export const getInputs = async (seccionMenuId: number, columna: string) => {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify({ 
-            'seccionMenuId': seccionMenuId,
-            'columna': columna
+            seccionMenu: {
+                id: seccionMenuId
+            },
+            columna: columna
         }),
     })
 }
 
-export const getNavLinks = async (grupo: any) => {
+export const getNavLinks = async (token: string) => {
     return fetch(`${urlAPI}accion_grupo/allowed_menus`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
-        body: JSON.stringify({ 
-            'grupoId': grupo.id
-        }),
     })
 }
 
@@ -209,10 +255,10 @@ export const getSeccionMenu = async (seccionMenu: string) => {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify({ 
-            'descripcion': seccionMenu
+            descripcion: seccionMenu
         }),
     })
 }
@@ -222,7 +268,7 @@ export const getSeccionMenuList = async (seccionMenu: string) => {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
     })
 }
@@ -232,18 +278,17 @@ export const getSeccionMenuListFiltered = async (seccionMenu: string, formdata: 
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify(formdata),
     })
 }
 
-export const getUser = async (data: User) => {
+export const getUser = async (data: any) => {
     return fetch(`${urlAPI}authenticate`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
         },
         body: JSON.stringify(data),
     })
@@ -254,7 +299,7 @@ export const validateUserIsActive = async (username: string) => {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            [`${apiKey}`]: `${apiToken}`
+            "Authorization": `Bearer ${getToken()}`
         },
         body: JSON.stringify({username: username}),
     })

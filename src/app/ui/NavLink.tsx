@@ -1,16 +1,20 @@
 import Link from 'next/link';
 
-const NavLink = (props: any) => {
+interface NavLinkProps {
+    seccion: {
+        descripcion: string;
+        navbarLabel: string;
+    };
+}
+
+const NavLink = ({ seccion }: NavLinkProps) => {
     return (
         <Link 
-            key={ props.seccion.descripcion }
-            className="dropdown-item w3-button"
-            href={ '/dashboard/'+props.seccion.descripcion+'/lista/' } >
-            <p>
-                { props.seccion.navbarLabel }
-            </p>
-        </Link> 
+            href={`/dashboard/${seccion.descripcion}/`} 
+            className="dropdown-item w3-button w3-round w3-hover-light-gray">
+            <p>{ seccion.navbarLabel }</p>
+        </Link>
     );
-}
+};
 
 export default NavLink;

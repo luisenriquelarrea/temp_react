@@ -3,7 +3,7 @@ import MessageBox from "./MessageBox";
 import Encabezado from "./Encabezado";
 import { MessageBoxT } from "@/app/utils/types";
 import Formulario from "./Formulario";
-import { SeccionMenuInput, User } from "@/app/utils/entities";
+import { SeccionMenuInput } from "@/app/utils/entities";
 
 interface ModalUpdateProps {
     title: string;
@@ -14,7 +14,6 @@ interface ModalUpdateProps {
     setShowModal: Dispatch<SetStateAction<any>>;
     seccionMenuId: number;
     seccionMenu: string;
-    user: User;
 }
 const ModalUpdate = (props: ModalUpdateProps) => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -22,6 +21,7 @@ const ModalUpdate = (props: ModalUpdateProps) => {
     const [messageData, setMessageData] = useState<MessageBoxT>({});
 
     const closeModal = () => {
+        props.setFormData({});
         props.setShowModal(false);
     }
 
@@ -55,7 +55,6 @@ const ModalUpdate = (props: ModalUpdateProps) => {
                         handleSubmit={ handleSubmit }
                         seccionMenu={ props.seccionMenu }
                         buttonSize={ 12 }
-                        user={ props.user }
                         buttonDisabled={ buttonDisabled }
                         record={ props.record } />
                 </section>

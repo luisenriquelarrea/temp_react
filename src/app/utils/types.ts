@@ -1,3 +1,8 @@
+export type ApiResponse = {
+    error: boolean;
+    message: string;
+    data: any[];
+}
 export interface ColumnStyle  {
     backgroundColor?: string,
     border?: string

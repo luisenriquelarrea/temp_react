@@ -98,12 +98,71 @@ a {
   cursor: default;
 }
 
+.report-nav {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.nav-tab {
+    padding: 0.6rem 1rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+}
+
+.nav-tab:hover {
+    color: #2563eb;
+}
+
+.nav-tab.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
 .my-login{
   margin: 75px auto;
   padding: 30px;
   max-width: 500px;
   background-color: rgb(248, 248, 255);
   border-radius: 10px;
+}
+
+.table-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.table-wrapper .table-container {
+  overflow-x: auto;
+}
+
+.table-wrapper .table {
+  border: none;
+}
+
+.table-wrapper .table td,
+.table-wrapper .table th {
+  border: none;
+}
+
+.table-wrapper .table tr:not(:last-child) td {
+  border-bottom: 1px solid #f7f7f7;
+}
+
+.table-wrapper thead th {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.table-wrapper .table td:not(:last-child),
+.table-wrapper .table th:not(:last-child) {
+  border-right: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 table {
@@ -190,27 +249,27 @@ i  {
 }
 
 .pdf-header {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  display: flex;
+  align-items: center;
   gap: 6px;
-  font-size: 12px;
-  line-height: 1.15;
 }
 
-.pdf-header .right {
-  text-align: right;
+.pdf-header .spacer {
+  flex: 1;
 }
 
 .pdf-meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
   font-size: 12px;
   line-height: 1.4;
 }
 
-.pdf-meta-row span {
-  white-space: nowrap;
+.pdf-meta-text {
+  display: block;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .report-footer td {

@@ -1,4 +1,4 @@
-import { numberWithCommas } from '@/app/funciones';
+import { numberWithCommas } from '@/app/utils/helpers';
 import { useState } from 'react';
 
 interface PaginationProps {
@@ -33,7 +33,7 @@ const Pagination: React.FC<PaginationProps> = (props) => {
     }
     
     return (
-        <nav className="pagination is-small" role="navigation" aria-label="pagination">
+        <nav className="w3-section pagination is-small" role="navigation" aria-label="pagination">
             <a href="#" className="pagination-previous">Anterior</a>
             <a href="#" className="pagination-next">Siguiente</a>
             <ul className="pagination-list">

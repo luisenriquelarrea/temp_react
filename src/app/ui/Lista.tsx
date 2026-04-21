@@ -14,9 +14,6 @@ import {
     flipStatus,
     castNullToString
 } from '@/app/utils/helpers';
-import {
-    User
-} from '@/app/utils/entities';
 import Filters from './Filters';
 import ModalUpdate from './ModalUpdate';
 import Pagination from "./Pagination";
@@ -25,9 +22,10 @@ import Navbar from "./Navbar";
 import Swal from 'sweetalert2'
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { Filter, MessageBoxT, StyledColumns } from "@/app/utils/types";
+import NumericData from "./NumericData";
+import FilterSummary from "./FilterSummary";
 
 interface ListaProps {
-    user: User;
     seccionMenuId: number;
     seccionMenu: string;
     customFilters?: {[key: string]: {}};
@@ -45,7 +43,7 @@ const Lista = (props: ListaProps) => {
     const tableRef = useRef(null);
 
     const off = 0;
-    const lim = props.noPagination ?? true ? 30 : 1000;
+    const lim = props.noPagination ? 1000 : 30;
 
     const [inputsFilters, setInputsFilters] = useState([]);
     
@@ -53,13 +51,14 @@ const Lista = (props: ListaProps) => {
         return {
             offset: off,
             limit: lim,
-            userId: props.user.userId,
             ...(props.customFilters || {})
         };
     };
 
     const [filterData, setFilterData] = useState<Filter>(getFilters());
+    const [appliedFilters, setAppliedFilters] = useState<{[key: string]: any}>({});
     const [navbarActions, setNavbarActions] = useState([]);
+    const [numericColumns, setNumericColumns] = useState([]);
     const [columns, setColumns] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [tableActions, setTableActions] = useState([]);
@@ -135,6 +134,7 @@ const Lista = (props: ListaProps) => {
             response.json().then(data => {
                 setDataTable(data);
                 setBtnFilterDisabled(false);
+                setAppliedFilters( fd );
             })
         }).catch(error => console.error(error));
     }
@@ -256,7 +256,6 @@ const Lista = (props: ListaProps) => {
                 return false;
             }
             const data = await responseGet.json();
-            data.userUpdatedId = props.user.userId;
             data.status = flipStatus(data.status);
 
             const responseUpdate = await updateRecord(props.seccionMenu, recordId, data);
@@ -329,6 +328,8 @@ const Lista = (props: ListaProps) => {
                     };
                 }
             }
+
+            setFormData({});
             setTable(currentPage);
     
             // Determine the message to show from rawResponse text
@@ -351,9 +352,6 @@ const Lista = (props: ListaProps) => {
         if (isProcessing) return;
         setIsProcessing(true);
         try {
-            setFormData({
-                userUpdatedId: props.user.userId
-            });
             if(props.setRecordId)
                 props.setRecordId(recordId);
             const customActions = props.functions;
@@ -401,8 +399,9 @@ const Lista = (props: ListaProps) => {
                     setInputsFilters(data);
                 })
             }).catch(error => console.error(error));
+
         if(!props.noNavbar)
-            getNavbarActions(props.seccionMenuId, props.user.grupo).then(response => {
+            getNavbarActions(props.seccionMenuId).then(response => {
                 if(!response.ok){
                     console.log("Error al obtener navbarActions");
                     console.log(response);
@@ -412,9 +411,21 @@ const Lista = (props: ListaProps) => {
                     setNavbarActions(data);
                 })
             }).catch(error => console.error(error));
+
+        getInputs(props.seccionMenuId, 'numeric').then(response => {
+            if(!response.ok){
+                console.log("Error al obtener inputs numeric");
+                console.log(response);
+                return;
+            }
+            response.json().then(data => {
+                setNumericColumns(data);
+            })
+        }).catch(error => console.error(error));
+
         getInputs(props.seccionMenuId, 'lista').then(response => {
             if(!response.ok){
-                console.log("Error al obtener inputs");
+                console.log("Error al obtener inputs lista");
                 console.log(response);
                 return;
             }
@@ -422,8 +433,9 @@ const Lista = (props: ListaProps) => {
                 setColumns(data);
             })
         }).catch(error => console.error(error));
+
         if(!props.noActions)
-            getTableActions(props.seccionMenuId, props.user.grupo).then(response => {
+            getTableActions(props.seccionMenuId).then(response => {
                 if(!response.ok){
                     console.log("Error al obtener tableActions");
                     console.log(response);
@@ -433,8 +445,10 @@ const Lista = (props: ListaProps) => {
                     setTableActions(data);
                 })
             }).catch(error => console.error(error));
+        
         if(!props.noPagination)
             setCountFilteredList();
+        
         setTable(0);
     }, []);
 
@@ -443,7 +457,6 @@ const Lista = (props: ListaProps) => {
             {
                 !props.noPagination ?
                     <Filters
-                        userId={ props.user.userId }
                         seccionMenuId={ props.seccionMenuId }
                         seccionMenu={ props.seccionMenu }
                         inputsFilters={ inputsFilters }
@@ -454,15 +467,26 @@ const Lista = (props: ListaProps) => {
                         setBtnFilterDisabled={ setBtnFilterDisabled } />
                 : null
             }
-            {
-                !props.noNavbar ? 
+
+            {!props.noNavbar && <div className="columns">
+                <div className="column is-9">
                     <Navbar
                         navbarActions={ navbarActions }
                         functions={ functions }
                         btnFilterDisabled={ btnFilterDisabled }
                         setBtnFilterDisabled={ setBtnFilterDisabled } />
-                : null
-            }
+                </div>
+                <div className="column is-3">
+                    <NumericData
+                        dataTable={ dataTable }
+                        inputs={ numericColumns } />
+                </div>
+            </div>}
+
+            {!props.noPagination && <div className="is-hidden-mobile">
+                <FilterSummary filters={appliedFilters} />
+            </div>}
+
             <Table
                 seccionMenu={ props.seccionMenu } 
                 columns={ columns } 
@@ -498,8 +522,7 @@ const Lista = (props: ListaProps) => {
                     inputs={ inputs }
                     performUpdate={ performUpdate }
                     setFormData={ setFormData }
-                    setShowModal={ setShowModal }
-                    user={ props.user } /> 
+                    setShowModal={ setShowModal } /> 
                 : null 
             }
         </>

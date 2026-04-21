@@ -166,14 +166,16 @@ const Table = (props: TableProps) => {
                 text={ defaultValue }
                 recordId={ recordId }
                 handlePropEvent={ props.handlePropEvent } />
-        if( columnExtra.inputType === "checkbox" )
+        if( columnExtra.inputType === "checkbox" ){
+            const text = columnExtra?.defaultValue ?? 0;
             return <InputCheckboxFilter 
                 key={ columnExtra.inputName }
                 inputData={ columnExtra }
                 stateFormData={ props.setFormData } 
                 recordId={ recordId }
-                text="0"
+                text={ text }
                 noLabel="1" />
+        }
         if( inputsText.includes(String(columnExtra.inputType)) )
             return <InputTextFilter
                 key={ columnExtra.inputName }
@@ -212,105 +214,102 @@ const Table = (props: TableProps) => {
 
     return (
         <>
-            <div className="table-container">
-                <table 
-                    className="myTable table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
-                    ref={ props.tableRef }>
-                    <thead>
-                        <tr>
-                            { tableActions.length > 0 
-                                ? <th className="no-print">Acciones</th> 
-                                : null }
-                            { columnsExtra.map((column: any) => {
-                                if(column.inputType !== "checkbox")
-                                    return null;
+            <div className="table-wrapper">
+                <div className="table-container">
+                    <table 
+                        className="myTable table is-bordered is-striped is-hoverable is-fullwidth is-narrow" 
+                        ref={ props.tableRef }>
+                        <thead>
+                            <tr>
+                                { tableActions.length > 0 
+                                    ? <th className="no-print">Acciones</th> 
+                                    : null }
+                                { columnsExtra.map((column: any) => {
+                                    if(column.inputType !== "checkbox")
+                                        return null;
+                                    return(
+                                        <th key={ column.id }> { column.inputLabel } </th>
+                                    );
+                                })}
+                                { columns.map((column: any) => {
+                                    return(
+                                        <th key={ column.id }> { column.inputLabel } </th>
+                                    );
+                                })}
+                                { columnsExtra.map((column: any) => {
+                                    if(column.inputType === "checkbox")
+                                        return null;
+                                    return(
+                                        <th key={ column.id }> { column.inputLabel } </th>
+                                    );
+                                })}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dataTable.map((record: any, index: number) => {
                                 return(
-                                    <th key={ column.id }> { column.inputLabel } </th>
-                                );
-                            })}
-                            { columns.map((column: any) => {
-                                return(
-                                    <th key={ column.id }> { column.inputLabel } </th>
-                                );
-                            })}
-                            { columnsExtra.map((column: any) => {
-                                if(column.inputType === "checkbox")
-                                    return null;
-                                return(
-                                    <th key={ column.id }> { column.inputLabel } </th>
-                                );
-                            })}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataTable.map((record: any, index: number) => {
-                            return(
-                                <tr key={ index }>
-                                    { tableActions.length > 0 
-                                        ? <td>
-                                        {tableActions.map((action: Accion) => {
+                                    <tr key={ index }>
+                                        { tableActions.length > 0 
+                                            ? <td>
+                                            {tableActions.map((action: Accion) => {
+                                                return(
+                                                    renderAction(action, record)
+                                                );
+                                            })}
+                                            </td> : null 
+                                        }
+                                        { columnsExtra.map((columnExtra: any) => {
+                                            if(columnExtra.inputType !== "checkbox")
+                                                return null;
                                             return(
-                                                renderAction(action, record)
-                                            );
-                                        })}
-                                        </td> : null 
-                                    }
-                                    { columnsExtra.map((columnExtra: any) => {
-                                        if(columnExtra.inputType !== "checkbox")
-                                            return null;
-                                        return(
-                                            <td key={ columnExtra.id }>
-                                                { renderColumnExtra(columnExtra, record) }
-                                            </td>
-                                        );
-                                    })}
-                                    { columns.map((column: SeccionMenuInput) => {
-                                        const columnName = column.inputName!;
-                                        const columnId = column.inputId!;
-                                        let columnValue = renderColumn(columnName, record, column);
-                                        columnValue = (column.currencyFormat === 1 && castNullToString(columnValue) !== "") 
-                                            ? toCurrencyFormat(columnValue) 
-                                            : columnValue;
-                                        columnValue = (column.numberFormat === 1 && castNullToString(columnValue) !== "") 
-                                            ? numberWithCommas(columnValue) 
-                                            : columnValue;
-                                        let recordStyled = getColumnStyled(columnName, columnId, columnValue);
-                                        if(column.currencyFormat === 1 || column.numberFormat === 1)
-                                            recordStyled = {
-                                                ...recordStyled,
-                                                ...{ textAlign: 'right' }
-                                            };
-                                        return(
-                                            <td 
-                                                key={ column.id } 
-                                                style={ parseInt(record.status) === 0 ? recordInactive : recordStyled }> 
-                                                { 
-                                                    columnValue
-                                                } 
-                                            </td>
-                                        );
-                                    })}
-                                    { columnsExtra.map((columnExtra: any) => {
-                                        if (columnExtra.inputType === "actions" && columnExtra.actions.length > 0) {
-                                            return (
-                                                <td key={columnExtra.id}>
-                                                    {columnExtra.actions.map((action: any) => renderActionExtra(action, record))}
+                                                <td key={ columnExtra.id }>
+                                                    { renderColumnExtra(columnExtra, record) }
                                                 </td>
                                             );
-                                        }
-                                        if(columnExtra.inputType === "checkbox")
-                                            return null;
-                                        return(
-                                            <td key={ columnExtra.id }>
-                                                { renderColumnExtra(columnExtra, record) }
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                        })}
+                                        { columns.map((column: SeccionMenuInput) => {
+                                            const columnName = column.inputName!;
+                                            const columnId = column.inputId!;
+                                            let columnValue = renderColumn(columnName, record, column);
+                                            columnValue = (column.currencyFormat === 1 && castNullToString(columnValue) !== "") 
+                                                ? toCurrencyFormat(columnValue) 
+                                                : columnValue;
+                                            columnValue = (column.numberFormat === 1 && castNullToString(columnValue) !== "") 
+                                                ? numberWithCommas(columnValue) 
+                                                : columnValue;
+                                            let recordStyled = getColumnStyled(columnName, columnId, columnValue);
+                                            return(
+                                                <td 
+                                                    key={ column.id } 
+                                                    style={ parseInt(record.status) === 0 ? recordInactive : recordStyled }> 
+                                                    { 
+                                                        columnValue
+                                                    } 
+                                                </td>
+                                            );
+                                        })}
+                                        { columnsExtra.map((columnExtra: any) => {
+                                            if (columnExtra.inputType === "actions" && columnExtra.actions.length > 0) {
+                                                return (
+                                                    <td key={columnExtra.id}>
+                                                        {columnExtra.actions.map((action: any) => renderActionExtra(action, record))}
+                                                    </td>
+                                                );
+                                            }
+                                            if(columnExtra.inputType === "checkbox")
+                                                return null;
+                                            return(
+                                                <td key={ columnExtra.id }>
+                                                    { renderColumnExtra(columnExtra, record) }
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </>
     );

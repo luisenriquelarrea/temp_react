@@ -8,6 +8,7 @@ import { SeccionMenuInput } from '@/app/utils/entities';
 const Filters = (props: any) => {
     const inputs = props.inputsFilters;
     const inputsText = ['text', 'number', 'password', 'date'];
+    const filters = { };
 
     useEffect(() => {
         window.addEventListener('keypress', e => {
@@ -37,7 +38,8 @@ const Filters = (props: any) => {
                 inputData={ input }
                 stateFormData={ props.setFilterData }
                 seccionMenu={ props.seccionMenu } 
-                defaultValue="0" />
+                defaultValue="0"
+                filters={ filters } />
         if( input.inputType === "checkbox" )
             return <InputCheckboxFilter 
                 key={ input.inputName }
@@ -63,12 +65,13 @@ const Filters = (props: any) => {
                         renderInput(input)
                     );
                 })}
-                <div className="column is-12" style={{"padding": 0}}></div>
+                
                 <div className="column is-2">
+                    <label>&nbsp;</label>
                     <button 
                         id="btn" 
                         onClick={ handleSubmit } 
-                        className="button is-small is-fullwidth"
+                        className="button is-small is-fullwidth w3-light-gray"
                         disabled={ props.btnFilterDisabled }>Filtrar
                     </button>
                 </div>
