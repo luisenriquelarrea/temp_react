@@ -61,23 +61,29 @@ const InputSelect = (props: InputSelectProps) => {
             return option['descripcion'];
         selectColumnas = selectColumnas.replace(/ /g, "");
         const columnas = selectColumnas.split(",");
-        var str = "";
+        const parts:string[] = [];
+
         columnas.forEach(columna => {
-            if(columna.includes(".")){
+            if (columna.includes(".")) {
                 const deepColumn = columna.split(".");
-                var deepRecord = option;
-                var finalColumn = "descripcion";
+                let deepRecord = option;
+                let finalColumn = "descripcion";
+                
                 deepColumn.forEach(column => {
-                    if(typeof(deepRecord[column]) === 'object' 
-                        && String(deepRecord[column]) !== "null")
-                        deepRecord = deepRecord[column]
+                    if (typeof deepRecord[column] === 'object' && deepRecord[column] !== null) {
+                        deepRecord = deepRecord[column];
+                    }
                     finalColumn = column;
                 });
-                str += deepRecord[finalColumn]+" - ";
+                
+                parts.push(deepRecord[finalColumn]);
+            } else {
+                parts.push(option[columna]);
             }
-            else
-                str += option[columna]+" ";
         });
+
+        const str = parts.join(" - ");
+        
         return str;
     }
 
